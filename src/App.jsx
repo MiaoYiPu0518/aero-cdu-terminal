@@ -1,0 +1,301 @@
+import React, { useState, useEffect } from 'react';
+import { TopBar } from './components/TopBar';
+import { CDUFrame } from './components/CDUFrame';
+import { KeyProgrammerModal } from './components/KeyProgrammerModal';
+import { ProfileModal } from './components/ProfileModal';
+import { PTYClient } from './utils/ptyClient';
+import { soundEngine } from './utils/soundEngine';
+
+export function App() {
+  const [bindings, setBindings] = useState({});
+  const [scratchpad, setScratchpad] = useState('');
+  const [lastExecutedCmd, setLastExecutedCmd] = useState('');
+  const [execStaged, setExecStaged] = useState(false);
+  const [programMode, setProgramMode] = useState(false);
+  const [activeShell, setActiveShell] = useState('powershell.exe');
+  const [soundMuted, setSoundMuted] = useState(false);
+  const [ptyConnected, setPtyConnected] = useState(false);
+
+  const [activeModal, setActiveModal] = useState(null);
+  const [editingKeyId, setEditingKeyId] = useState(null);
+  const [pressedKeyId, setPressedKeyId] = useState(null);
+
+  const [activePage, setActivePage] = useState(1);
+  const totalPages = 3;
+
+  // Terminal Zoom (Font Size)
+  const [fontSize, setFontSize] = useState(13);
+
+  // React state for ptyClient
+  const [ptyClient, setPtyClient] = useState(null);
+
+  useEffect(() => {
+    const client = new PTYClient();
+    client.onStatus((status) => {
+      setPtyConnected(status === 'CONNECTED');
+    });
+
+    client.connect(activeShell, 80, 24);
+    setPtyClient(client);
+
+    fetch('/api/config')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.bindings && Object.keys(data.bindings).length > 0) {
+          setBindings(data.bindings);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      client.disconnect();
+    };
+  }, []);
+
+  const saveBindingsToStorage = (newBindings) => {
+    setBindings(newBindings);
+    fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bindings: newBindings, activeShell }),
+    }).catch(() => {});
+  };
+
+  const handleShellChange = (newShell) => {
+    setActiveShell(newShell);
+    if (ptyClient) {
+      ptyClient.disconnect();
+      ptyClient.connect(newShell, 80, 24);
+    }
+  };
+
+  const handleReconnect = () => {
+    if (ptyClient) {
+      ptyClient.disconnect();
+      ptyClient.connect(activeShell, 80, 24);
+    }
+  };
+
+  // Zoom handlers for LSK 1L and LSK 2L
+  const handleZoomIn = () => {
+    setFontSize((prev) => Math.min(prev + 1, 24));
+  };
+
+  const handleZoomOut = () => {
+    setFontSize((prev) => Math.max(prev - 1, 9));
+  };
+
+  // Keyboard button press handler
+  const handleKeyPress = (keyId, defaultChar = '', e) => {
+    setPressedKeyId(keyId);
+    setTimeout(() => setPressedKeyId(null), 150);
+
+    // If Program Mode is active, open key binding editor
+    if (programMode) {
+      setEditingKeyId(keyId);
+      setActiveModal('PROGRAM');
+      return;
+    }
+
+    // Handle Zoom In on LSK 1L (if unbound)
+    if (keyId === '1L' && !bindings['1L']) {
+      handleZoomIn();
+      soundEngine.playKeyClick(false);
+      setLastExecutedCmd(`ZOOM IN (${fontSize + 1}px)`);
+      return;
+    }
+
+    // Handle Zoom Out on LSK 2L (if unbound)
+    if (keyId === '2L' && !bindings['2L']) {
+      handleZoomOut();
+      soundEngine.playKeyClick(false);
+      setLastExecutedCmd(`ZOOM OUT (${fontSize - 1}px)`);
+      return;
+    }
+
+    const bound = bindings[keyId];
+
+    // 1. If button has a macro command bound
+    if (bound && bound.command) {
+      setLastExecutedCmd(bound.command);
+      if (bound.autoEnter) {
+        if (ptyClient) {
+          ptyClient.sendInput(bound.command + '\r');
+        }
+        soundEngine.playExecChime();
+        setScratchpad('');
+        setExecStaged(false);
+      } else {
+        setScratchpad(bound.command);
+        setExecStaged(true);
+      }
+      return;
+    }
+
+    // 2. Special Key actions
+    if (keyId === 'EXEC') {
+      if (scratchpad) {
+        setLastExecutedCmd(scratchpad);
+        if (ptyClient) {
+          ptyClient.sendInput(scratchpad + '\r');
+        }
+        soundEngine.playExecChime();
+        setScratchpad('');
+        setExecStaged(false);
+      }
+      return;
+    }
+
+    if (keyId === 'CLR') {
+      setScratchpad('');
+      setExecStaged(false);
+      return;
+    }
+
+    if (keyId === 'DEL') {
+      if (scratchpad) {
+        setScratchpad((prev) => prev.slice(0, -1));
+        if (scratchpad.length <= 1) setExecStaged(false);
+      } else if (ptyClient) {
+        ptyClient.sendInput('\x08');
+      }
+      return;
+    }
+
+    if (keyId === 'SP') {
+      setScratchpad((prev) => prev + ' ');
+      return;
+    }
+
+    if (keyId === 'PREV_PAGE') {
+      setActivePage((prev) => (prev > 1 ? prev - 1 : totalPages));
+      return;
+    }
+
+    if (keyId === 'NEXT_PAGE') {
+      setActivePage((prev) => (prev < totalPages ? prev + 1 : 1));
+      return;
+    }
+
+    // 3. Unbound alpha/numeric buttons clicked via mouse
+    if (defaultChar && e) {
+      if (ptyClient) {
+        ptyClient.sendInput(defaultChar);
+      }
+    }
+  };
+
+  // Sync physical keyboard keypresses for visual key feedback
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName : '';
+      if (activeTag === 'INPUT' || (activeTag === 'TEXTAREA' && !document.activeElement.classList.contains('xterm-helper-textarea'))) {
+        return;
+      }
+      const char = e.key.toUpperCase();
+      if (char.length === 1 && char >= 'A' && char <= 'Z') {
+        setPressedKeyId(char);
+        setTimeout(() => setPressedKeyId(null), 120);
+      } else if (char >= '0' && char <= '9') {
+        setPressedKeyId(char);
+        setTimeout(() => setPressedKeyId(null), 120);
+      } else if (e.key === 'Backspace') {
+        setPressedKeyId('DEL');
+        setTimeout(() => setPressedKeyId(null), 120);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleKeyContextMenu = (keyId) => {
+    setEditingKeyId(keyId);
+    setActiveModal('PROGRAM');
+  };
+
+  const handleLSKClick = (lskId) => {
+    handleKeyPress(lskId, '', null);
+  };
+
+  const handleSaveKeyBinding = (keyId, bindingData) => {
+    const updated = { ...bindings, [keyId]: bindingData };
+    saveBindingsToStorage(updated);
+    setActiveModal(null);
+    setEditingKeyId(null);
+  };
+
+  const handleUnbindKey = (keyId) => {
+    const updated = { ...bindings };
+    delete updated[keyId];
+    saveBindingsToStorage(updated);
+    setActiveModal(null);
+    setEditingKeyId(null);
+  };
+
+  const handleLoadProfile = (profileBindings) => {
+    saveBindingsToStorage(profileBindings);
+  };
+
+  const handleClearAllBindings = () => {
+    saveBindingsToStorage({});
+  };
+
+  return (
+    <div className="app-container">
+      {/* Top Bar */}
+      <TopBar
+        ptyConnected={ptyConnected}
+        activeShell={activeShell}
+        onShellChange={handleShellChange}
+        programMode={programMode}
+        onToggleProgramMode={() => setProgramMode(!programMode)}
+        soundMuted={soundMuted}
+        onToggleSound={() => setSoundMuted(soundEngine.toggleMute())}
+        onOpenProfiles={() => setActiveModal('PROFILES')}
+        onReconnect={handleReconnect}
+      />
+
+      {/* Main 3D CDU Unit */}
+      <CDUFrame
+        ptyClient={ptyClient}
+        scratchpad={scratchpad}
+        bindings={bindings}
+        onKeyPress={handleKeyPress}
+        onKeyContextMenu={handleKeyContextMenu}
+        onLSKClick={handleLSKClick}
+        execStaged={execStaged}
+        pressedKeyId={pressedKeyId}
+        programMode={programMode}
+        activePage={activePage}
+        totalPages={totalPages}
+        fontSize={fontSize}
+        lastExecutedCmd={lastExecutedCmd}
+      />
+
+      {/* Key Programmer Dialog */}
+      {activeModal === 'PROGRAM' && editingKeyId && (
+        <KeyProgrammerModal
+          keyId={editingKeyId}
+          existingBinding={bindings[editingKeyId]}
+          onSave={handleSaveKeyBinding}
+          onUnbind={handleUnbindKey}
+          onClose={() => {
+            setActiveModal(null);
+            setEditingKeyId(null);
+          }}
+        />
+      )}
+
+      {/* Profiles Modal */}
+      {activeModal === 'PROFILES' && (
+        <ProfileModal
+          currentBindings={bindings}
+          onLoadProfile={handleLoadProfile}
+          onClearAllBindings={handleClearAllBindings}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
+    </div>
+  );
+}

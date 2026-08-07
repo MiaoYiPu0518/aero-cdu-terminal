@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production build output
+dist/
+build/
+
+# Logs & user custom data
+logs/
+*.log
+server/bindings-config.json
+server/profiles/
+
+# OS / IDE metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
