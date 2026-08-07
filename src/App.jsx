@@ -23,8 +23,11 @@ export function App() {
   const [activePage, setActivePage] = useState(1);
   const totalPages = 3;
 
-  // Terminal Zoom (Font Size)
+  // Terminal CRT Font Size
   const [fontSize, setFontSize] = useState(13);
+
+  // Entire CDU UI Scale
+  const [uiScale, setUiScale] = useState(1.0);
 
   // React state for ptyClient
   const [ptyClient, setPtyClient] = useState(null);
@@ -76,13 +79,26 @@ export function App() {
     }
   };
 
-  // Zoom handlers for LSK 1L and LSK 2L
+  // Zoom handlers for CRT font size (LSK 1L and LSK 2L)
   const handleZoomIn = () => {
     setFontSize((prev) => Math.min(prev + 1, 24));
   };
 
   const handleZoomOut = () => {
     setFontSize((prev) => Math.max(prev - 1, 9));
+  };
+
+  // Entire UI Scale Handlers
+  const handleZoomInUI = () => {
+    setUiScale((prev) => Math.min(parseFloat((prev + 0.1).toFixed(1)), 1.6));
+  };
+
+  const handleZoomOutUI = () => {
+    setUiScale((prev) => Math.max(parseFloat((prev - 0.1).toFixed(1)), 0.6));
+  };
+
+  const handleResetUI = () => {
+    setUiScale(1.0);
   };
 
   // Keyboard button press handler
@@ -243,7 +259,7 @@ export function App() {
 
   return (
     <div className="app-container">
-      {/* Top Bar */}
+      {/* Top Header Bar with UI Scale Controls */}
       <TopBar
         ptyConnected={ptyConnected}
         activeShell={activeShell}
@@ -254,24 +270,30 @@ export function App() {
         onToggleSound={() => setSoundMuted(soundEngine.toggleMute())}
         onOpenProfiles={() => setActiveModal('PROFILES')}
         onReconnect={handleReconnect}
+        uiScale={uiScale}
+        onZoomInUI={handleZoomInUI}
+        onZoomOutUI={handleZoomOutUI}
+        onResetUI={handleResetUI}
       />
 
-      {/* Main 3D CDU Unit */}
-      <CDUFrame
-        ptyClient={ptyClient}
-        scratchpad={scratchpad}
-        bindings={bindings}
-        onKeyPress={handleKeyPress}
-        onKeyContextMenu={handleKeyContextMenu}
-        onLSKClick={handleLSKClick}
-        execStaged={execStaged}
-        pressedKeyId={pressedKeyId}
-        programMode={programMode}
-        activePage={activePage}
-        totalPages={totalPages}
-        fontSize={fontSize}
-        lastExecutedCmd={lastExecutedCmd}
-      />
+      {/* Main 3D CDU Unit Wrapper with Transform Scale */}
+      <div style={{ width: '100%', transform: `scale(${uiScale})`, transformOrigin: 'top center', transition: 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
+        <CDUFrame
+          ptyClient={ptyClient}
+          scratchpad={scratchpad}
+          bindings={bindings}
+          onKeyPress={handleKeyPress}
+          onKeyContextMenu={handleKeyContextMenu}
+          onLSKClick={handleLSKClick}
+          execStaged={execStaged}
+          pressedKeyId={pressedKeyId}
+          programMode={programMode}
+          activePage={activePage}
+          totalPages={totalPages}
+          fontSize={fontSize}
+          lastExecutedCmd={lastExecutedCmd}
+        />
+      </div>
 
       {/* Key Programmer Dialog */}
       {activeModal === 'PROGRAM' && editingKeyId && (

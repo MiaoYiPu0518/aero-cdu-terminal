@@ -30,12 +30,12 @@ function startBackendServer() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 740,
-    height: 980,
-    minWidth: 640,
-    minHeight: 800,
+    width: 940,
+    height: 1000,
+    minWidth: 800,
+    minHeight: 850,
     title: 'AeroCDU Flight Terminal',
-    backgroundColor: '#0b0c0e',
+    backgroundColor: '#060709',
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,

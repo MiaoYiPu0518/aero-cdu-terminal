@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, Cpu } from 'lucide-react';
+import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 
 export function TopBar({
   ptyConnected,
@@ -10,8 +10,14 @@ export function TopBar({
   soundMuted,
   onToggleSound,
   onOpenProfiles,
-  onReconnect
+  onReconnect,
+  uiScale = 1.0,
+  onZoomInUI,
+  onZoomOutUI,
+  onResetUI
 }) {
+  const scalePercent = Math.round(uiScale * 100);
+
   return (
     <div className="top-bar">
       <div className="brand-section">
@@ -51,6 +57,33 @@ export function TopBar({
           <option value="cmd.exe">CMD</option>
           <option value="bash">WSL Bash</option>
         </select>
+
+        {/* UI Zoom Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 2, background: '#1c2028', borderRadius: 6, padding: 2, border: '1px solid #363d4a' }}>
+          <button
+            className="icon-btn"
+            style={{ padding: '4px 8px', border: 'none', background: 'transparent' }}
+            onClick={onZoomOutUI}
+            title="Zoom Out Entire CDU UI"
+          >
+            <ZoomOut size={14} />
+          </button>
+          <span
+            onClick={onResetUI}
+            title="Reset UI Zoom to 100%"
+            style={{ fontSize: 11, fontWeight: 'bold', color: 'var(--crt-cyan)', cursor: 'pointer', padding: '0 4px', fontFamily: 'Share Tech Mono, monospace' }}
+          >
+            {scalePercent}%
+          </span>
+          <button
+            className="icon-btn"
+            style={{ padding: '4px 8px', border: 'none', background: 'transparent' }}
+            onClick={onZoomInUI}
+            title="Zoom In Entire CDU UI"
+          >
+            <ZoomIn size={14} />
+          </button>
+        </div>
 
         <button
           className="icon-btn"
