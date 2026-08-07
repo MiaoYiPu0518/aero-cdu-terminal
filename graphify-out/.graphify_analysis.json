@@ -1,0 +1,259 @@
+{
+  "communities": {
+    "0": [
+      "src_app",
+      "src_app_app",
+      "src_components_keyprogrammermodal",
+      "src_components_keyprogrammermodal_keyprogrammermodal",
+      "src_components_profilemodal",
+      "src_components_profilemodal_preset_profiles",
+      "src_components_profilemodal_profilemodal",
+      "src_components_topbar",
+      "src_components_topbar_topbar",
+      "src_main",
+      "src_utils_ptyclient",
+      "src_utils_ptyclient_ptyclient",
+      "src_utils_ptyclient_ptyclient_connect",
+      "src_utils_ptyclient_ptyclient_constructor",
+      "src_utils_ptyclient_ptyclient_disconnect",
+      "src_utils_ptyclient_ptyclient_ondata",
+      "src_utils_ptyclient_ptyclient_onstatus",
+      "src_utils_ptyclient_ptyclient_resize",
+      "src_utils_ptyclient_ptyclient_sendinput",
+      "src_utils_soundengine_soundengine_setcabinvolume"
+    ],
+    "1": [
+      "cors",
+      "express",
+      "lucide_react",
+      "node_pty",
+      "package_dependencies",
+      "package_dependencies_cors",
+      "package_dependencies_express",
+      "package_dependencies_lucide_react",
+      "package_dependencies_node_pty",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_ws",
+      "package_dependencies_xterm_addon_fit",
+      "package_dependencies_xterm_xterm",
+      "react",
+      "react_dom",
+      "ws",
+      "xterm_addon_fit",
+      "xterm_xterm"
+    ],
+    "2": [
+      "src_utils_soundengine_soundengine",
+      "src_utils_soundengine_soundengine_constructor",
+      "src_utils_soundengine_soundengine_generateandplaydynamictransmission",
+      "src_utils_soundengine_soundengine_generatedynamicphrase",
+      "src_utils_soundengine_soundengine_init",
+      "src_utils_soundengine_soundengine_playemergencychime",
+      "src_utils_soundengine_soundengine_playexecchime",
+      "src_utils_soundengine_soundengine_playkeyclick",
+      "src_utils_soundengine_soundengine_schedulenexttransmission",
+      "src_utils_soundengine_soundengine_setatcvolume",
+      "src_utils_soundengine_soundengine_startatcchatter",
+      "src_utils_soundengine_soundengine_startcockpitnoise",
+      "src_utils_soundengine_soundengine_stopactivetransmissionstatic",
+      "src_utils_soundengine_soundengine_stopatcchatter",
+      "src_utils_soundengine_soundengine_stopcockpitnoise",
+      "src_utils_soundengine_soundengine_toggleatcchatter",
+      "src_utils_soundengine_soundengine_togglecockpitnoise",
+      "src_utils_soundengine_soundengine_togglemute"
+    ],
+    "3": [
+      "package",
+      "package_main",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_app",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_scripts_dev_all",
+      "package_scripts_preview",
+      "package_scripts_server",
+      "package_scripts_start",
+      "package_type",
+      "package_version"
+    ],
+    "4": [
+      "concurrently",
+      "electron",
+      "package_devdependencies",
+      "package_devdependencies_concurrently",
+      "package_devdependencies_electron",
+      "package_devdependencies_types_react",
+      "package_devdependencies_types_react_dom",
+      "package_devdependencies_vite",
+      "package_devdependencies_vitejs_plugin_react",
+      "types_react",
+      "types_react_dom",
+      "vite",
+      "vitejs_plugin_react"
+    ],
+    "5": [
+      "server_index",
+      "server_index_app",
+      "server_index_config_file",
+      "server_index_dirname",
+      "server_index_distpath",
+      "server_index_filename",
+      "server_index_logfilepath",
+      "server_index_logsdir",
+      "server_index_logtofile",
+      "server_index_profiles_dir",
+      "server_index_projectrootdir",
+      "server_index_server",
+      "server_index_wss"
+    ],
+    "6": [
+      "src_utils_soundengine",
+      "src_utils_soundengine_alien_phrases",
+      "src_utils_soundengine_altitudes",
+      "src_utils_soundengine_callsigns",
+      "src_utils_soundengine_emergency_phrases",
+      "src_utils_soundengine_facilities",
+      "src_utils_soundengine_flight_levels",
+      "src_utils_soundengine_frequencies",
+      "src_utils_soundengine_headings",
+      "src_utils_soundengine_runways"
+    ],
+    "7": [
+      "src_components_cduframe",
+      "src_components_cduframe_cduframe",
+      "src_components_cdukeypad",
+      "src_components_cdukeypad_cdukeypad",
+      "src_components_cduscreen",
+      "src_components_cduscreen_cduscreen",
+      "src_utils_keyboardhelper",
+      "src_utils_keyboardhelper_eventtoansi"
+    ],
+    "8": [
+      "electron_main",
+      "electron_main_createwindow",
+      "electron_main_dirname",
+      "electron_main_filename",
+      "electron_main_startbackendserver"
+    ],
+    "9": [
+      "vite_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.14210526315789473,
+    "1": 0.10526315789473684,
+    "2": 0.2222222222222222,
+    "3": 0.14285714285714285,
+    "4": 0.15384615384615385,
+    "5": 0.15384615384615385,
+    "6": 0.2,
+    "7": 0.39285714285714285,
+    "8": 0.4,
+    "9": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_utils_soundengine_soundengine",
+      "label": "SoundEngine",
+      "degree": 22
+    },
+    {
+      "id": "src_utils_ptyclient_ptyclient",
+      "label": "PTYClient",
+      "degree": 9
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "degree": 8
+    },
+    {
+      "id": "src_app_app",
+      "label": "App()",
+      "degree": 5
+    },
+    {
+      "id": "src_components_cduscreen_cduscreen",
+      "label": "CDUScreen()",
+      "degree": 3
+    },
+    {
+      "id": "src_components_topbar_topbar",
+      "label": "TopBar()",
+      "degree": 3
+    },
+    {
+      "id": "src_utils_keyboardhelper_eventtoansi",
+      "label": "eventToAnsi()",
+      "degree": 3
+    },
+    {
+      "id": "package_dependencies_xterm_addon_fit",
+      "label": "@xterm/addon-fit",
+      "degree": 2
+    },
+    {
+      "id": "package_dependencies_xterm_xterm",
+      "label": "@xterm/xterm",
+      "degree": 2
+    },
+    {
+      "id": "package_dependencies_cors",
+      "label": "cors",
+      "degree": 2
+    }
+  ],
+  "surprises": [
+    {
+      "source": "CDUScreen()",
+      "target": "eventToAnsi()",
+      "source_files": [
+        "src/components/CDUScreen.jsx",
+        "src/utils/keyboardHelper.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `SoundEngine` connect `SoundEngine` to `App.jsx`, `soundEngine.js`, `CDUFrame.jsx`?",
+      "why": "High betweenness centrality (0.109) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `dependencies` connect `dependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.088) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `devDependencies` connect `devDependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.064) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `__filename`, `__dirname`, `name` to the rest of the system?",
+      "why": "50 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `App.jsx` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14210526315789473 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `dependencies` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

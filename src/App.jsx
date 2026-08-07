@@ -164,8 +164,15 @@ export function App() {
         setScratchpad('');
         setExecStaged(false);
       } else {
-        setScratchpad(bound.command);
-        setExecStaged(true);
+        if (ptyClient) {
+          ptyClient.sendInput(bound.command);
+        }
+        setScratchpad('');
+        setExecStaged(false);
+        setTimeout(() => {
+          const helperArea = document.querySelector('.xterm-helper-textarea');
+          if (helperArea) helperArea.focus();
+        }, 10);
       }
       return;
     }
@@ -220,6 +227,10 @@ export function App() {
       if (ptyClient) {
         ptyClient.sendInput(defaultChar);
       }
+      setTimeout(() => {
+        const helperArea = document.querySelector('.xterm-helper-textarea');
+        if (helperArea) helperArea.focus();
+      }, 10);
     }
   };
 

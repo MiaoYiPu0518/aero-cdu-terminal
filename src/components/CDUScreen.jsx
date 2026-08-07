@@ -146,10 +146,10 @@ export function CDUScreen({
       }
     });
 
-    // Global KeyDown Listener -> routes physical keyboard events to PTY
+    // Global KeyDown Listener -> routes physical keyboard events to PTY when terminal/inputs are not focused
     const handleGlobalKeyDown = (e) => {
       const activeTag = document.activeElement ? document.activeElement.tagName : '';
-      if (activeTag === 'INPUT' || (activeTag === 'TEXTAREA' && !document.activeElement.classList.contains('xterm-helper-textarea'))) {
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') {
         return;
       }
 
