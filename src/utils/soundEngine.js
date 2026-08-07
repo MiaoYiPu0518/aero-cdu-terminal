@@ -3,30 +3,111 @@
 const CALLSIGNS = [
   "Aero 4 1 2", "United 9 5 4", "Delta 8 1 9", "American 3 0 7",
   "Air Canada 7 4 2", "FedEx 1 1 4 Heavy", "Speedbird 1 1 7",
-  "Cessna November 4 2 2", "Skyhawk 9 1 Charlie"
+  "Lufthansa 4 5 0", "KLM 6 8 2", "Qantas 1 2", "Cathay 8 3 1",
+  "Emirates 2 0 1 Heavy", "Southwest 1 4 9 2", "Alaska 5 3 0",
+  "Cessna November 4 2 2 Bravo", "Skyhawk 9 1 Charlie", "Cherokee 3 8 Kilo",
+  "CargoJet 9 0 4 Heavy", "Air Force One", "Navy Alpha-Foxtrot 7 1"
 ];
 
 const FACILITIES = [
   "Kennedy Tower", "Boston Center", "Seattle Approach",
-  "Chicago O'Hare Tower", "Heathrow Control", "Tokyo Radar", "Departure"
+  "Chicago O'Hare Tower", "Heathrow Control", "Tokyo Radar",
+  "Atlanta Center", "Frankfurt Radar", "Sydney Departure",
+  "LaGuardia Ground", "Hong Kong Tower", "Anchorage Center",
+  "San Francisco Tower", "Paris Control", "Dubai Departure"
 ];
 
-const RUNWAYS = ["2 2 Right", "2 8 Left", "0 4 Right", "1 8 Left", "3 6 Right"];
-const HEADINGS = ["0 9 0", "1 8 0", "2 1 0", "2 7 0", "3 6 0"];
-const FLIGHT_LEVELS = ["2 4 0", "3 2 0", "3 5 0", "3 9 0"];
-const ALTITUDES = ["3 thousand", "5 thousand", "8 thousand", "1 2 thousand"];
-const FREQUENCIES = ["1 2 4 point 7 5", "1 1 8 point 3", "1 3 3 point 4 5", "1 2 1 point 9"];
+const RUNWAYS = [
+  "2 2 Right", "2 8 Left", "0 4 Right", "1 8 Left",
+  "3 6 Right", "0 9 Left", "2 7 Right", "1 3 Center", "3 1 Left"
+];
+
+const HEADINGS = [
+  "0 4 0", "0 9 0", "1 4 0", "1 8 0", "2 1 0", "2 7 0", "3 1 0", "3 6 0"
+];
+
+const FLIGHT_LEVELS = [
+  "1 8 0", "2 4 0", "2 8 0", "3 2 0", "3 5 0", "3 7 0", "3 9 0", "4 1 0"
+];
+
+const ALTITUDES = [
+  "2 thousand 5 hundred", "3 thousand", "4 thousand", "5 thousand",
+  "8 thousand", "1 0 thousand", "1 2 thousand", "1 4 thousand"
+];
+
+const FREQUENCIES = [
+  "1 2 4 point 7 5", "1 1 8 point 3", "1 3 3 point 4 5", "1 2 1 point 9",
+  "1 2 8 point 1 5", "1 1 9 point 7", "1 3 4 point 0 5", "1 2 0 point 5"
+];
+
+const WAYPOINTS = [
+  "KENNEDY", "BEXOS", "NAROW", "MERIT", "ROD32", "PAXTON", "SOLBERG", "GREKI"
+];
+
+const SQUAWKS = [
+  "4 7 1 2", "2 1 0 5", "7 0 0 0", "1 2 0 0", "5 3 4 1", "3 6 2 0"
+];
+
+const ATIS_LETTERS = [
+  "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India"
+];
+
+const AIRCRAFT_TYPES = [
+  "Boeing 7 3 7", "Airbus A 3 2 0", "Boeing 7 7 7 Heavy",
+  "Airbus A 3 5 0", "Embraer 1 9 0", "Bombardier CRJ 9 hundred"
+];
 
 const ALIEN_PHRASES = [
   "Tower, Aero 7 3 7, we have an unidentified contact 12 o'clock high, velocity Mach 1 4, no transponder.",
   "Center, radar contact moving across sector 4 at flight level 8 0 0, trajectory non-ballistic.",
-  "Unknown contact, state your callsign and intention on 1 2 1 point 5."
+  "Unknown contact, state your callsign and intention on 1 2 1 point 5.",
+  "Approach, Skyhawk 9 1 Charlie, we have a fast moving glowing contact orbiting 3 miles north of the field."
 ];
 
 const EMERGENCY_PHRASES = [
   "MAYDAY MAYDAY MAYDAY, Aero 4 1 2, engine failure number 2, requesting immediate vector back to the field!",
   "PAN-PAN PAN-PAN PAN-PAN, Delta 8 1 9, hydraulic pressure loss, requesting priority handling.",
-  "Aero 4 1 2, Mayday acknowledged, turn heading 0 9 0, cleared ILS approach runway 2 2 Right, crash rescue dispatched."
+  "Aero 4 1 2, Mayday acknowledged, turn heading 0 9 0, cleared ILS approach runway 2 2 Right, crash rescue dispatched.",
+  "PAN-PAN, FedEx 1 1 4 Heavy, bird strike on departure, requesting immediate altitude hold at 4 thousand.",
+  "MAYDAY MAYDAY MAYDAY, Speedbird 1 1 7, cabin depressurization, emergency descent to 1 0 thousand, turning left heading 1 8 0!"
+];
+
+const FUNNY_PHRASES = [
+  {
+    speaker1: "Center, Aspen 2 0, request ground speed readout.",
+    speaker2: "Aspen 2 0, Boston Center, showing you at 1 thousand 9 hundred 42 knots across the ground.",
+    isPilotFirst: true
+  },
+  {
+    speaker1: "Meow.",
+    speaker2: "Aircraft meowing on 1 2 1 point 5, yer on Guard! Keep it off the emergency frequency!",
+    isPilotFirst: true
+  },
+  {
+    speaker1: "Approach, Aero 4 1 2, requesting priority descent to 3 thousand.",
+    speaker2: "Aero 4 1 2, say reason for priority descent?",
+    isPilotFirst: true
+  },
+  {
+    speaker1: "Speedbird 1 1 7, hold short runway 2 2 Right, airport operations is currently chasing a goat off the centerline.",
+    speaker2: "Holding short 2 2 Right, Speedbird 1 1 7. Advise if the goat has right of way.",
+    isPilotFirst: false
+  },
+  {
+    speaker1: "Tower, Skyhawk 9 1 Charlie, I am somewhere near a big lake and a red barn, requesting vector to anywhere with pizza.",
+    speaker2: "Skyhawk 9 1 Charlie, radar contact 5 miles north of the barn, turn heading 1 8 0 for runway 2 8.",
+    isPilotFirst: true
+  },
+  {
+    speaker1: "Tower, check frequency, someone left their microphone keyed while heavy snoring.",
+    speaker2: "Attention aircraft broadcasting on 1 2 4 point 7 5, check your mic button, heavy snoring on frequency!",
+    isPilotFirst: true
+  },
+  {
+    speaker1: "All aircraft sector 4, be advised, fast moving contact at flight level 6 0 0, 9-reindeer power, red nose beacon.",
+    speaker2: "Roger Center, tell him we left cookies in the flight deck.",
+    isPilotFirst: false
+  }
 ];
 
 class SoundEngine {
@@ -60,16 +141,17 @@ class SoundEngine {
       }
     }
 
-    // TTS Engine Config
+    // TTS Engine Config & Voice Rolepools
     this.ttsProvider = 'PIPER'; // 'PIPER' or 'WEBSPEECH'
-    this.piperVoices = [
+    this.controllerVoice = 'en_GB-vctk-medium';
+    this.pilotVoices = [
       'en_GB-alan-medium',
       'en_US-arctic-medium',
       'en_US-danny-low',
-      'en_US-l2arctic-medium',
-      'en_GB-vctk-medium'
+      'en_US-l2arctic-medium'
     ];
     this.currentVoiceNode = null;
+    this.isTransmitting = false;
   }
 
   init() {
@@ -105,6 +187,11 @@ class SoundEngine {
     if (this.currentStaticGain && this.audioCtx) {
       this.currentStaticGain.gain.setValueAtTime(this.atcVolume * 0.7, this.audioCtx.currentTime);
     }
+  }
+
+  // Aviation VHF Push-To-Talk (PTT) Mic Squelch Click (Disabled per user preference)
+  playPTTClick(isStart = true) {
+    return;
   }
 
   // Key Click Sound
@@ -261,11 +348,12 @@ class SoundEngine {
   startATCChatter() {
     this.init();
     this.chatterActive = true;
-    this.scheduleNextTransmission();
+    this.runTransmissionCycle();
   }
 
   stopATCChatter() {
     this.chatterActive = false;
+    this.isTransmitting = false;
     if (this.chatterTimer) {
       clearTimeout(this.chatterTimer);
       this.chatterTimer = null;
@@ -278,46 +366,60 @@ class SoundEngine {
 
   setATCChatterFrequency(level) {
     this.chatterFrequency = level;
-    if (this.chatterActive && this.chatterTimer) {
-      clearTimeout(this.chatterTimer);
-      this.scheduleNextTransmission();
+    if (this.chatterActive && !this.isTransmitting) {
+      if (this.chatterTimer) {
+        clearTimeout(this.chatterTimer);
+        this.chatterTimer = null;
+      }
+      this.runTransmissionCycle();
     }
   }
 
-  scheduleNextTransmission() {
-    if (!this.chatterActive) return;
-    this.generateAndPlayDynamicTransmission();
+  async runTransmissionCycle() {
+    if (!this.chatterActive || this.muted || this.isTransmitting) return;
 
-    let minDelay = 7000;
-    let maxDelay = 14000;
+    this.isTransmitting = true;
+    try {
+      await this.generateAndPlayDynamicTransmission();
+    } catch (err) {
+      // Ignore transmission error and proceed to next cycle
+    } finally {
+      this.isTransmitting = false;
+    }
+
+    if (!this.chatterActive) return;
+
+    // Calculate silence gap AFTER previous transmission completes
+    let minGap = 5000;
+    let maxGap = 10000;
 
     switch (this.chatterFrequency) {
-      case 1: // LOW (15s - 25s)
-        minDelay = 15000;
-        maxDelay = 25000;
+      case 1: // LOW (12s - 22s silent gap)
+        minGap = 12000;
+        maxGap = 22000;
         break;
-      case 2: // MED (7s - 14s)
-        minDelay = 7000;
-        maxDelay = 14000;
+      case 2: // MED (5s - 10s silent gap)
+        minGap = 5000;
+        maxGap = 10000;
         break;
-      case 3: // HIGH (3s - 7s)
-        minDelay = 3000;
-        maxDelay = 7000;
+      case 3: // HIGH (2s - 5s silent gap)
+        minGap = 2000;
+        maxGap = 5000;
         break;
-      case 4: // RAPID (1s - 3s)
-        minDelay = 1000;
-        maxDelay = 3000;
+      case 4: // RAPID (0.5s - 2s silent gap)
+        minGap = 500;
+        maxGap = 2000;
         break;
       default:
-        minDelay = 7000;
-        maxDelay = 14000;
+        minGap = 5000;
+        maxGap = 10000;
         break;
     }
 
-    const delay = Math.floor(Math.random() * (maxDelay - minDelay)) + minDelay;
+    const gap = Math.floor(Math.random() * (maxGap - minGap)) + minGap;
     this.chatterTimer = setTimeout(() => {
-      this.scheduleNextTransmission();
-    }, delay);
+      this.runTransmissionCycle();
+    }, gap);
   }
 
   stopActiveTransmissionStatic() {
@@ -342,16 +444,43 @@ class SoundEngine {
     }
   }
 
-  // Generate phrase from 7 dynamic conditions
+  // Generate 2-way paired aviation dialogue (Controller instruction + Pilot readback)
   generateDynamicPhrase() {
     const rand = Math.random();
 
-    if (rand < 0.02) {
-      return { type: 'ALIEN', text: ALIEN_PHRASES[Math.floor(Math.random() * ALIEN_PHRASES.length)] };
+    if (rand < 0.03) {
+      return {
+        type: 'ALIEN',
+        isDialogue: false,
+        text: ALIEN_PHRASES[Math.floor(Math.random() * ALIEN_PHRASES.length)],
+        voice: this.controllerVoice
+      };
     }
 
-    if (rand < 0.05) {
-      return { type: 'EMERGENCY', text: EMERGENCY_PHRASES[Math.floor(Math.random() * EMERGENCY_PHRASES.length)] };
+    if (rand < 0.07) {
+      return {
+        type: 'EMERGENCY',
+        isDialogue: false,
+        text: EMERGENCY_PHRASES[Math.floor(Math.random() * EMERGENCY_PHRASES.length)],
+        voice: this.pilotVoices[Math.floor(Math.random() * this.pilotVoices.length)]
+      };
+    }
+
+    if (rand < 0.12) {
+      const funnyObj = FUNNY_PHRASES[Math.floor(Math.random() * FUNNY_PHRASES.length)];
+      const pilotVoice = this.pilotVoices[Math.floor(Math.random() * this.pilotVoices.length)];
+      return {
+        type: 'NORMAL',
+        isDialogue: true,
+        firstSpeaker: {
+          text: funnyObj.speaker1,
+          voice: funnyObj.isPilotFirst ? pilotVoice : this.controllerVoice
+        },
+        secondSpeaker: {
+          text: funnyObj.speaker2,
+          voice: funnyObj.isPilotFirst ? this.controllerVoice : pilotVoice
+        }
+      };
     }
 
     const callsign = CALLSIGNS[Math.floor(Math.random() * CALLSIGNS.length)];
@@ -361,30 +490,141 @@ class SoundEngine {
     const flightLevel = FLIGHT_LEVELS[Math.floor(Math.random() * FLIGHT_LEVELS.length)];
     const altitude = ALTITUDES[Math.floor(Math.random() * ALTITUDES.length)];
     const freq = FREQUENCIES[Math.floor(Math.random() * FREQUENCIES.length)];
+    const waypoint = WAYPOINTS[Math.floor(Math.random() * WAYPOINTS.length)];
+    const squawk = SQUAWKS[Math.floor(Math.random() * SQUAWKS.length)];
+    const atis = ATIS_LETTERS[Math.floor(Math.random() * ATIS_LETTERS.length)];
+    const aircraft = AIRCRAFT_TYPES[Math.floor(Math.random() * AIRCRAFT_TYPES.length)];
 
-    const conditionType = Math.floor(Math.random() * 5);
-    let text = '';
+    // Controller always uses en_GB-vctk-medium
+    const controllerVoice = this.controllerVoice;
+    // Pilot uses one of the remaining voices (alan, arctic, danny, l2arctic)
+    const pilotVoice = this.pilotVoices[Math.floor(Math.random() * this.pilotVoices.length)];
 
-    switch (conditionType) {
-      case 0:
-        text = `${callsign}, ${facility}, wind 2 4 0 at 1 4 knots, cleared for takeoff runway ${runway}.`;
-        break;
-      case 1:
-        text = `${callsign}, turn left heading ${heading}, climb and maintain flight level ${flightLevel}, altimeter 2 9 point 9 2.`;
-        break;
-      case 2:
-        text = `${callsign}, cleared ILS approach runway ${runway}, report 4-mile final.`;
-        break;
-      case 3:
-        text = `${callsign}, traffic 1 2 o'clock, 5 miles, Boeing 7 3 7 at ${altitude}. Caution wake turbulence behind departing Heavy.`;
-        break;
-      case 4:
-      default:
-        text = `${callsign}, contact departure on ${freq}, good day.`;
-        break;
+    // Randomly select dialogue initiation direction (Controller-initiated vs Pilot-initiated)
+    const initiatedBy = Math.random() > 0.45 ? 'CONTROLLER' : 'PILOT';
+    const conditionType = Math.floor(Math.random() * 12);
+    let speaker1Text = '';
+    let speaker2Text = '';
+    let speaker1Voice = '';
+    let speaker2Voice = '';
+
+    if (initiatedBy === 'CONTROLLER') {
+      speaker1Voice = controllerVoice;
+      speaker2Voice = pilotVoice;
+      switch (conditionType) {
+        case 0:
+          speaker1Text = `${callsign}, ${facility}, wind 2 4 0 at 1 4 knots gusting 2 2, cleared for takeoff runway ${runway}.`;
+          speaker2Text = `Cleared for takeoff runway ${runway}, ${callsign}.`;
+          break;
+        case 1:
+          speaker1Text = `${callsign}, turn left heading ${heading}, climb and maintain flight level ${flightLevel}.`;
+          speaker2Text = `Left heading ${heading}, climb and maintain flight level ${flightLevel}, ${callsign}.`;
+          break;
+        case 2:
+          speaker1Text = `${callsign}, cleared ILS approach runway ${runway}, report 4-mile final.`;
+          speaker2Text = `Cleared ILS approach runway ${runway}, wilco, ${callsign}.`;
+          break;
+        case 3:
+          speaker1Text = `${callsign}, traffic 1 2 o'clock, 5 miles, opposite direction, ${aircraft} at ${altitude}.`;
+          speaker2Text = `Traffic in sight, ${callsign}.`;
+          break;
+        case 4:
+          speaker1Text = `${callsign}, pushback and engine start approved, face south, advise ready to taxi.`;
+          speaker2Text = `Pushback and start approved, facing south, ${callsign}.`;
+          break;
+        case 5:
+          speaker1Text = `${callsign}, taxi to runway ${runway} via Alpha, Bravo, hold short ${runway}.`;
+          speaker2Text = `Taxi to ${runway} via Alpha, Bravo, hold short ${runway}, ${callsign}.`;
+          break;
+        case 6:
+          speaker1Text = `${callsign}, direct to ${waypoint}, resume own navigation, maintain flight level ${flightLevel}.`;
+          speaker2Text = `Direct ${waypoint}, climbing flight level ${flightLevel}, ${callsign}.`;
+          break;
+        case 7:
+          speaker1Text = `${callsign}, squawk ${squawk}, radar contact 2 0 miles southwest of ${waypoint}.`;
+          speaker2Text = `Squawking ${squawk}, ${callsign}.`;
+          break;
+        case 8:
+          speaker1Text = `${callsign}, Information ${atis} is current, expect visual approach runway ${runway}.`;
+          speaker2Text = `Wilco, Information ${atis}, ${callsign}.`;
+          break;
+        case 9:
+          speaker1Text = `${callsign}, slow to 2 1 0 knots for traffic sequencing.`;
+          speaker2Text = `Slowing to 2 1 0 knots, ${callsign}.`;
+          break;
+        case 10:
+          speaker1Text = `${callsign}, Go around! Windshear alert, climb heading ${heading}, maintain ${altitude}.`;
+          speaker2Text = `Going around, climbing heading ${heading} to ${altitude}, ${callsign}!`;
+          break;
+        case 11:
+        default:
+          speaker1Text = `${callsign}, contact ${facility} on ${freq}, good day.`;
+          speaker2Text = `Contact ${facility} on ${freq}, good day, ${callsign}.`;
+          break;
+      }
+    } else {
+      // Pilot-initiated communications (Pilot -> Controller)
+      speaker1Voice = pilotVoice;
+      speaker2Voice = controllerVoice;
+      switch (conditionType) {
+        case 0:
+          speaker1Text = `${facility}, ${callsign}, gate 1 4, with Information ${atis}, request pushback and engine start.`;
+          speaker2Text = `${callsign}, ${facility}, pushback and engine start approved, face south.`;
+          break;
+        case 1:
+          speaker1Text = `${facility}, ${callsign}, request flight level ${flightLevel}.`;
+          speaker2Text = `${callsign}, ${facility}, climb and maintain flight level ${flightLevel}.`;
+          break;
+        case 2:
+          speaker1Text = `${facility}, ${callsign}, 1 2 miles out, with Information ${atis}, field in sight.`;
+          speaker2Text = `${callsign}, cleared visual approach runway ${runway}, contact tower on 1 1 8 point 3.`;
+          break;
+        case 3:
+          speaker1Text = `${facility}, ${callsign}, moderate turbulence reported at flight level ${flightLevel}.`;
+          speaker2Text = `${callsign}, roger, maintain flight level ${flightLevel}, report clear of turbulence.`;
+          break;
+        case 4:
+          speaker1Text = `${facility}, ${callsign}, request direct to ${waypoint}.`;
+          speaker2Text = `${callsign}, direct ${waypoint}, resume own navigation.`;
+          break;
+        case 5:
+          speaker1Text = `${facility}, ${callsign}, 4-mile final runway ${runway}.`;
+          speaker2Text = `${callsign}, ${facility}, wind 2 7 0 at 1 2 knots, cleared to land runway ${runway}.`;
+          break;
+        case 6:
+          speaker1Text = `${facility}, ${callsign}, ready for departure runway ${runway}.`;
+          speaker2Text = `${callsign}, ${facility}, hold short runway ${runway}, traffic on 2-mile final.`;
+          break;
+        case 7:
+          speaker1Text = `${facility}, ${callsign}, passing 5 thousand for flight level 2 4 0.`;
+          speaker2Text = `${callsign}, ${facility}, radar contact, climb and maintain flight level 2 4 0.`;
+          break;
+        case 8:
+          speaker1Text = `${facility}, ${callsign}, request deviation 1 0 miles right of track for weather.`;
+          speaker2Text = `${callsign}, deviation right of track approved, advise when clear of weather.`;
+          break;
+        case 9:
+          speaker1Text = `${facility}, ${callsign}, established ILS runway ${runway}.`;
+          speaker2Text = `${callsign}, ${facility}, wind 2 4 0 at 1 0 knots, cleared to land runway ${runway}.`;
+          break;
+        case 10:
+          speaker1Text = `${facility}, ${callsign}, requesting higher altitude if available.`;
+          speaker2Text = `${callsign}, climb and maintain flight level 3 9 0.`;
+          break;
+        case 11:
+        default:
+          speaker1Text = `${facility}, ${callsign}, checking in at ${altitude}.`;
+          speaker2Text = `${callsign}, ${facility}, roger, altimeter 2 9 point 9 2.`;
+          break;
+      }
     }
 
-    return { type: 'NORMAL', text };
+    return {
+      type: 'NORMAL',
+      isDialogue: true,
+      firstSpeaker: { text: speaker1Text, voice: speaker1Voice },
+      secondSpeaker: { text: speaker2Text, voice: speaker2Voice }
+    };
   }
 
   setTTSProvider(provider) {
@@ -393,22 +633,22 @@ class SoundEngine {
     }
   }
 
-  async playPiperSpeech(text, transmissionType) {
-    const selectedVoice = this.piperVoices[Math.floor(Math.random() * this.piperVoices.length)];
-    const url = `/api/tts/generate?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(selectedVoice)}`;
+  async fetchPiperAudioBuffer(text, voiceName) {
+    const url = `/api/tts/generate?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voiceName)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const arrayBuffer = await res.arrayBuffer();
+    if (!this.audioCtx) return null;
+    return await this.audioCtx.decodeAudioData(arrayBuffer);
+  }
 
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const arrayBuffer = await res.arrayBuffer();
+  playAudioBufferWithRadioFX(audioBuffer, transmissionType = 'NORMAL') {
+    return new Promise((resolve) => {
+      if (!this.audioCtx || !this.chatterActive || !audioBuffer) return resolve();
 
-      if (!this.audioCtx || !this.chatterActive) return;
-
-      const audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer);
       const source = this.audioCtx.createBufferSource();
       source.buffer = audioBuffer;
 
-      // Filter speech through bandpass radio effect
       const bandpass = this.audioCtx.createBiquadFilter();
       bandpass.type = 'bandpass';
 
@@ -430,45 +670,102 @@ class SoundEngine {
       this.currentVoiceNode = source;
 
       source.onended = () => {
-        this.stopActiveTransmissionStatic();
+        resolve();
       };
 
       source.start();
+    });
+  }
+
+  async playSingleUtterance(text, voiceName, transmissionType = 'NORMAL') {
+    this.playPTTClick(true);
+    try {
+      if (this.ttsProvider === 'PIPER') {
+        const audioBuffer = await this.fetchPiperAudioBuffer(text, voiceName);
+        await this.playAudioBufferWithRadioFX(audioBuffer, transmissionType);
+      } else {
+        await this.playWebSpeech(text, transmissionType);
+      }
     } catch (err) {
-      // Fall back cleanly to Web Speech API if Piper service is unavailable
-      this.playWebSpeech(text, transmissionType);
+      await this.playWebSpeech(text, transmissionType);
+    } finally {
+      this.playPTTClick(false);
+      this.stopActiveTransmissionStatic();
     }
+  }
+
+  async playDialogueSequence(transmission) {
+    // 1. First Transmission (Controller or Pilot)
+    this.playPTTClick(true);
+    try {
+      if (this.ttsProvider === 'PIPER') {
+        const firstBuf = await this.fetchPiperAudioBuffer(transmission.firstSpeaker.text, transmission.firstSpeaker.voice);
+        await this.playAudioBufferWithRadioFX(firstBuf, 'NORMAL');
+      } else {
+        await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL');
+      }
+    } catch (e) {
+      await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL');
+    }
+    this.playPTTClick(false);
+
+    if (!this.chatterActive || this.muted) return;
+
+    // Realistic radio response gap between speakers (1.0s to 5.0s)
+    const pauseMs = 1000 + Math.floor(Math.random() * 4000);
+    await new Promise(r => setTimeout(r, pauseMs));
+
+    if (!this.chatterActive || this.muted) return;
+
+    // 2. Second Transmission (Response)
+    this.playPTTClick(true);
+    try {
+      if (this.ttsProvider === 'PIPER') {
+        const secondBuf = await this.fetchPiperAudioBuffer(transmission.secondSpeaker.text, transmission.secondSpeaker.voice);
+        await this.playAudioBufferWithRadioFX(secondBuf, 'NORMAL');
+      } else {
+        await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL');
+      }
+    } catch (e) {
+      await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL');
+    }
+    this.playPTTClick(false);
+    this.stopActiveTransmissionStatic();
   }
 
   playWebSpeech(text, transmissionType) {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+    return new Promise((resolve) => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = transmissionType === 'EMERGENCY' ? 1.35 : (1.2 + Math.random() * 0.2);
-      utterance.pitch = transmissionType === 'ALIEN' ? 0.55 : (0.75 + Math.random() * 0.3);
-      utterance.volume = this.atcVolume;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = transmissionType === 'EMERGENCY' ? 1.35 : (1.2 + Math.random() * 0.2);
+        utterance.pitch = transmissionType === 'ALIEN' ? 0.55 : (0.75 + Math.random() * 0.3);
+        utterance.volume = this.atcVolume;
 
-      if (this.voices.length > 0) {
-        const englishVoices = this.voices.filter(v => v.lang.includes('en'));
-        if (englishVoices.length > 0) {
-          utterance.voice = englishVoices[Math.floor(Math.random() * englishVoices.length)];
+        if (this.voices.length > 0) {
+          const englishVoices = this.voices.filter(v => v.lang.includes('en'));
+          if (englishVoices.length > 0) {
+            utterance.voice = englishVoices[Math.floor(Math.random() * englishVoices.length)];
+          }
         }
+
+        utterance.onend = () => {
+          resolve();
+        };
+
+        utterance.onerror = () => {
+          resolve();
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } else {
+        resolve();
       }
-
-      utterance.onend = () => {
-        this.stopActiveTransmissionStatic();
-      };
-
-      utterance.onerror = () => {
-        this.stopActiveTransmissionStatic();
-      };
-
-      window.speechSynthesis.speak(utterance);
-    }
+    });
   }
 
-  generateAndPlayDynamicTransmission() {
+  async generateAndPlayDynamicTransmission() {
     if (this.muted || !this.chatterActive) return;
     this.init();
 
@@ -481,7 +778,7 @@ class SoundEngine {
     if (this.audioCtx) {
       this.stopActiveTransmissionStatic();
       const now = this.audioCtx.currentTime;
-      const bufferSize = Math.floor(this.audioCtx.sampleRate * 4.5);
+      const bufferSize = Math.floor(this.audioCtx.sampleRate * 7.0);
       const staticBuffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
       const sData = staticBuffer.getChannelData(0);
 
@@ -517,13 +814,14 @@ class SoundEngine {
       this.currentStaticSource.start(now);
     }
 
-    if (this.ttsProvider === 'PIPER') {
-      this.playPiperSpeech(transmission.text, transmission.type);
+    if (transmission.isDialogue) {
+      await this.playDialogueSequence(transmission);
     } else {
-      this.playWebSpeech(transmission.text, transmission.type);
+      await this.playSingleUtterance(transmission.text, transmission.voice, transmission.type);
     }
   }
 }
 
 export const soundEngine = new SoundEngine();
+
 
