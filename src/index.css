@@ -967,3 +967,220 @@ body {
   text-align: center;
   letter-spacing: 0.5px;
 }
+
+/* ==========================================
+   👾 8-BIT RETRO PIXEL KDU THEME STYLES
+   ========================================== */
+
+[data-theme="PIXEL"] {
+  font-family: 'Press Start 2P', 'Silkscreen', 'VT323', monospace;
+  background: #080c0e;
+  image-rendering: pixelated;
+}
+
+/* Pixel Chassis */
+[data-theme="PIXEL"] .cdu-chassis,
+.cdu-chassis.theme-pixel {
+  background: #11161b !important;
+  border: 4px solid #00ff66 !important;
+  border-radius: 0px !important;
+  box-shadow: 
+    0 0 0 4px #000000,
+    0 0 0 8px #1a232a,
+    8px 8px 0px #000000,
+    0 0 25px rgba(0, 255, 102, 0.25) !important;
+}
+
+/* Pixel Corner Screws */
+[data-theme="PIXEL"] .cdu-screw {
+  border-radius: 0px !important;
+  background: #00ff66 !important;
+  box-shadow: 0 0 4px #00ff66 !important;
+  border: 2px solid #000000 !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+[data-theme="PIXEL"] .cdu-screw::after {
+  display: none;
+}
+
+/* Pixel Status Indicator Lamps */
+[data-theme="PIXEL"] .status-indicators {
+  background: #000000 !important;
+  border: 2px solid #2a3544 !important;
+  border-radius: 0px !important;
+  padding: 4px 8px !important;
+}
+[data-theme="PIXEL"] .indicator-lamp {
+  border-radius: 0px !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 8px !important;
+  padding: 3px 6px !important;
+  border: 1px solid #1a232a !important;
+  text-shadow: none !important;
+}
+[data-theme="PIXEL"] .indicator-lamp.active {
+  background: #00ff66 !important;
+  color: #000000 !important;
+  box-shadow: 0 0 6px #00ff66 !important;
+}
+[data-theme="PIXEL"] .indicator-lamp.exec-active {
+  background: #ffb000 !important;
+  color: #000000 !important;
+  box-shadow: 0 0 8px #ffb000 !important;
+}
+
+/* Pixel CRT Display Housing */
+[data-theme="PIXEL"] .cdu-screen-housing {
+  background: #0a0d10 !important;
+  border: 2px solid #1f2a36 !important;
+  border-radius: 0px !important;
+}
+[data-theme="PIXEL"] .crt-display-frame {
+  border: 4px solid #00ff66 !important;
+  border-radius: 0px !important;
+  background: #020a04 !important;
+  box-shadow: inset 0 0 0 2px #000000, 0 0 15px rgba(0, 255, 102, 0.3) !important;
+}
+[data-theme="PIXEL"] .crt-header {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 9px !important;
+  border-bottom: 2px solid #00ff66 !important;
+  padding-bottom: 4px !important;
+  color: #00ff66 !important;
+}
+[data-theme="PIXEL"] .crt-title {
+  text-shadow: 2px 2px 0px #000000 !important;
+}
+[data-theme="PIXEL"] .crt-scratchpad {
+  font-family: 'VT323', 'Press Start 2P', monospace !important;
+  border-top: 2px solid #00ff66 !important;
+  background: #001206 !important;
+  font-size: 14px !important;
+}
+[data-theme="PIXEL"] .scratchpad-cursor {
+  border-radius: 0px !important;
+  background: #00ff66 !important;
+}
+
+/* Pixel Line Select Keys (LSKs) */
+[data-theme="PIXEL"] .lsk-button {
+  border-radius: 0px !important;
+  border: 2px solid #2a3544 !important;
+  background: #182028 !important;
+  color: #00ff66 !important;
+  box-shadow: 3px 3px 0px #000000 !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 10px !important;
+}
+[data-theme="PIXEL"] .lsk-button:hover {
+  background: #222d3a !important;
+  border-color: #00ff66 !important;
+  color: #ffffff !important;
+}
+[data-theme="PIXEL"] .lsk-button:active,
+[data-theme="PIXEL"] .lsk-button.pressed {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0px #000000 !important;
+}
+[data-theme="PIXEL"] .lsk-button.stop-btn {
+  color: #ff4444 !important;
+  border-color: #ff4444 !important;
+  box-shadow: 3px 3px 0px #000000, 0 0 6px rgba(255, 68, 68, 0.4) !important;
+}
+
+/* Pixel Physical Keypad Buttons */
+[data-theme="PIXEL"] .cdu-key {
+  border-radius: 0px !important;
+  border: 2px solid #2e3b4d !important;
+  background: #1a222c !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 0 #000000 !important;
+  font-family: 'Press Start 2P', monospace !important;
+}
+[data-theme="PIXEL"] .cdu-key span {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 9px !important;
+}
+[data-theme="PIXEL"] .cdu-key .sub-label {
+  font-family: 'VT323', monospace !important;
+  font-size: 11px !important;
+  color: #00ff66 !important;
+}
+[data-theme="PIXEL"] .cdu-key:hover {
+  background: #24303f !important;
+  border-color: #00ff66 !important;
+}
+[data-theme="PIXEL"] .cdu-key:active,
+[data-theme="PIXEL"] .cdu-key.key-pressed {
+  transform: translateY(4px) !important;
+  box-shadow: 0 0 0 #000000 !important;
+  background: #00ff66 !important;
+  color: #000000 !important;
+}
+[data-theme="PIXEL"] .cdu-key.programmed {
+  border-color: #00e5ff !important;
+  color: #00e5ff !important;
+}
+
+/* Pixel EXEC Key */
+[data-theme="PIXEL"] .exec-key {
+  border-radius: 0px !important;
+  border: 2px solid #ffb000 !important;
+  background: #2a220a !important;
+  color: #ffb000 !important;
+  box-shadow: 0 4px 0 #000000 !important;
+  font-family: 'Press Start 2P', monospace !important;
+}
+[data-theme="PIXEL"] .exec-key span {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 9px !important;
+}
+[data-theme="PIXEL"] .exec-key.staged {
+  background: #ffb000 !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 0 #000000, 0 0 12px #ffb000 !important;
+}
+[data-theme="PIXEL"] .exec-key:active,
+[data-theme="PIXEL"] .exec-key.key-pressed {
+  transform: translateY(4px) !important;
+  box-shadow: 0 0 0 #000000 !important;
+}
+[data-theme="PIXEL"] .exec-light-bar {
+  border-radius: 0px !important;
+}
+
+/* Pixel TopBar & Popovers */
+[data-theme="PIXEL"] .top-bar {
+  border-bottom: 3px solid #00ff66 !important;
+  background: #0a0d10 !important;
+}
+[data-theme="PIXEL"] .brand-title {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 11px !important;
+}
+[data-theme="PIXEL"] .icon-btn {
+  border-radius: 0px !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 8px !important;
+  border: 2px solid #2a3544 !important;
+}
+[data-theme="PIXEL"] .icon-btn.active {
+  background: #00ff66 !important;
+  color: #000000 !important;
+  border-color: #00ff66 !important;
+}
+[data-theme="PIXEL"] .topbar-popover {
+  border-radius: 0px !important;
+  border: 3px solid #00ff66 !important;
+  box-shadow: 6px 6px 0px #000000 !important;
+}
+[data-theme="PIXEL"] .popover-header {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 8px !important;
+}
+[data-theme="PIXEL"] .modal-card {
+  border-radius: 0px !important;
+  border: 4px solid #00ff66 !important;
+  box-shadow: 8px 8px 0px #000000 !important;
+}

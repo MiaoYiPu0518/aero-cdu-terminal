@@ -15,10 +15,11 @@ export function CDUFrame({
   activePage,
   totalPages,
   fontSize,
-  lastExecutedCmd
+  lastExecutedCmd,
+  uiTheme = 'REALISTIC'
 }) {
   return (
-    <div className="cdu-chassis">
+    <div className={`cdu-chassis ${uiTheme === 'PIXEL' ? 'theme-pixel' : 'theme-realistic'}`}>
       {/* Screw Fasteners on Corner Frame */}
       <div className="cdu-screw screw-tl" />
       <div className="cdu-screw screw-tr" />

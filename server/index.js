@@ -69,7 +69,7 @@ app.get('/api/config', (req, res) => {
       logToFile(`[SERVER] Error reading config file: ${e.message}`);
     }
   }
-  res.json({ bindings: {}, activeShell: 'powershell.exe' });
+  res.json({ bindings: {}, activeShell: 'powershell.exe', uiTheme: 'REALISTIC' });
 });
 
 app.post('/api/config', (req, res) => {

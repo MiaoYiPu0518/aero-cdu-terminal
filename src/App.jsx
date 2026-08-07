@@ -31,6 +31,11 @@ export function App() {
   // Entire CDU UI Scale
   const [uiScale, setUiScale] = useState(1.0);
 
+  // UI Theme State ('REALISTIC' | 'PIXEL')
+  const [uiTheme, setUiTheme] = useState(() => {
+    return localStorage.getItem('aero_cdu_theme') || 'REALISTIC';
+  });
+
   // React state for ptyClient
   const [ptyClient, setPtyClient] = useState(null);
 
@@ -46,8 +51,14 @@ export function App() {
     fetch('/api/config')
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.bindings && Object.keys(data.bindings).length > 0) {
-          setBindings(data.bindings);
+        if (data) {
+          if (data.bindings && Object.keys(data.bindings).length > 0) {
+            setBindings(data.bindings);
+          }
+          if (data.uiTheme) {
+            setUiTheme(data.uiTheme);
+            localStorage.setItem('aero_cdu_theme', data.uiTheme);
+          }
         }
       })
       .catch(() => {});
@@ -57,13 +68,20 @@ export function App() {
     };
   }, []);
 
-  const saveBindingsToStorage = (newBindings) => {
+  const saveConfigToStorage = (newBindings = bindings, newTheme = uiTheme, newShell = activeShell) => {
     setBindings(newBindings);
+    setUiTheme(newTheme);
+    localStorage.setItem('aero_cdu_theme', newTheme);
     fetch('/api/config', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bindings: newBindings, activeShell }),
+      body: JSON.stringify({ bindings: newBindings, activeShell: newShell, uiTheme: newTheme }),
     }).catch(() => {});
+  };
+
+  const handleThemeChange = (newTheme) => {
+    setUiTheme(newTheme);
+    saveConfigToStorage(bindings, newTheme, activeShell);
   };
 
   const handleShellChange = (newShell) => {
@@ -279,7 +297,7 @@ export function App() {
 
   const handleSaveKeyBinding = (keyId, bindingData) => {
     const updated = { ...bindings, [keyId]: bindingData };
-    saveBindingsToStorage(updated);
+    saveConfigToStorage(updated);
     setActiveModal(null);
     setEditingKeyId(null);
   };
@@ -287,26 +305,28 @@ export function App() {
   const handleUnbindKey = (keyId) => {
     const updated = { ...bindings };
     delete updated[keyId];
-    saveBindingsToStorage(updated);
+    saveConfigToStorage(updated);
     setActiveModal(null);
     setEditingKeyId(null);
   };
 
   const handleLoadProfile = (profileBindings) => {
-    saveBindingsToStorage(profileBindings);
+    saveConfigToStorage(profileBindings);
   };
 
   const handleClearAllBindings = () => {
-    saveBindingsToStorage({});
+    saveConfigToStorage({});
   };
 
   return (
-    <div className="app-container">
+    <div className="app-container" data-theme={uiTheme}>
       {/* Top Header Bar with Resizable Layout & Audio Controls */}
       <TopBar
         ptyConnected={ptyConnected}
         activeShell={activeShell}
         onShellChange={handleShellChange}
+        uiTheme={uiTheme}
+        onThemeChange={handleThemeChange}
         programMode={programMode}
         onToggleProgramMode={() => setProgramMode(!programMode)}
         soundMuted={soundMuted}
@@ -339,6 +359,7 @@ export function App() {
           totalPages={totalPages}
           fontSize={fontSize}
           lastExecutedCmd={lastExecutedCmd}
+          uiTheme={uiTheme}
         />
       </div>
 

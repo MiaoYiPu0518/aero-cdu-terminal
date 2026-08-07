@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Sliders, ChevronDown } from 'lucide-react';
+import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Sliders, ChevronDown, Palette } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export function TopBar({
   ptyConnected,
   activeShell,
   onShellChange,
+  uiTheme = 'REALISTIC',
+  onThemeChange,
   programMode,
   onToggleProgramMode,
   soundMuted,
@@ -69,6 +71,20 @@ export function TopBar({
       </div>
 
       <div className="controls-section">
+        {/* Theme Selector Dropdown */}
+        <div className="topbar-dropdown-wrap">
+          <select
+            className={`icon-btn ${uiTheme === 'PIXEL' ? 'active' : ''}`}
+            value={uiTheme}
+            onChange={(e) => onThemeChange && onThemeChange(e.target.value)}
+            title="Select KDU UI Theme (Realistic Cockpit / Pixel 8-Bit)"
+            style={{ cursor: 'pointer', outline: 'none' }}
+          >
+            <option value="REALISTIC">🎨 REALISTIC</option>
+            <option value="PIXEL">👾 PIXEL 8-BIT</option>
+          </select>
+        </div>
+
         {/* Key Programmer Toggle */}
         <button
           className={`icon-btn ${programMode ? 'active' : ''}`}
