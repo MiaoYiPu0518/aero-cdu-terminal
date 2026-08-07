@@ -59,6 +59,17 @@ class SoundEngine {
         window.speechSynthesis.onvoiceschanged = loadVoices;
       }
     }
+
+    // TTS Engine Config
+    this.ttsProvider = 'PIPER'; // 'PIPER' or 'WEBSPEECH'
+    this.piperVoices = [
+      'en_GB-alan-medium',
+      'en_US-arctic-medium',
+      'en_US-danny-low',
+      'en_US-l2arctic-medium',
+      'en_GB-vctk-medium'
+    ];
+    this.currentVoiceNode = null;
   }
 
   init() {
@@ -376,6 +387,87 @@ class SoundEngine {
     return { type: 'NORMAL', text };
   }
 
+  setTTSProvider(provider) {
+    if (provider === 'PIPER' || provider === 'WEBSPEECH') {
+      this.ttsProvider = provider;
+    }
+  }
+
+  async playPiperSpeech(text, transmissionType) {
+    const selectedVoice = this.piperVoices[Math.floor(Math.random() * this.piperVoices.length)];
+    const url = `/api/tts/generate?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(selectedVoice)}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const arrayBuffer = await res.arrayBuffer();
+
+      if (!this.audioCtx || !this.chatterActive) return;
+
+      const audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer);
+      const source = this.audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+
+      // Filter speech through bandpass radio effect
+      const bandpass = this.audioCtx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+
+      if (transmissionType === 'ALIEN') {
+        bandpass.frequency.setValueAtTime(2400, this.audioCtx.currentTime);
+        bandpass.Q.setValueAtTime(5.0, this.audioCtx.currentTime);
+      } else {
+        bandpass.frequency.setValueAtTime(1600, this.audioCtx.currentTime);
+        bandpass.Q.setValueAtTime(2.5, this.audioCtx.currentTime);
+      }
+
+      const voiceGain = this.audioCtx.createGain();
+      voiceGain.gain.setValueAtTime(this.atcVolume * 1.2, this.audioCtx.currentTime);
+
+      source.connect(bandpass);
+      bandpass.connect(voiceGain);
+      voiceGain.connect(this.audioCtx.destination);
+
+      this.currentVoiceNode = source;
+
+      source.onended = () => {
+        this.stopActiveTransmissionStatic();
+      };
+
+      source.start();
+    } catch (err) {
+      // Fall back cleanly to Web Speech API if Piper service is unavailable
+      this.playWebSpeech(text, transmissionType);
+    }
+  }
+
+  playWebSpeech(text, transmissionType) {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = transmissionType === 'EMERGENCY' ? 1.35 : (1.2 + Math.random() * 0.2);
+      utterance.pitch = transmissionType === 'ALIEN' ? 0.55 : (0.75 + Math.random() * 0.3);
+      utterance.volume = this.atcVolume;
+
+      if (this.voices.length > 0) {
+        const englishVoices = this.voices.filter(v => v.lang.includes('en'));
+        if (englishVoices.length > 0) {
+          utterance.voice = englishVoices[Math.floor(Math.random() * englishVoices.length)];
+        }
+      }
+
+      utterance.onend = () => {
+        this.stopActiveTransmissionStatic();
+      };
+
+      utterance.onerror = () => {
+        this.stopActiveTransmissionStatic();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
   generateAndPlayDynamicTransmission() {
     if (this.muted || !this.chatterActive) return;
     this.init();
@@ -425,33 +517,13 @@ class SoundEngine {
       this.currentStaticSource.start(now);
     }
 
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-
-      const utterance = new SpeechSynthesisUtterance(transmission.text);
-
-      utterance.rate = transmission.type === 'EMERGENCY' ? 1.35 : (1.2 + Math.random() * 0.2);
-      utterance.pitch = transmission.type === 'ALIEN' ? 0.55 : (0.75 + Math.random() * 0.3);
-      utterance.volume = this.atcVolume;
-
-      if (this.voices.length > 0) {
-        const englishVoices = this.voices.filter(v => v.lang.includes('en'));
-        if (englishVoices.length > 0) {
-          utterance.voice = englishVoices[Math.floor(Math.random() * englishVoices.length)];
-        }
-      }
-
-      utterance.onend = () => {
-        this.stopActiveTransmissionStatic();
-      };
-
-      utterance.onerror = () => {
-        this.stopActiveTransmissionStatic();
-      };
-
-      window.speechSynthesis.speak(utterance);
+    if (this.ttsProvider === 'PIPER') {
+      this.playPiperSpeech(transmission.text, transmission.type);
+    } else {
+      this.playWebSpeech(transmission.text, transmission.type);
     }
   }
 }
 
 export const soundEngine = new SoundEngine();
+

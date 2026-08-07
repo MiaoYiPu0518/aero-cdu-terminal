@@ -212,6 +212,23 @@ export function TopBar({
                   className="popover-range"
                 />
               </div>
+
+              <div className="popover-divider" />
+
+              <div className="popover-row">
+                <span className="popover-label">TTS ENGINE</span>
+                <select
+                  className="icon-btn"
+                  value={soundEngine.ttsProvider}
+                  onChange={(e) => {
+                    soundEngine.setTTSProvider(e.target.value);
+                  }}
+                  style={{ padding: '2px 6px', fontSize: '10px' }}
+                >
+                  <option value="PIPER">🎙️ PIPER NEURAL</option>
+                  <option value="WEBSPEECH">🗣️ WEB SPEECH</option>
+                </select>
+              </div>
             </div>
           )}
         </div>

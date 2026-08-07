@@ -60,6 +60,73 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', ptyAvailable: !!pty, ptyType: 'winpty' });
 });
 
+// Piper TTS Managed Backend Process
+import { spawn } from 'child_process';
+let piperProcess = null;
+
+const startPiperServer = () => {
+  const scriptPath = path.join(__dirname, 'piper_tts_server.py');
+  if (fs.existsSync(scriptPath)) {
+    logToFile(`[PIPER] Spawning Piper TTS Python server script: ${scriptPath}`);
+    try {
+      piperProcess = spawn('python', [scriptPath], { cwd: __dirname });
+      
+      piperProcess.stdout.on('data', (data) => {
+        logToFile(`[PIPER STDOUT] ${data.toString().trim()}`);
+      });
+      
+      piperProcess.stderr.on('data', (data) => {
+        logToFile(`[PIPER STDERR] ${data.toString().trim()}`);
+      });
+
+      piperProcess.on('exit', (code) => {
+        logToFile(`[PIPER] Piper Python process exited with code ${code}`);
+      });
+    } catch (e) {
+      logToFile(`[PIPER] Error spawning Piper server: ${e.message}`);
+    }
+  }
+};
+
+startPiperServer();
+
+// Piper TTS API Proxy Endpoints
+app.get('/api/tts/voices', async (req, res) => {
+  const voicesDir = path.join(__dirname, 'voices');
+  let available = [];
+  if (fs.existsSync(voicesDir)) {
+    try {
+      available = fs.readdirSync(voicesDir)
+        .filter(f => f.endsWith('.onnx') && !f.endsWith('.onnx.json'))
+        .map(f => f.replace('.onnx', ''));
+    } catch (e) {}
+  }
+  res.json({ voices: available });
+});
+
+app.get('/api/tts/generate', async (req, res) => {
+  const { text, voice } = req.query;
+  if (!text) return res.status(400).json({ error: 'Text query parameter is required' });
+  
+  const piperUrl = `http://127.0.0.1:5005/synthesize?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voice || '')}`;
+  try {
+    const fetchRes = await fetch(piperUrl);
+    if (!fetchRes.ok) {
+      const errText = await fetchRes.text();
+      return res.status(fetchRes.status).json({ error: errText || 'Piper synthesis error' });
+    }
+    const audioBuffer = Buffer.from(await fetchRes.arrayBuffer());
+    res.setHeader('Content-Type', 'audio/wav');
+    res.setHeader('Content-Length', audioBuffer.length);
+    res.setHeader('Cache-Control', 'no-cache');
+    return res.send(audioBuffer);
+  } catch (e) {
+    logToFile(`[PIPER API ERROR] Failed proxying request to Piper server: ${e.message}`);
+    return res.status(502).json({ error: 'Piper TTS server unavailable' });
+  }
+});
+
+
 app.get('/api/config', (req, res) => {
   if (fs.existsSync(CONFIG_FILE)) {
     try {
