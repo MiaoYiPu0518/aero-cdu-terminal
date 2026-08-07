@@ -14,6 +14,8 @@ export function App() {
   const [programMode, setProgramMode] = useState(false);
   const [activeShell, setActiveShell] = useState('powershell.exe');
   const [soundMuted, setSoundMuted] = useState(false);
+  const [cabinNoiseActive, setCabinNoiseActive] = useState(false);
+  const [atcChatterActive, setAtcChatterActive] = useState(false);
   const [ptyConnected, setPtyConnected] = useState(false);
 
   const [activeModal, setActiveModal] = useState(null);
@@ -68,15 +70,25 @@ export function App() {
     setActiveShell(newShell);
     if (ptyClient) {
       ptyClient.disconnect();
-      ptyClient.connect(newShell, 80, 24);
     }
+    const newClient = new PTYClient();
+    newClient.onStatus((status) => {
+      setPtyConnected(status === 'CONNECTED');
+    });
+    newClient.connect(newShell, 80, 24);
+    setPtyClient(newClient);
   };
 
   const handleReconnect = () => {
     if (ptyClient) {
       ptyClient.disconnect();
-      ptyClient.connect(activeShell, 80, 24);
     }
+    const newClient = new PTYClient();
+    newClient.onStatus((status) => {
+      setPtyConnected(status === 'CONNECTED');
+    });
+    newClient.connect(activeShell, 80, 24);
+    setPtyClient(newClient);
   };
 
   // Zoom handlers for CRT font size (LSK 1L and LSK 2L)
@@ -99,6 +111,16 @@ export function App() {
 
   const handleResetUI = () => {
     setUiScale(1.0);
+  };
+
+  const handleToggleCabinNoise = () => {
+    const newState = soundEngine.toggleCockpitNoise();
+    setCabinNoiseActive(newState);
+  };
+
+  const handleToggleATCChatter = () => {
+    const newState = soundEngine.toggleATCChatter();
+    setAtcChatterActive(newState);
   };
 
   // Keyboard button press handler
@@ -259,7 +281,7 @@ export function App() {
 
   return (
     <div className="app-container">
-      {/* Top Header Bar with UI Scale Controls */}
+      {/* Top Header Bar with Resizable Layout & Audio Controls */}
       <TopBar
         ptyConnected={ptyConnected}
         activeShell={activeShell}
@@ -268,6 +290,10 @@ export function App() {
         onToggleProgramMode={() => setProgramMode(!programMode)}
         soundMuted={soundMuted}
         onToggleSound={() => setSoundMuted(soundEngine.toggleMute())}
+        cabinNoiseActive={cabinNoiseActive}
+        onToggleCabinNoise={handleToggleCabinNoise}
+        atcChatterActive={atcChatterActive}
+        onToggleATCChatter={handleToggleATCChatter}
         onOpenProfiles={() => setActiveModal('PROFILES')}
         onReconnect={handleReconnect}
         uiScale={uiScale}

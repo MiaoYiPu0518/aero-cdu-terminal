@@ -12,7 +12,7 @@ export class PTYClient {
   connect(shell = 'powershell.exe', cols = 80, rows = 24) {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.hostname === 'localhost' ? 'localhost:3001' : window.location.host;
-    const url = `${protocol}//${host}/pty?shell=${encodeURIComponent(shell)}&cols=${cols}&rows=${rows}`;
+    const url = `${protocol}//${host}/terminal?shell=${encodeURIComponent(shell)}&cols=${cols}&rows=${rows}`;
 
     console.log('[PTY Client] Connecting to', url);
 
@@ -74,6 +74,11 @@ export class PTYClient {
 
   onData(fn) {
     this.onDataHandler = fn;
+    return () => {
+      if (this.onDataHandler === fn) {
+        this.onDataHandler = null;
+      }
+    };
   }
 
   onStatus(fn) {

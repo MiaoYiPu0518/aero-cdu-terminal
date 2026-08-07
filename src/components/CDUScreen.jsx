@@ -19,15 +19,17 @@ export function CDUScreen({
   const xtermInstance = useRef(null);
   const fitAddonInstance = useRef(null);
 
-  // 1. Initialize XTerm Instance
+  // 1. Initialize XTerm Instance & ResizeObserver
   useEffect(() => {
     if (!terminalContainerRef.current) return;
 
     const term = new XTerm({
       fontFamily: "'Share Tech Mono', 'Courier New', monospace",
       fontSize: fontSize,
-      lineHeight: 1.15,
+      lineHeight: 1.0,
+      letterSpacing: 0,
       cursorStyle: 'block',
+      cursorInactiveStyle: 'block',
       cursorBlink: true,
       allowProposedApi: true,
       theme: {
@@ -48,34 +50,51 @@ export function CDUScreen({
         brightGreen: '#55ff55',
         brightCyan: '#55ffff'
       },
-      cols: 64,
-      rows: 15
+      cols: 80,
+      rows: 24
     });
 
     const fitAddon = new FitAddon();
     term.loadAddon(fitAddon);
     term.open(terminalContainerRef.current);
-    fitAddon.fit();
-
-    setTimeout(() => {
-      term.focus();
-    }, 100);
 
     xtermInstance.current = term;
     fitAddonInstance.current = fitAddon;
 
-    const handleResize = () => {
-      if (fitAddonInstance.current) {
+    const safeFit = () => {
+      if (fitAddonInstance.current && xtermInstance.current) {
         try {
           fitAddonInstance.current.fit();
+          const { cols, rows } = xtermInstance.current;
+          if (cols > 0 && rows > 0 && ptyClient) {
+            ptyClient.resize(cols, rows);
+          }
         } catch (e) {}
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    // Initial fit delayed slightly to ensure DOM layout bounds are computed
+    const timer = setTimeout(() => {
+      safeFit();
+      term.focus();
+    }, 150);
+
+    // ResizeObserver for container bounds changes
+    let resizeObserver = null;
+    if (typeof ResizeObserver !== 'undefined' && terminalContainerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        safeFit();
+      });
+      resizeObserver.observe(terminalContainerRef.current);
+    }
+
+    const handleWindowResize = () => safeFit();
+    window.addEventListener('resize', handleWindowResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleWindowResize);
+      if (resizeObserver) resizeObserver.disconnect();
       term.dispose();
     };
   }, []);
@@ -87,24 +106,38 @@ export function CDUScreen({
       if (fitAddonInstance.current) {
         try {
           fitAddonInstance.current.fit();
-          if (ptyClient) {
-            ptyClient.resize(xtermInstance.current.cols, xtermInstance.current.rows);
+          const { cols, rows } = xtermInstance.current;
+          if (cols > 0 && rows > 0 && ptyClient) {
+            ptyClient.resize(cols, rows);
           }
         } catch (e) {}
       }
     }
   }, [fontSize, ptyClient]);
 
-  // 2. Wire PTY output and physical keyboard listener whenever ptyClient changes
+  // 2. Wire PTY WebSocket stream and physical keyboard listener
   useEffect(() => {
     if (!ptyClient || !xtermInstance.current) return;
 
+    // Reset XTerm buffer on new PTY connection
+    try {
+      xtermInstance.current.reset();
+    } catch (e) {}
+
     // Output from PTY backend to XTerm
-    ptyClient.onData((data) => {
+    const removeDataListener = ptyClient.onData((data) => {
       if (xtermInstance.current) {
         xtermInstance.current.write(data);
       }
     });
+
+    // Send initial newline or resize to trigger prompt rendering if shell is idle
+    if (ptyClient && xtermInstance.current) {
+      const { cols, rows } = xtermInstance.current;
+      if (cols > 0 && rows > 0) {
+        ptyClient.resize(cols, rows);
+      }
+    }
 
     // Native XTerm onData input handler
     const onDataDisposable = xtermInstance.current.onData((data) => {
@@ -120,10 +153,6 @@ export function CDUScreen({
         return;
       }
 
-      if (document.activeElement && document.activeElement.classList.contains('xterm-helper-textarea')) {
-        return;
-      }
-
       const ansi = eventToAnsi(e);
       if (ansi && ptyClient) {
         if (e.key === 'Tab' || e.key === 'Backspace') e.preventDefault();
@@ -136,6 +165,7 @@ export function CDUScreen({
     return () => {
       window.removeEventListener('keydown', handleGlobalKeyDown);
       if (onDataDisposable) onDataDisposable.dispose();
+      if (removeDataListener) removeDataListener();
     };
   }, [ptyClient]);
 
@@ -147,7 +177,6 @@ export function CDUScreen({
 
   const getLSKBinding = (keyId) => bindings[keyId] || null;
 
-  // Determine scratchpad display text (shows active button macro command or typed buffer)
   const getScratchpadDisplay = () => {
     if (scratchpad) return scratchpad.toUpperCase();
     if (lastExecutedCmd) return lastExecutedCmd.toUpperCase();
@@ -202,7 +231,7 @@ export function CDUScreen({
           {/* Embedded Interactive XTerm Terminal */}
           <div className="terminal-layer" ref={terminalContainerRef} />
 
-          {/* Scratchpad Line at Screen Bottom (Displays Current Macro Command) */}
+          {/* Scratchpad Line at Screen Bottom */}
           <div className="crt-scratchpad">
             <span className="scratchpad-prompt">&lt;</span>
             <span className="scratchpad-text">
