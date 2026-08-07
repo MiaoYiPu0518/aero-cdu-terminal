@@ -151,6 +151,16 @@ export function App() {
       return;
     }
 
+    // Handle Force Stop on LSK 3L (if unbound)
+    if (keyId === '3L' && !bindings['3L']) {
+      if (ptyClient) {
+        ptyClient.sendInput('\x03');
+      }
+      soundEngine.playKeyClick(true);
+      setLastExecutedCmd('FORCE STOP (SIGINT)');
+      return;
+    }
+
     const bound = bindings[keyId];
 
     // 1. If button has a macro command bound

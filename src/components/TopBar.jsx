@@ -24,6 +24,7 @@ export function TopBar({
   const [activeMenu, setActiveMenu] = useState(null); // 'AUDIO' | 'VIEW' | null
   const [cabinVolume, setCabinVolume] = useState(25);
   const [atcVolume, setAtcVolume] = useState(35);
+  const [atcFrequency, setAtcFrequency] = useState(2); // 1: LOW, 2: MED, 3: HIGH, 4: RAPID
 
   const menuRef = useRef(null);
 
@@ -48,6 +49,12 @@ export function TopBar({
     const val = parseInt(e.target.value, 10);
     setAtcVolume(val);
     soundEngine.setATCVolume(val / 100);
+  };
+
+  const handleATCFreqChange = (e) => {
+    const val = parseInt(e.target.value, 10);
+    setAtcFrequency(val);
+    soundEngine.setATCChatterFrequency(val);
   };
 
   const scalePercent = Math.round(uiScale * 100);
@@ -173,6 +180,21 @@ export function TopBar({
                   className="popover-range"
                 />
                 <span className="popover-val">{atcVolume}%</span>
+              </div>
+
+              <div className="popover-row" style={{ marginTop: 4 }}>
+                <span className="popover-label">CHATTER FREQUENCY</span>
+                <span className="popover-val">{['', 'LOW', 'MED', 'HIGH', 'RAPID'][atcFrequency]}</span>
+              </div>
+              <div className="popover-slider-row">
+                <input
+                  type="range"
+                  min="1"
+                  max="4"
+                  value={atcFrequency}
+                  onChange={handleATCFreqChange}
+                  className="popover-range"
+                />
               </div>
             </div>
           )}

@@ -43,6 +43,7 @@ class SoundEngine {
 
     // ATC Radio Engine
     this.chatterActive = false;
+    this.chatterFrequency = 2; // 1: LOW, 2: MED, 3: HIGH, 4: RAPID
     this.chatterTimer = null;
     this.currentStaticSource = null;
     this.currentStaticGain = null;
@@ -264,10 +265,45 @@ class SoundEngine {
     }
   }
 
+  setATCChatterFrequency(level) {
+    this.chatterFrequency = level;
+    if (this.chatterActive && this.chatterTimer) {
+      clearTimeout(this.chatterTimer);
+      this.scheduleNextTransmission();
+    }
+  }
+
   scheduleNextTransmission() {
     if (!this.chatterActive) return;
     this.generateAndPlayDynamicTransmission();
-    const delay = Math.floor(Math.random() * 6000) + 6000;
+
+    let minDelay = 7000;
+    let maxDelay = 14000;
+
+    switch (this.chatterFrequency) {
+      case 1: // LOW (15s - 25s)
+        minDelay = 15000;
+        maxDelay = 25000;
+        break;
+      case 2: // MED (7s - 14s)
+        minDelay = 7000;
+        maxDelay = 14000;
+        break;
+      case 3: // HIGH (3s - 7s)
+        minDelay = 3000;
+        maxDelay = 7000;
+        break;
+      case 4: // RAPID (1s - 3s)
+        minDelay = 1000;
+        maxDelay = 3000;
+        break;
+      default:
+        minDelay = 7000;
+        maxDelay = 14000;
+        break;
+    }
+
+    const delay = Math.floor(Math.random() * (maxDelay - minDelay)) + minDelay;
     this.chatterTimer = setTimeout(() => {
       this.scheduleNextTransmission();
     }, delay);

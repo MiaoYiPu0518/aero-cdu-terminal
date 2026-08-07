@@ -432,6 +432,21 @@ body {
   font-size: 15px;
 }
 
+.lsk-button.stop-btn {
+  color: #ff5555;
+  font-weight: 800;
+  font-size: 12px;
+  border-color: rgba(255, 85, 85, 0.4);
+  box-shadow: 0 0 8px rgba(255, 85, 85, 0.2);
+}
+
+.lsk-button.stop-btn:hover {
+  color: #ff7777;
+  border-color: rgba(255, 85, 85, 0.8);
+  box-shadow: 0 0 12px rgba(255, 85, 85, 0.4);
+  background: rgba(255, 85, 85, 0.12);
+}
+
 /* Perfectly Centered & Symmetrical 16:9 Widescreen CRT Frame (676px) */
 .crt-display-frame {
   width: 676px !important;

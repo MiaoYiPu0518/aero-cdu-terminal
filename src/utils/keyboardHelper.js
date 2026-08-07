@@ -3,6 +3,7 @@
 export function eventToAnsi(e) {
   if (e.ctrlKey) {
     const keyLower = e.key.toLowerCase();
+    if (keyLower === 'v') return null; // Clipboard paste handles Ctrl+V
     if (keyLower === 'c') return '\x03'; // Ctrl+C
     if (keyLower === 'd') return '\x04'; // Ctrl+D
     if (keyLower === 'z') return '\x1a'; // Ctrl+Z

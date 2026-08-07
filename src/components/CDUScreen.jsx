@@ -58,6 +58,37 @@ export function CDUScreen({
     term.loadAddon(fitAddon);
     term.open(terminalContainerRef.current);
 
+    // Custom Key Event Handler for XTerm (Copy/Paste shortcuts)
+    term.attachCustomKeyEventHandler((e) => {
+      if (e.type !== 'keydown') return true;
+
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      const keyLower = e.key ? e.key.toLowerCase() : '';
+
+      // Copy: Ctrl+C (when text is selected), Ctrl+Shift+C, Cmd+C (when text is selected or Shift)
+      if (isCtrlOrCmd && (keyLower === 'c' || e.code === 'KeyC')) {
+        if (term.hasSelection() || e.shiftKey) {
+          const selection = term.getSelection();
+          if (selection) {
+            navigator.clipboard.writeText(selection).catch(() => {});
+          }
+          return false; // Don't send \x03 to terminal
+        }
+      }
+
+      // Paste: Ctrl+V, Ctrl+Shift+V, Cmd+V
+      if (isCtrlOrCmd && (keyLower === 'v' || e.code === 'KeyV')) {
+        navigator.clipboard.readText().then((text) => {
+          if (text && ptyClient) {
+            ptyClient.sendInput(text);
+          }
+        }).catch(() => {});
+        return false; // Prevent default control sequence
+      }
+
+      return true;
+    });
+
     xtermInstance.current = term;
     fitAddonInstance.current = fitAddon;
 
@@ -153,6 +184,30 @@ export function CDUScreen({
         return;
       }
 
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      const keyLower = e.key ? e.key.toLowerCase() : '';
+
+      // Paste when focus is outside xterm
+      if (isCtrlOrCmd && (keyLower === 'v' || e.code === 'KeyV')) {
+        navigator.clipboard.readText().then((text) => {
+          if (text && ptyClient) {
+            ptyClient.sendInput(text);
+          }
+        }).catch(() => {});
+        e.preventDefault();
+        return;
+      }
+
+      // Copy selection when focus is outside xterm
+      if (isCtrlOrCmd && (keyLower === 'c' || e.code === 'KeyC') && xtermInstance.current && xtermInstance.current.hasSelection()) {
+        const selection = xtermInstance.current.getSelection();
+        if (selection) {
+          navigator.clipboard.writeText(selection).catch(() => {});
+        }
+        e.preventDefault();
+        return;
+      }
+
       const ansi = eventToAnsi(e);
       if (ansi && ptyClient) {
         if (e.key === 'Tab' || e.key === 'Backspace') e.preventDefault();
@@ -160,10 +215,26 @@ export function CDUScreen({
       }
     };
 
+    // Global Paste Listener (handles OS/browser/Electron right-click paste & paste events)
+    const handlePaste = (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName : '';
+      if (activeTag === 'INPUT' || (activeTag === 'TEXTAREA' && !document.activeElement.classList.contains('xterm-helper-textarea'))) {
+        return;
+      }
+
+      const text = e.clipboardData ? e.clipboardData.getData('text') : null;
+      if (text && ptyClient) {
+        e.preventDefault();
+        ptyClient.sendInput(text);
+      }
+    };
+
     window.addEventListener('keydown', handleGlobalKeyDown);
+    window.addEventListener('paste', handlePaste);
 
     return () => {
       window.removeEventListener('keydown', handleGlobalKeyDown);
+      window.removeEventListener('paste', handlePaste);
       if (onDataDisposable) onDataDisposable.dispose();
       if (removeDataListener) removeDataListener();
     };
@@ -172,6 +243,24 @@ export function CDUScreen({
   const handleScreenClick = () => {
     if (xtermInstance.current) {
       xtermInstance.current.focus();
+    }
+  };
+
+  const handleScreenContextMenu = (e) => {
+    e.preventDefault();
+    if (!xtermInstance.current) return;
+
+    if (xtermInstance.current.hasSelection()) {
+      const selection = xtermInstance.current.getSelection();
+      if (selection) {
+        navigator.clipboard.writeText(selection).catch(() => {});
+      }
+    } else {
+      navigator.clipboard.readText().then((text) => {
+        if (text && ptyClient) {
+          ptyClient.sendInput(text);
+        }
+      }).catch(() => {});
     }
   };
 
@@ -198,6 +287,9 @@ export function CDUScreen({
           } else if (lskId === '2L') {
             buttonIcon = '-';
             titleText = b ? `LSK 2L: ${b.command}` : 'LSK 2L: ZOOM OUT (-)';
+          } else if (lskId === '3L') {
+            buttonIcon = '■';
+            titleText = b ? `LSK 3L: ${b.command}` : 'LSK 3L: FORCE STOP (CTRL+C)';
           } else if (b) {
             titleText = `LSK ${lskId}: ${b.command}`;
           }
@@ -205,7 +297,7 @@ export function CDUScreen({
           return (
             <button
               key={lskId}
-              className={`lsk-button ${b ? 'pressed' : ''} ${lskId === '1L' || lskId === '2L' ? 'zoom-btn' : ''}`}
+              className={`lsk-button ${b ? 'pressed' : ''} ${lskId === '1L' || lskId === '2L' ? 'zoom-btn' : ''} ${lskId === '3L' ? 'stop-btn' : ''}`}
               onClick={() => onLSKClick(lskId)}
               title={titleText}
             >
@@ -216,7 +308,7 @@ export function CDUScreen({
       </div>
 
       {/* CRT Display Container */}
-      <div className="crt-display-frame" onClick={handleScreenClick}>
+      <div className="crt-display-frame" onClick={handleScreenClick} onContextMenu={handleScreenContextMenu}>
         <div className="crt-scanlines" />
         <div className="crt-glass-reflection" />
         <div className="crt-phosphor-glow" />
