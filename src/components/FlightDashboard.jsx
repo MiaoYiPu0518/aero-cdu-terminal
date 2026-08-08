@@ -32,6 +32,11 @@ export function FlightDashboard({
   } = telemetry;
 
   const isPixel = uiTheme === 'PIXEL';
+  const progressPct = Number.isFinite(legProgressPct)
+    ? Math.min(100, Math.max(0, legProgressPct))
+    : 0;
+  const remainingNm = Number.isFinite(distRemainingNM) ? distRemainingNM : 0;
+  const totalNm = Number.isFinite(totalDistNM) ? totalDistNM : 0;
 
   return (
     <div className={`flight-dashboard-panel ${isPixel ? 'pixel-theme' : ''} ${panicMode ? 'panic-active' : ''}`}>
@@ -109,15 +114,15 @@ export function FlightDashboard({
             )}
           </div>
           <div className="route-timing">
-            <span className="route-dist">{distRemainingNM} NM / {totalDistNM} NM</span>
+            <span className="route-dist">{remainingNm.toFixed(1)} NM / {totalNm.toFixed(1)} NM</span>
             <span className="route-ete">⏳ {eteFormatted} ETE</span>
           </div>
         </div>
         <div className="progress-bar-bg">
-          <div className="progress-bar-fill" style={{ width: `${legProgressPct}%` }}></div>
+          <div className="progress-bar-fill" style={{ width: `${progressPct}%` }}></div>
         </div>
         <div className="route-footer">
-          <span>LEG: {legProgressPct}% COMPLETE</span>
+          <span>LEG: {progressPct.toFixed(2)}% COMPLETE</span>
           <span>PHASE: <strong className="text-green">{preset}</strong></span>
         </div>
       </div>

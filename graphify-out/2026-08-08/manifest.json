@@ -10,13 +10,13 @@
     "semantic_hash": ""
   },
   "server/index.js": {
-    "mtime": 1786210664.9094443,
-    "ast_hash": "796b09eedb0bdb0ea3156e51863d8d20",
+    "mtime": 1786217964.887333,
+    "ast_hash": "11ee95d2d062d111d89d9c28bf12284c",
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1786214662.038324,
-    "ast_hash": "bfb2670bdbcf0ac45ffdfa98fcc99d2e",
+    "mtime": 1786219284.5488925,
+    "ast_hash": "a86652f9ecf8b9572b843de81996892b",
     "semantic_hash": ""
   },
   "src/components/CDUFrame.jsx": {
@@ -45,8 +45,8 @@
     "semantic_hash": "fb1b65a1f17835c787aab4a806093df4"
   },
   "src/components/TopBar.jsx": {
-    "mtime": 1786209826.3593714,
-    "ast_hash": "df805e34b4314e4a7095d563dc50c9ed",
+    "mtime": 1786220001.0838668,
+    "ast_hash": "ea5cc9b42ba7c8630d080749aef09ed3",
     "semantic_hash": ""
   },
   "src/main.jsx": {
@@ -65,8 +65,8 @@
     "semantic_hash": "9dafffef83d2f765ad2ae09352f0c994"
   },
   "src/utils/soundEngine.js": {
-    "mtime": 1786213416.003114,
-    "ast_hash": "553489fc3f2291d93ee724159dba1f4c",
+    "mtime": 1786218966.7683454,
+    "ast_hash": "17f80a7737541a580b824b7c632836db",
     "semantic_hash": ""
   },
   "vite.config.js": {
@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "src/components/FlightDashboard.jsx": {
-    "mtime": 1786214655.45094,
-    "ast_hash": "6eb17f54c017fb4773a85634a7698163",
+    "mtime": 1786221932.1897838,
+    "ast_hash": "a30a3968221bcbfb1386fa02ca1f817b",
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786214649.2966003,
-    "ast_hash": "c17b3a958489b0cd6c7a6ee8320d29ce",
+    "mtime": 1786222618.7410994,
+    "ast_hash": "b3e79aeecb45420e6293979c2d310c93",
     "semantic_hash": ""
   },
   "public/sounds/altitude_chime.wav": {
@@ -187,6 +187,11 @@
   "public/sounds/overspeed_warn.wav": {
     "mtime": 1786211347.7519255,
     "ast_hash": "5c3b0d585040ec6275fa97fa0050849e",
+    "semantic_hash": ""
+  },
+  "docs/flight-simulation.md": {
+    "mtime": 1786222620.176625,
+    "ast_hash": "308e10eac370398ed752376c6d216aa0",
     "semantic_hash": ""
   }
 }

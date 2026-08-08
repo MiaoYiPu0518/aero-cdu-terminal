@@ -1973,10 +1973,32 @@
       "norm_label": "real_world_routes"
     },
     {
+      "label": "ROUTE_MOVEMENT_PHASES",
+      "file_type": "code",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_utils_useflightsimulator_route_movement_phases",
+      "community": 0,
+      "community_name": "App.jsx",
+      "norm_label": "route_movement_phases"
+    },
+    {
+      "label": "getRandomManeuverDelay()",
+      "file_type": "code",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "src_utils_useflightsimulator_getrandommaneuverdelay",
+      "community": 0,
+      "community_name": "App.jsx",
+      "norm_label": "getrandommaneuverdelay()"
+    },
+    {
       "label": "useFlightSimulator()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L24",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "src_utils_useflightsimulator_useflightsimulator",
       "community": 0,
@@ -2037,6 +2059,94 @@
       "community": 11,
       "community_name": "graphify.md",
       "norm_label": "workflow: graphify"
+    },
+    {
+      "label": "flight-simulation.md",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_flight_simulation",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "flight-simulation.md"
+    },
+    {
+      "label": "Flight Simulation Logic",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_flight_simulation_logic",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "flight simulation logic"
+    },
+    {
+      "label": "Runtime and time",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_runtime_and_time",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "runtime and time"
+    },
+    {
+      "label": "Automatic flight state machine",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_automatic_flight_state_machine",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "automatic flight state machine"
+    },
+    {
+      "label": "Random automated events",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_random_automated_events",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "random automated events"
+    },
+    {
+      "label": "Telemetry and display contract",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_telemetry_and_display_contract",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "telemetry and display contract"
+    },
+    {
+      "label": "Overrides and route behavior",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_overrides_and_route_behavior",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "overrides and route behavior"
+    },
+    {
+      "label": "Change checklist for future agents",
+      "file_type": "document",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "docs_flight_simulation_change_checklist_for_future_agents",
+      "community": 17,
+      "community_name": "Flight Simulation Logic",
+      "norm_label": "change checklist for future agents"
     }
   ],
   "links": [
@@ -4984,6 +5094,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_useflightsimulator_getrandommaneuverdelay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
       "source_location": "L4",
       "weight": 1.0,
       "source": "src_utils_useflightsimulator",
@@ -4994,10 +5114,42 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L24",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_useflightsimulator_route_movement_phases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "src_utils_useflightsimulator",
       "target": "src_utils_useflightsimulator_useflightsimulator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L308",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator_useflightsimulator",
+      "target": "src_utils_useflightsimulator_route_movement_phases"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator_useflightsimulator",
+      "target": "src_utils_useflightsimulator_getrandommaneuverdelay",
       "confidence_score": 1.0
     },
     {
@@ -5019,8 +5171,78 @@
       "source": "agents_workflows_graphify",
       "target": "agents_workflows_graphify_workflow_graphify",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_flight_simulation",
+      "target": "docs_flight_simulation_flight_simulation_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "docs_flight_simulation_flight_simulation_logic",
+      "target": "docs_flight_simulation_automatic_flight_state_machine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "docs_flight_simulation_flight_simulation_logic",
+      "target": "docs_flight_simulation_change_checklist_for_future_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "docs_flight_simulation_flight_simulation_logic",
+      "target": "docs_flight_simulation_overrides_and_route_behavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "docs_flight_simulation_flight_simulation_logic",
+      "target": "docs_flight_simulation_random_automated_events",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "docs_flight_simulation_flight_simulation_logic",
+      "target": "docs_flight_simulation_runtime_and_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/flight-simulation.md",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "docs_flight_simulation_flight_simulation_logic",
+      "target": "docs_flight_simulation_telemetry_and_display_contract",
+      "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "6482a73fd2c3780fb02af92dcb1776bf139c1d9a"
+  "built_at_commit": "86dfc627a25f610b18987cb8e5bf20fe0aa224ca"
 }

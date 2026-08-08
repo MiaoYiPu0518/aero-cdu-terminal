@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "src/components/FlightDashboard.jsx": {
-    "mtime": 1786214655.45094,
-    "ast_hash": "6eb17f54c017fb4773a85634a7698163",
+    "mtime": 1786221932.1897838,
+    "ast_hash": "a30a3968221bcbfb1386fa02ca1f817b",
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786217200.1523907,
-    "ast_hash": "b6fc186d25e8d4b8111966b7e83268ca",
+    "mtime": 1786222618.7410994,
+    "ast_hash": "b3e79aeecb45420e6293979c2d310c93",
     "semantic_hash": ""
   },
   "public/sounds/altitude_chime.wav": {
@@ -187,6 +187,11 @@
   "public/sounds/overspeed_warn.wav": {
     "mtime": 1786211347.7519255,
     "ast_hash": "5c3b0d585040ec6275fa97fa0050849e",
+    "semantic_hash": ""
+  },
+  "docs/flight-simulation.md": {
+    "mtime": 1786222855.8424978,
+    "ast_hash": "4142ae29d693886e209ae595f4ab736d",
     "semantic_hash": ""
   }
 }
