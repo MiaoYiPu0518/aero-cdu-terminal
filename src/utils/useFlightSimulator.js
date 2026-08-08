@@ -1,11 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { soundEngine } from './soundEngine';
 
-/**
- * Advanced Telemetry Flight Simulator Engine Hook
- * Includes Auto-Flight Lifecycle State Machine, Random Tactical Maneuvers,
- * Weather Storm Cells, and TCAS Proximity Alerts.
- */
+export const REAL_WORLD_ROUTES = [
+  { origin: 'KJFK', destination: 'EGLL', distNM: 3000, name: 'New York (JFK) ➔ London Heathrow' },
+  { origin: 'KLAX', destination: 'RJTT', distNM: 4760, name: 'Los Angeles ➔ Tokyo Haneda' },
+  { origin: 'EGLL', destination: 'OMDB', distNM: 2970, name: 'London Heathrow ➔ Dubai' },
+  { origin: 'KSFO', destination: 'PHNL', distNM: 2085, name: 'San Francisco ➔ Honolulu' },
+  { origin: 'LFPG', destination: 'KJFK', distNM: 3160, name: 'Paris CDG ➔ New York JFK' },
+  { origin: 'YSSY', destination: 'WSSS', distNM: 3400, name: 'Sydney ➔ Singapore Changi' },
+  { origin: 'KORD', destination: 'EGLL', distNM: 3430, name: 'Chicago O\'Hare ➔ London Heathrow' },
+  { origin: 'EDDF', destination: 'VHHH', distNM: 4960, name: 'Frankfurt ➔ Hong Kong' },
+  { origin: 'RJTT', destination: 'VHHH', distNM: 1560, name: 'Tokyo Haneda ➔ Hong Kong' },
+  { origin: 'ZBAA', destination: 'WSSS', distNM: 2420, name: 'Beijing ➔ Singapore Changi' },
+  { origin: 'KATL', destination: 'KLAX', distNM: 1690, name: 'Atlanta ➔ Los Angeles' },
+  { origin: 'KJFK', destination: 'KLAX', distNM: 2150, name: 'New York JFK ➔ Los Angeles' },
+  { origin: 'EGLL', destination: 'LFPG', distNM: 188,  name: 'London Heathrow ➔ Paris CDG' },
+  { origin: 'OMDB', destination: 'WSSS', distNM: 3150, name: 'Dubai ➔ Singapore Changi' },
+  { origin: 'RKSI', destination: 'VHHH', distNM: 1120, name: 'Seoul Incheon ➔ Hong Kong' }
+];
+
+const initialRoute = REAL_WORLD_ROUTES[0];
+
 export function useFlightSimulator(active = false) {
   const [telemetry, setTelemetry] = useState({
     // Primary Flight Instruments Data
@@ -33,11 +48,13 @@ export function useFlightSimulator(active = false) {
     simSpeed: 4,         // 1x, 4x, 8x speed multiplier
 
     // Route & Progress Tracking
-    origin: 'KJFK',
-    destination: 'EGLL',
-    distRemainingNM: 420,
-    totalDistNM: 420,
+    origin: initialRoute.origin,
+    destination: initialRoute.destination,
+    routeName: initialRoute.name,
+    distRemainingNM: initialRoute.distNM,
+    totalDistNM: initialRoute.distNM,
     legProgressPct: 0,
+    eteFormatted: '--H --M',
     targetAlt: 35000,
     targetSpeed: 440,
 
@@ -346,8 +363,13 @@ export function useFlightSimulator(active = false) {
           return { ...tgt, distance, bearing, alt, hdg };
         });
 
-        // Calculate Route Leg Progress %
+        // Calculate Route Leg Progress % & ETE (Estimated Time Enroute)
         const legPct = Math.min(100, Math.round(((totalDistNM - distRemainingNM) / totalDistNM) * 100));
+        const effectiveSpd = Math.max(140, airspeed);
+        const eteMinutesTotal = Math.round((distRemainingNM / effectiveSpd) * 60);
+        const eteHours = Math.floor(eteMinutesTotal / 60);
+        const eteMins = eteMinutesTotal % 60;
+        const eteFormatted = `${String(eteHours).padStart(2, '0')}H ${String(eteMins).padStart(2, '0')}M`;
 
         // Update selected target reference if active
         let syncSelectedTarget = selectedTarget;
@@ -373,6 +395,7 @@ export function useFlightSimulator(active = false) {
           preset,
           distRemainingNM: Math.round(distRemainingNM),
           legProgressPct: legPct,
+          eteFormatted,
           activeEvent,
           tcasAlert: activeTcas,
           radarTargets: updatedTargets,
@@ -456,12 +479,27 @@ export function useFlightSimulator(active = false) {
     }
   };
 
+  const nextRoute = () => {
+    const nextIndex = Math.floor(Math.random() * REAL_WORLD_ROUTES.length);
+    const r = REAL_WORLD_ROUTES[nextIndex];
+    setTelemetry((prev) => ({
+      ...prev,
+      origin: r.origin,
+      destination: r.destination,
+      routeName: r.name,
+      totalDistNM: r.distNM,
+      distRemainingNM: r.distNM,
+      legProgressPct: 0
+    }));
+  };
+
   return {
     telemetry,
     setPreset,
     toggleAutoFlight,
     toggleRandomManeuvers,
     togglePanicMode,
+    nextRoute,
     setSimSpeed,
     setRadarRange,
     setRadarMode,

@@ -12,6 +12,7 @@ export function FlightDashboard({
   toggleAutoFlight,
   toggleRandomManeuvers,
   togglePanicMode,
+  nextRoute,
   setSimSpeed,
   setRadarRange,
   setRadarMode,
@@ -25,9 +26,9 @@ export function FlightDashboard({
 }) {
   const {
     pitch, roll, heading, altitude, airspeed, vsi, n1, egt, fuelFlow, fuelTotal, flaps, gearDown,
-    preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, origin, destination, distRemainingNM,
-    totalDistNM, legProgressPct, activeEvent, tcasAlert, radarRangeNM, radarMode, selectedTarget,
-    weatherCells, radarTargets
+    preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, origin, destination, routeName,
+    distRemainingNM, totalDistNM, legProgressPct, eteFormatted, activeEvent, tcasAlert, radarRangeNM,
+    radarMode, selectedTarget, weatherCells, radarTargets
   } = telemetry;
 
   const isPixel = uiTheme === 'PIXEL';
@@ -91,14 +92,26 @@ export function FlightDashboard({
         </div>
       </div>
 
-      {/* Flight Route Leg Progress Bar */}
+      {/* Flight Route Leg Progress Bar & Real-World Distance */}
       <div className="route-progress-card">
         <div className="route-header">
           <div className="route-leg">
             <Navigation size={12} />
             <span>ROUTE: {origin} ➔ {destination}</span>
+            {nextRoute && (
+              <button
+                className="route-change-btn"
+                onClick={nextRoute}
+                title="Cycle Random Real-World Global Route"
+              >
+                🔀 CHANGE
+              </button>
+            )}
           </div>
-          <span className="route-dist">{distRemainingNM} NM REMAINING</span>
+          <div className="route-timing">
+            <span className="route-dist">{distRemainingNM} NM / {totalDistNM} NM</span>
+            <span className="route-ete">⏳ {eteFormatted} ETE</span>
+          </div>
         </div>
         <div className="progress-bar-bg">
           <div className="progress-bar-fill" style={{ width: `${legProgressPct}%` }}></div>

@@ -1918,9 +1918,41 @@ body {
   color: #00e5ff;
 }
 
+.route-change-btn {
+  background: #182230;
+  border: 1px solid #2a3b52;
+  color: #00e5ff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.route-change-btn:hover {
+  background: #25374d;
+  color: #ffffff;
+}
+
+.route-timing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .route-dist {
   color: #ffb000;
   font-size: 9px;
+}
+
+.route-ete {
+  color: #00ff66;
+  font-size: 9px;
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(0, 255, 102, 0.3);
+  padding: 1px 5px;
+  border-radius: 3px;
 }
 
 .progress-bar-bg {

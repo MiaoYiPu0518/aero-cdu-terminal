@@ -1,7 +1,7 @@
 # Graph Report - quick-einstein  (2026-08-08)
 
 ## Corpus Check
-- 30 files · ~20,396 words
+- 30 files · ~20,581 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

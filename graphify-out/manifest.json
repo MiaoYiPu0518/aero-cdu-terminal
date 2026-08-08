@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1786211824.3149197,
-    "ast_hash": "3d2ead953a6f54f831027159532adad6",
+    "mtime": 1786214662.038324,
+    "ast_hash": "bfb2670bdbcf0ac45ffdfa98fcc99d2e",
     "semantic_hash": ""
   },
   "src/components/CDUFrame.jsx": {
@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "src/components/FlightDashboard.jsx": {
-    "mtime": 1786211814.4604073,
-    "ast_hash": "b5491eaa2f7e89ee8564c373956f54fc",
+    "mtime": 1786214655.45094,
+    "ast_hash": "6eb17f54c017fb4773a85634a7698163",
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786212505.956905,
-    "ast_hash": "043f0e151c4f1124f62fd425f2c16ad5",
+    "mtime": 1786214649.2966003,
+    "ast_hash": "c17b3a958489b0cd6c7a6ee8320d29ce",
     "semantic_hash": ""
   },
   "public/sounds/altitude_chime.wav": {
