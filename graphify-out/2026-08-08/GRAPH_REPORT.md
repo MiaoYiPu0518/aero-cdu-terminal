@@ -1,16 +1,16 @@
-# Graph Report - quick-einstein  (2026-08-08)
+# Graph Report - quick-einstein  (2026-08-07)
 
 ## Corpus Check
-- 29 files · ~17,118 words
+- 25 files · ~13,684 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 160 nodes · 209 edges · 16 communities (12 shown, 4 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
+- 150 nodes · 194 edges · 15 communities (11 shown, 4 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9e9469dd`
+- Built from commit: `2efec698`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,38 +27,35 @@
 - graphify.md
 - graphify.md
 - PiperHandler
-- FlightDashboard.jsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `SoundEngine` - 31 edges
 2. `PTYClient` - 9 edges
 3. `scripts` - 8 edges
-4. `App()` - 6 edges
-5. `PiperHandler` - 5 edges
+4. `PiperHandler` - 5 edges
+5. `App()` - 5 edges
 6. `CDUScreen()` - 3 edges
 7. `TopBar()` - 3 edges
 8. `eventToAnsi()` - 3 edges
-9. `useFlightSimulator()` - 3 edges
-10. `@xterm/addon-fit` - 2 edges
+9. `@xterm/addon-fit` - 2 edges
+10. `@xterm/xterm` - 2 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `App()` --calls--> `useFlightSimulator()`  [EXTRACTED]
-  src/App.jsx → src/utils/useFlightSimulator.js
 - `CDUScreen()` --calls--> `eventToAnsi()`  [EXTRACTED]
   src/components/CDUScreen.jsx → src/utils/keyboardHelper.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (16 total, 4 thin omitted)
+## Communities (15 total, 4 thin omitted)
 
 ### Community 0 - "App.jsx"
-Cohesion: 0.13
-Nodes (7): App(), KeyProgrammerModal(), PRESET_PROFILES, ProfileModal(), TopBar(), PTYClient, useFlightSimulator()
+Cohesion: 0.14
+Nodes (6): App(), KeyProgrammerModal(), PRESET_PROFILES, ProfileModal(), TopBar(), PTYClient
 
 ### Community 1 - "dependencies"
-Cohesion: 0.10
-Nodes (21): cors, express, lucide-react, node-pty, dependencies, cors, express, lucide-react (+13 more)
+Cohesion: 0.11
+Nodes (19): cors, express, lucide-react, node-pty, dependencies, cors, express, lucide-react (+11 more)
 
 ### Community 3 - "package.json"
 Cohesion: 0.14
@@ -84,12 +81,8 @@ Nodes (4): CDUFrame(), CDUKeypad(), CDUScreen(), eventToAnsi()
 Cohesion: 0.32
 Nodes (5): BaseHTTPRequestHandler, get_voice(), PiperHandler, Piper TTS HTTP Server for Quick-Einstein ATC Chatter Loads selected Piper models, run_server()
 
-### Community 15 - "FlightDashboard.jsx"
-Cohesion: 0.47
-Nodes (3): AnalogRadarScope(), AnalogSixPack(), FlightDashboard()
-
 ## Knowledge Gaps
-- **58 isolated node(s):** `__filename`, `__dirname`, `name`, `private`, `version` (+53 more)
+- **57 isolated node(s):** `__filename`, `__dirname`, `name`, `private`, `version` (+52 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -97,16 +90,16 @@ Nodes (3): AnalogRadarScope(), AnalogSixPack(), FlightDashboard()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `SoundEngine` connect `SoundEngine` to `App.jsx`, `soundEngine.js`, `CDUFrame.jsx`?**
-  _High betweenness centrality (0.130) - this node is a cross-community bridge._
+  _High betweenness centrality (0.128) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
   _High betweenness centrality (0.057) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **What connects `__filename`, `__dirname`, `name` to the rest of the system?**
-  _58 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _57 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `App.jsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.1341991341991342 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14210526315789473 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._

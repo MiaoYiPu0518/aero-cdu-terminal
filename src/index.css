@@ -1430,3 +1430,377 @@ body {
     left: 0;
   }
 }
+
+/* ==========================================================================
+   VIRTUAL FLIGHT DASHBOARD & COCKPIT LAYOUT STYLES
+   ========================================================================== */
+
+.app-container.has-dashboard {
+  max-width: 1440px;
+}
+
+.cockpit-main-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.cdu-unit-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Flight Dashboard Left Panel */
+.flight-dashboard-panel {
+  flex: 1;
+  min-width: 520px;
+  max-width: 560px;
+  background: linear-gradient(180deg, #181b22 0%, #101217 100%);
+  border: 1px solid #313845;
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: #e0e6ed;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #282e3a;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #00ff66;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.header-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #f0f4f8;
+}
+
+.header-badge {
+  background: rgba(0, 255, 102, 0.12);
+  border: 1px solid rgba(0, 255, 102, 0.3);
+  color: #00ff66;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.dashboard-close-btn {
+  background: #20242d;
+  border: 1px solid #363e4e;
+  color: #9aa8ba;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.dashboard-close-btn:hover {
+  background: #ff4757;
+  color: #ffffff;
+  border-color: #ff4757;
+}
+
+/* Dashboard Content Grid */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 6-Pack Instruments Grid */
+.six-pack-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #0d0f14;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #232833;
+}
+
+.analog-gauge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #14171d;
+  border: 1px solid #252b36;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.gauge-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: #8a99ad;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+/* Middle Row: Radar + EICAS */
+.dashboard-middle-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+/* CRT Radar Scope Wrapper */
+.radar-scope-wrapper {
+  flex: 1;
+  background: #040d07;
+  border: 1px solid #00aa44;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.15), inset 0 0 12px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.radar-scope-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: #00ff66;
+  padding: 0 4px;
+}
+
+.canvas-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.radar-canvas {
+  width: 100%;
+  max-width: 230px;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #020b05;
+}
+
+/* EICAS Metrics Card */
+.engine-metrics-card {
+  flex: 1;
+  background: #0f1217;
+  border: 1px solid #252b36;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffb000;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #202632;
+  padding-bottom: 4px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #151921;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #202633;
+}
+
+.metric-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: #7b889a;
+}
+
+.metric-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  color: #f0f4f8;
+}
+
+.text-green { color: #00ff66; }
+.text-amber { color: #ffb000; }
+.text-cyan { color: #00e5ff; }
+.text-muted { color: #627083; }
+
+/* Dashboard Controls Section */
+.dashboard-controls-section {
+  background: #0d0f14;
+  border: 1px solid #232833;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-bar-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: #8a99ad;
+  font-weight: bold;
+}
+
+.preset-buttons-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset-btn {
+  flex: 1;
+  min-width: 70px;
+  background: #171b23;
+  border: 1px solid #2c3442;
+  color: #b0c0d4;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 6px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-btn:hover {
+  background: #252c39;
+  color: #ffffff;
+  border-color: #4a566b;
+}
+
+.preset-btn.active {
+  background: #00552b;
+  border-color: #00ff66;
+  color: #00ff66;
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
+}
+
+.manual-stick-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid #1c212b;
+}
+
+.stick-subgroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.subgroup-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: #6d7b8e;
+}
+
+.stick-btn {
+  background: #1a1e27;
+  border: 1px solid #303746;
+  color: #d0dceb;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.stick-btn:hover {
+  background: #2b3342;
+  color: #ffffff;
+}
+
+.stick-btn.active-green {
+  background: #004d25;
+  color: #00ff66;
+  border-color: #00aa44;
+}
+
+/* PIXEL Theme Overrides for Dashboard */
+[data-theme="PIXEL"] .flight-dashboard-panel {
+  border-radius: 0;
+  border: 2px solid #00a943;
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+[data-theme="PIXEL"] .header-title,
+[data-theme="PIXEL"] .gauge-label,
+[data-theme="PIXEL"] .radar-title,
+[data-theme="PIXEL"] .card-title,
+[data-theme="PIXEL"] .metric-label,
+[data-theme="PIXEL"] .preset-btn,
+[data-theme="PIXEL"] .stick-btn {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 7px !important;
+}
+
+/* Responsive adjustment for Dashboard */
+@media (max-width: 1150px) {
+  .cockpit-main-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .flight-dashboard-panel {
+    width: 100%;
+    max-width: 680px;
+    min-width: 100%;
+  }
+}
+

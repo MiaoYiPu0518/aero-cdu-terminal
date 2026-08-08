@@ -53,6 +53,14 @@ function createWindow() {
     return { action: 'allow' };
   });
 
+  // Log console messages and errors from renderer process
+  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[RENDERER CONSOLE ${level}] ${message} (${sourceId}:${line})`);
+  });
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error(`[RENDERER FAIL LOAD] ${errorCode}: ${errorDescription}`);
+  });
+
   const appUrl = 'http://localhost:3001';
 
   const tryLoad = (attempts = 0) => {

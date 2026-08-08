@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Sliders, ChevronDown, Palette } from 'lucide-react';
+import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Sliders, ChevronDown, Palette, Activity } from 'lucide-react';
 import { soundEngine } from '../utils/soundEngine';
 
 export function TopBar({
@@ -10,6 +10,8 @@ export function TopBar({
   onThemeChange,
   programMode,
   onToggleProgramMode,
+  showDashboard = false,
+  onToggleDashboard,
   soundMuted,
   onToggleSound,
   cabinNoiseActive,
@@ -89,6 +91,16 @@ export function TopBar({
             <option value="PIXEL">👾 PIXEL 8-BIT</option>
           </select>
         </div>
+
+        {/* Flight Dashboard Toggle Button */}
+        <button
+          className={`icon-btn ${showDashboard ? 'active' : ''}`}
+          onClick={onToggleDashboard}
+          title="Toggle Flight Dashboard Display"
+        >
+          <Activity size={13} />
+          {showDashboard ? 'DASH ON' : 'DASHBOARD'}
+        </button>
 
         {/* Key Programmer Toggle */}
         <button

@@ -3,8 +3,10 @@ import { TopBar } from './components/TopBar';
 import { CDUFrame } from './components/CDUFrame';
 import { KeyProgrammerModal } from './components/KeyProgrammerModal';
 import { ProfileModal } from './components/ProfileModal';
+import { FlightDashboard } from './components/FlightDashboard';
 import { PTYClient } from './utils/ptyClient';
 import { soundEngine } from './utils/soundEngine';
+import { useFlightSimulator } from './utils/useFlightSimulator';
 
 export function App() {
   const [bindings, setBindings] = useState({});
@@ -12,11 +14,15 @@ export function App() {
   const [lastExecutedCmd, setLastExecutedCmd] = useState('');
   const [execStaged, setExecStaged] = useState(false);
   const [programMode, setProgramMode] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
   const [activeShell, setActiveShell] = useState('powershell.exe');
   const [soundMuted, setSoundMuted] = useState(false);
   const [cabinNoiseActive, setCabinNoiseActive] = useState(false);
   const [atcChatterActive, setAtcChatterActive] = useState(false);
   const [ptyConnected, setPtyConnected] = useState(false);
+
+  // Initialize Flight Simulator Engine
+  const { telemetry, setPreset, adjustPitch, adjustRoll, toggleGear, setFlaps } = useFlightSimulator(showDashboard);
 
   const [activeModal, setActiveModal] = useState(null);
   const [editingKeyId, setEditingKeyId] = useState(null);
@@ -319,8 +325,7 @@ export function App() {
   };
 
   return (
-    <div className="app-container" data-theme={uiTheme}>
-      {/* Top Header Bar with Resizable Layout & Audio Controls */}
+    <div className={`app-container ${showDashboard ? 'has-dashboard' : ''}`} data-theme={uiTheme}>
       <TopBar
         ptyConnected={ptyConnected}
         activeShell={activeShell}
@@ -329,6 +334,8 @@ export function App() {
         onThemeChange={handleThemeChange}
         programMode={programMode}
         onToggleProgramMode={() => setProgramMode(!programMode)}
+        showDashboard={showDashboard}
+        onToggleDashboard={() => setShowDashboard(!showDashboard)}
         soundMuted={soundMuted}
         onToggleSound={() => setSoundMuted(soundEngine.toggleMute())}
         cabinNoiseActive={cabinNoiseActive}
@@ -343,24 +350,41 @@ export function App() {
         onResetUI={handleResetUI}
       />
 
-      {/* Main 3D CDU Unit Wrapper with Transform Scale */}
-      <div style={{ width: '100%', transform: `scale(${uiScale})`, transformOrigin: 'top center', transition: 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
-        <CDUFrame
-          ptyClient={ptyClient}
-          scratchpad={scratchpad}
-          bindings={bindings}
-          onKeyPress={handleKeyPress}
-          onKeyContextMenu={handleKeyContextMenu}
-          onLSKClick={handleLSKClick}
-          execStaged={execStaged}
-          pressedKeyId={pressedKeyId}
-          programMode={programMode}
-          activePage={activePage}
-          totalPages={totalPages}
-          fontSize={fontSize}
-          lastExecutedCmd={lastExecutedCmd}
-          uiTheme={uiTheme}
-        />
+      {/* Main Cockpit Layout containing Left Dashboard & Right CDU Unit */}
+      <div className="cockpit-main-layout">
+        {/* Left Side Flight Dashboard Panel */}
+        {showDashboard && (
+          <FlightDashboard
+            telemetry={telemetry}
+            setPreset={setPreset}
+            adjustPitch={adjustPitch}
+            adjustRoll={adjustRoll}
+            toggleGear={toggleGear}
+            setFlaps={setFlaps}
+            onClose={() => setShowDashboard(false)}
+            uiTheme={uiTheme}
+          />
+        )}
+
+        {/* Right Side Main 3D CDU Unit Wrapper */}
+        <div className="cdu-unit-wrapper" style={{ transform: `scale(${uiScale})`, transformOrigin: 'top center', transition: 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
+          <CDUFrame
+            ptyClient={ptyClient}
+            scratchpad={scratchpad}
+            bindings={bindings}
+            onKeyPress={handleKeyPress}
+            onKeyContextMenu={handleKeyContextMenu}
+            onLSKClick={handleLSKClick}
+            execStaged={execStaged}
+            pressedKeyId={pressedKeyId}
+            programMode={programMode}
+            activePage={activePage}
+            totalPages={totalPages}
+            fontSize={fontSize}
+            lastExecutedCmd={lastExecutedCmd}
+            uiTheme={uiTheme}
+          />
+        </div>
       </div>
 
       {/* Key Programmer Dialog */}
