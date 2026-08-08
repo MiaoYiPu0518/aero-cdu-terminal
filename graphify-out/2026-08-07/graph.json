@@ -2175,7 +2175,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L43",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_connect"
@@ -2186,7 +2186,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L56",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_disconnect"
@@ -2197,7 +2197,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L39",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_onstatus"
@@ -2410,7 +2410,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TopBar.jsx",
-      "source_location": "L44",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "src_components_topbar_topbar",
       "target": "src_utils_soundengine_soundengine_setcabinvolume"
@@ -3015,5 +3015,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1c6844029e85d050c838485ba6e138c712d62722"
+  "built_at_commit": "e3045f892e004ab675e8077106287d29c5b7b05e"
 }

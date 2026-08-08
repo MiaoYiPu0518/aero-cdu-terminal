@@ -65,12 +65,16 @@ export function TopBar({
     <div className="top-bar" ref={menuRef}>
       <div className="brand-section">
         <Terminal className="brand-icon" size={18} />
-        <div className="brand-title">
-          AERO-CDU <span className="brand-badge">PTY</span>
+        <div className="brand-copy">
+          <div className="brand-title">
+            AERO-CDU <span className="brand-badge">PTY</span>
+          </div>
+          <span className="brand-subtitle">LOCAL COMMAND UNIT</span>
         </div>
       </div>
 
       <div className="controls-section">
+        <div className="control-cluster" aria-label="Interface controls">
         {/* Theme Selector Dropdown */}
         <div className="topbar-dropdown-wrap">
           <select
@@ -78,6 +82,7 @@ export function TopBar({
             value={uiTheme}
             onChange={(e) => onThemeChange && onThemeChange(e.target.value)}
             title="Select KDU UI Theme (Realistic Cockpit / Pixel 8-Bit)"
+            aria-label="Interface theme"
             style={{ cursor: 'pointer', outline: 'none' }}
           >
             <option value="REALISTIC">🎨 REALISTIC</option>
@@ -104,7 +109,9 @@ export function TopBar({
           <Folder size={13} />
           PROFILES
         </button>
+        </div>
 
+        <div className="control-cluster session-cluster" aria-label="Terminal session controls">
         {/* Shell Selector Dropdown */}
         <div className="topbar-dropdown-wrap">
           <select
@@ -112,6 +119,7 @@ export function TopBar({
             value={activeShell}
             onChange={(e) => onShellChange(e.target.value)}
             title="Select Local PTY Shell"
+            aria-label="Terminal shell"
             style={{ cursor: 'pointer', outline: 'none' }}
           >
             <option value="powershell.exe">PowerShell</option>
@@ -261,15 +269,25 @@ export function TopBar({
 
         {/* Reconnect Session */}
         <button
-          className="icon-btn"
+          className="icon-btn reconnect-btn"
           onClick={onReconnect}
           title="Reconnect PTY Session"
+          aria-label="Reconnect PTY session"
         >
           <RefreshCw size={13} />
+          <span>SYNC</span>
         </button>
 
         {/* PTY Connection Status Indicator */}
-        <div className={`status-dot ${ptyConnected ? 'connected' : 'error'}`} title={ptyConnected ? 'PTY Connected' : 'PTY Disconnected'} />
+        <div
+          className={`session-status ${ptyConnected ? 'connected' : 'error'}`}
+          title={ptyConnected ? 'PTY Connected' : 'PTY Disconnected'}
+          role="status"
+        >
+          <span className="status-dot" />
+          <span>{ptyConnected ? 'ONLINE' : 'OFFLINE'}</span>
+        </div>
+        </div>
       </div>
     </div>
   );

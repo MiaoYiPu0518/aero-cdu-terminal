@@ -677,8 +677,57 @@ class SoundEngine {
     });
   }
 
+  // Independent, randomized static burst per speaker
+  startSpeakerStatic(transmissionType = 'NORMAL') {
+    this.stopActiveTransmissionStatic();
+    if (!this.audioCtx || this.muted || !this.chatterActive) return;
+
+    const now = this.audioCtx.currentTime;
+    const bufferSize = Math.floor(this.audioCtx.sampleRate * 5.0);
+    const staticBuffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+    const sData = staticBuffer.getChannelData(0);
+
+    // Random soft static & crackle profile for this specific speaker
+    const baseNoiseLevel = 0.04 + Math.random() * 0.08;
+    const crackleLevel = 0.12 + Math.random() * 0.16;
+
+    for (let i = 0; i < bufferSize; i++) {
+      const crackle = Math.random() > 0.975 ? (Math.random() * 2 - 1) * crackleLevel : 0;
+      sData[i] = (Math.random() * 2 - 1) * baseNoiseLevel + crackle;
+    }
+
+    this.currentStaticSource = this.audioCtx.createBufferSource();
+    this.currentStaticSource.buffer = staticBuffer;
+    this.currentStaticSource.loop = true;
+
+    const bandpass = this.audioCtx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+
+    if (transmissionType === 'ALIEN') {
+      bandpass.frequency.setValueAtTime(2400, now);
+      bandpass.frequency.exponentialRampToValueAtTime(800, now + 2.0);
+      bandpass.Q.setValueAtTime(6.0, now);
+    } else {
+      bandpass.frequency.setValueAtTime(1400, now);
+      bandpass.Q.setValueAtTime(3.0, now);
+    }
+
+    this.currentStaticGain = this.audioCtx.createGain();
+    // Soft, randomized radio static level (0.06 to 0.18 * atcVolume)
+    const randomStaticVol = (0.06 + Math.random() * 0.12) * this.atcVolume;
+    this.currentStaticGain.gain.setValueAtTime(0.001, now);
+    this.currentStaticGain.gain.linearRampToValueAtTime(randomStaticVol, now + 0.04);
+
+    this.currentStaticSource.connect(bandpass);
+    bandpass.connect(this.currentStaticGain);
+    this.currentStaticGain.connect(this.audioCtx.destination);
+
+    this.currentStaticSource.start(now);
+  }
+
   async playSingleUtterance(text, voiceName, transmissionType = 'NORMAL') {
     this.playPTTClick(true);
+    this.startSpeakerStatic(transmissionType);
     try {
       if (this.ttsProvider === 'PIPER') {
         const audioBuffer = await this.fetchPiperAudioBuffer(text, voiceName);
@@ -695,8 +744,9 @@ class SoundEngine {
   }
 
   async playDialogueSequence(transmission) {
-    // 1. First Transmission (Controller or Pilot)
+    // 1. First Transmission (Independent static burst for Speaker 1)
     this.playPTTClick(true);
+    this.startSpeakerStatic('NORMAL');
     try {
       if (this.ttsProvider === 'PIPER') {
         const firstBuf = await this.fetchPiperAudioBuffer(transmission.firstSpeaker.text, transmission.firstSpeaker.voice);
@@ -708,17 +758,20 @@ class SoundEngine {
       await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL');
     }
     this.playPTTClick(false);
+    // Stop static immediately when Speaker 1 finishes
+    this.stopActiveTransmissionStatic();
 
     if (!this.chatterActive || this.muted) return;
 
-    // Realistic radio response gap between speakers (1.0s to 5.0s)
+    // Inter-speaker pause (1.0s to 5.0s) - Complete radio silence / cabin hum
     const pauseMs = 1000 + Math.floor(Math.random() * 4000);
     await new Promise(r => setTimeout(r, pauseMs));
 
     if (!this.chatterActive || this.muted) return;
 
-    // 2. Second Transmission (Response)
+    // 2. Second Transmission (Independent static burst for Speaker 2)
     this.playPTTClick(true);
+    this.startSpeakerStatic('NORMAL');
     try {
       if (this.ttsProvider === 'PIPER') {
         const secondBuf = await this.fetchPiperAudioBuffer(transmission.secondSpeaker.text, transmission.secondSpeaker.voice);
@@ -730,6 +783,7 @@ class SoundEngine {
       await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL');
     }
     this.playPTTClick(false);
+    // Stop static immediately when Speaker 2 finishes
     this.stopActiveTransmissionStatic();
   }
 
@@ -773,45 +827,6 @@ class SoundEngine {
 
     if (transmission.type === 'EMERGENCY') {
       this.playEmergencyChime();
-    }
-
-    if (this.audioCtx) {
-      this.stopActiveTransmissionStatic();
-      const now = this.audioCtx.currentTime;
-      const bufferSize = Math.floor(this.audioCtx.sampleRate * 7.0);
-      const staticBuffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
-      const sData = staticBuffer.getChannelData(0);
-
-      for (let i = 0; i < bufferSize; i++) {
-        const crackle = Math.random() > 0.96 ? (Math.random() * 2 - 1) * 0.7 : 0;
-        sData[i] = (Math.random() * 2 - 1) * 0.28 + crackle;
-      }
-
-      this.currentStaticSource = this.audioCtx.createBufferSource();
-      this.currentStaticSource.buffer = staticBuffer;
-      this.currentStaticSource.loop = true;
-
-      const bandpass = this.audioCtx.createBiquadFilter();
-      bandpass.type = 'bandpass';
-
-      if (transmission.type === 'ALIEN') {
-        bandpass.frequency.setValueAtTime(2400, now);
-        bandpass.frequency.exponentialRampToValueAtTime(800, now + 2.0);
-        bandpass.Q.setValueAtTime(6.0, now);
-      } else {
-        bandpass.frequency.setValueAtTime(1400, now);
-        bandpass.Q.setValueAtTime(3.2, now);
-      }
-
-      this.currentStaticGain = this.audioCtx.createGain();
-      this.currentStaticGain.gain.setValueAtTime(0.001, now);
-      this.currentStaticGain.gain.linearRampToValueAtTime(this.atcVolume * 0.7, now + 0.05);
-
-      this.currentStaticSource.connect(bandpass);
-      bandpass.connect(this.currentStaticGain);
-      this.currentStaticGain.connect(this.audioCtx.destination);
-
-      this.currentStaticSource.start(now);
     }
 
     if (transmission.isDialogue) {

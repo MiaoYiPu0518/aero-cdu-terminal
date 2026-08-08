@@ -26,6 +26,11 @@ export function CDUFrame({
       <div className="cdu-screw screw-bl" />
       <div className="cdu-screw screw-br" />
 
+      <div className="chassis-id" aria-hidden="true">
+        <span>LOCAL COMMAND DISPLAY</span>
+        <span>UNIT 01</span>
+      </div>
+
       {/* Top Status Lamps */}
       <div className="status-indicators">
         <span className="indicator-lamp active">MSG</span>

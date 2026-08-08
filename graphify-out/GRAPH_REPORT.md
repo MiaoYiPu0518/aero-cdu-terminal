@@ -1,16 +1,16 @@
 # Graph Report - quick-einstein  (2026-08-07)
 
 ## Corpus Check
-- 17 files · ~7,410 words
+- 25 files · ~13,684 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 126 nodes · 156 edges · 12 communities (8 shown, 4 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
+- 150 nodes · 194 edges · 15 communities (11 shown, 4 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e3045f89`
+- Built from commit: `2efec698`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,18 +26,19 @@
 - main.js
 - graphify.md
 - graphify.md
+- PiperHandler
 
 ## God Nodes (most connected - your core abstractions)
-1. `SoundEngine` - 23 edges
+1. `SoundEngine` - 31 edges
 2. `PTYClient` - 9 edges
 3. `scripts` - 8 edges
-4. `App()` - 5 edges
-5. `CDUScreen()` - 3 edges
-6. `TopBar()` - 3 edges
-7. `eventToAnsi()` - 3 edges
-8. `@xterm/addon-fit` - 2 edges
-9. `@xterm/xterm` - 2 edges
-10. `cors` - 2 edges
+4. `PiperHandler` - 5 edges
+5. `App()` - 5 edges
+6. `CDUScreen()` - 3 edges
+7. `TopBar()` - 3 edges
+8. `eventToAnsi()` - 3 edges
+9. `@xterm/addon-fit` - 2 edges
+10. `@xterm/xterm` - 2 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `CDUScreen()` --calls--> `eventToAnsi()`  [EXTRACTED]
@@ -46,7 +47,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (12 total, 4 thin omitted)
+## Communities (15 total, 4 thin omitted)
 
 ### Community 0 - "App.jsx"
 Cohesion: 0.14
@@ -66,18 +67,22 @@ Nodes (13): concurrently, electron, devDependencies, concurrently, electron, @ty
 
 ### Community 5 - "index.js"
 Cohesion: 0.15
-Nodes (11): app, CONFIG_FILE, __dirname, distPath, __filename, logFilePath, logsDir, PROFILES_DIR (+3 more)
+Nodes (13): app, CONFIG_FILE, __dirname, distPath, __filename, logFilePath, logsDir, logToFile() (+5 more)
 
 ### Community 6 - "soundEngine.js"
-Cohesion: 0.20
-Nodes (9): ALIEN_PHRASES, ALTITUDES, CALLSIGNS, EMERGENCY_PHRASES, FACILITIES, FLIGHT_LEVELS, FREQUENCIES, HEADINGS (+1 more)
+Cohesion: 0.13
+Nodes (14): AIRCRAFT_TYPES, ALIEN_PHRASES, ALTITUDES, ATIS_LETTERS, CALLSIGNS, EMERGENCY_PHRASES, FACILITIES, FLIGHT_LEVELS (+6 more)
 
 ### Community 7 - "CDUFrame.jsx"
 Cohesion: 0.39
 Nodes (4): CDUFrame(), CDUKeypad(), CDUScreen(), eventToAnsi()
 
+### Community 12 - "PiperHandler"
+Cohesion: 0.32
+Nodes (5): BaseHTTPRequestHandler, get_voice(), PiperHandler, Piper TTS HTTP Server for Quick-Einstein ATC Chatter Loads selected Piper models, run_server()
+
 ## Knowledge Gaps
-- **52 isolated node(s):** `__filename`, `__dirname`, `name`, `private`, `version` (+47 more)
+- **57 isolated node(s):** `__filename`, `__dirname`, `name`, `private`, `version` (+52 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -85,13 +90,13 @@ Nodes (4): CDUFrame(), CDUKeypad(), CDUScreen(), eventToAnsi()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `SoundEngine` connect `SoundEngine` to `App.jsx`, `soundEngine.js`, `CDUFrame.jsx`?**
-  _High betweenness centrality (0.108) - this node is a cross-community bridge._
+  _High betweenness centrality (0.128) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **What connects `__filename`, `__dirname`, `name` to the rest of the system?**
-  _52 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _57 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `App.jsx` be split into smaller, more focused modules?**
   _Cohesion score 0.14210526315789473 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**

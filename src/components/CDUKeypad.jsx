@@ -58,6 +58,11 @@ export function CDUKeypad({
 
   return (
     <div className="cdu-keypad">
+      <div className="keypad-bank-label" aria-hidden="true">
+        <span>FUNCTION / MACRO BANK</span>
+        <span>RIGHT-CLICK ANY KEY TO PROGRAM</span>
+      </div>
+
       {/* Top Function Rows */}
       <div className="key-row">
         {renderKey('INIT_REF', 'INIT REF')}
@@ -85,6 +90,10 @@ export function CDUKeypad({
       </div>
 
       {/* Split Keyboard Area */}
+      <div className="keypad-bank-label input-bank-label" aria-hidden="true">
+        <span>DIRECT INPUT DECK</span>
+        <span>NUMERIC · ALPHA</span>
+      </div>
       <div className="keyboard-split">
         {/* Numeric Cluster 3x4 */}
         <div className="num-grid">
