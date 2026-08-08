@@ -887,7 +887,7 @@
       "label": "AnalogRadarScope()",
       "file_type": "code",
       "source_file": "src/components/AnalogRadarScope.jsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_analogradarscope_analogradarscope",
       "community": 15,
@@ -997,7 +997,7 @@
       "label": "FlightDashboard()",
       "file_type": "code",
       "source_file": "src/components/FlightDashboard.jsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_flightdashboard_flightdashboard",
       "community": 15,
@@ -1687,6 +1687,61 @@
       "norm_label": ".generateandplaydynamictransmission()"
     },
     {
+      "label": ".playDashboardSFX()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L842",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playdashboardsfx",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playdashboardsfx()"
+    },
+    {
+      "label": ".updateEngineRumble()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L868",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_updateenginerumble",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".updateenginerumble()"
+    },
+    {
+      "label": ".stopEngineRumble()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L904",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_stopenginerumble",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".stopenginerumble()"
+    },
+    {
+      "label": ".setDashboardVolume()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L924",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_setdashboardvolume",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".setdashboardvolume()"
+    },
+    {
+      "label": ".toggleDashboardMute()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L928",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_toggledashboardmute",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".toggledashboardmute()"
+    },
+    {
       "label": "useFlightSimulator.js",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
@@ -1701,7 +1756,7 @@
       "label": "useFlightSimulator()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L6",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "src_utils_useflightsimulator_useflightsimulator",
       "community": 0,
@@ -2727,7 +2782,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L54",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_connect"
@@ -2738,7 +2793,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L73",
+      "source_location": "L86",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_disconnect"
@@ -2749,7 +2804,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L50",
+      "source_location": "L63",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_onstatus"
@@ -2760,7 +2815,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L25",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_useflightsimulator_useflightsimulator"
@@ -2780,7 +2835,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AnalogRadarScope.jsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_components_analogradarscope",
       "target": "src_components_analogradarscope_analogradarscope",
@@ -2973,10 +3028,32 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/FlightDashboard.jsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "src_components_flightdashboard",
       "target": "src_components_flightdashboard_flightdashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/FlightDashboard.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_components_flightdashboard",
+      "target": "src_utils_soundengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/FlightDashboard.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_components_flightdashboard",
+      "target": "src_utils_soundengine_soundengine",
       "confidence_score": 1.0
     },
     {
@@ -3266,7 +3343,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
-      "source_location": "L840",
+      "source_location": "L937",
       "weight": 1.0,
       "source": "src_utils_soundengine",
       "target": "src_utils_soundengine_soundengine",
@@ -3290,6 +3367,17 @@
       "weight": 1.0,
       "source": "src_utils_soundengine",
       "target": "src_utils_soundengine_waypoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_soundengine",
       "confidence_score": 1.0
     },
     {
@@ -3350,6 +3438,16 @@
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
       "target": "src_utils_soundengine_soundengine_playaudiobufferwithradiofx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L842",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playdashboardsfx",
       "confidence_score": 1.0
     },
     {
@@ -3466,6 +3564,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L924",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_setdashboardvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L630",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
@@ -3536,6 +3644,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L904",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_stopenginerumble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L338",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
@@ -3556,10 +3674,41 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L928",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_toggledashboardmute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L169",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
       "target": "src_utils_soundengine_soundengine_togglemute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L868",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_updateenginerumble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_soundengine_soundengine",
       "confidence_score": 1.0
     },
     {
@@ -3570,6 +3719,17 @@
       "source_location": "L824",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_generateandplaydynamictransmission",
+      "target": "src_utils_soundengine_soundengine_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L844",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playdashboardsfx",
       "target": "src_utils_soundengine_soundengine_init",
       "confidence_score": 1.0
     },
@@ -3614,6 +3774,17 @@
       "source_location": "L284",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_startcockpitnoise",
+      "target": "src_utils_soundengine_soundengine_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L874",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_updateenginerumble",
       "target": "src_utils_soundengine_soundengine_init",
       "confidence_score": 1.0
     },
@@ -3669,6 +3840,17 @@
       "source_location": "L829",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_generateandplaydynamictransmission",
+      "target": "src_utils_soundengine_soundengine_playemergencychime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L862",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playdashboardsfx",
       "target": "src_utils_soundengine_soundengine_playemergencychime",
       "confidence_score": 1.0
     },
@@ -3915,10 +4097,32 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L870",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_updateenginerumble",
+      "target": "src_utils_soundengine_soundengine_stopenginerumble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L931",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_toggledashboardmute",
+      "target": "src_utils_soundengine_soundengine_stopenginerumble",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L6",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_utils_useflightsimulator",
       "target": "src_utils_useflightsimulator_useflightsimulator",
@@ -3946,5 +4150,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9e9469dd25d7a5188d3e97636268f721fa4488d7"
+  "built_at_commit": "1ef1e6324fbb9ed082ab81b38e5c15b0acf77ed4"
 }

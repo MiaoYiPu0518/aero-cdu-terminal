@@ -1,16 +1,16 @@
 # Graph Report - quick-einstein  (2026-08-08)
 
 ## Corpus Check
-- 29 files · ~17,118 words
+- 29 files · ~19,348 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 160 nodes · 209 edges · 16 communities (12 shown, 4 thin omitted)
+- 165 nodes · 223 edges · 16 communities (12 shown, 4 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9e9469dd`
+- Built from commit: `1ef1e632`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,7 +30,7 @@
 - FlightDashboard.jsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `SoundEngine` - 31 edges
+1. `SoundEngine` - 38 edges
 2. `PTYClient` - 9 edges
 3. `scripts` - 8 edges
 4. `App()` - 6 edges
@@ -96,17 +96,17 @@ Nodes (3): AnalogRadarScope(), AnalogSixPack(), FlightDashboard()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SoundEngine` connect `SoundEngine` to `App.jsx`, `soundEngine.js`, `CDUFrame.jsx`?**
-  _High betweenness centrality (0.130) - this node is a cross-community bridge._
+- **Why does `SoundEngine` connect `SoundEngine` to `App.jsx`, `FlightDashboard.jsx`, `soundEngine.js`, `CDUFrame.jsx`?**
+  _High betweenness centrality (0.151) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `devDependencies` to `package.json`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **What connects `__filename`, `__dirname`, `name` to the rest of the system?**
   _58 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `App.jsx` be split into smaller, more focused modules?**
   _Cohesion score 0.1341991341991342 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
-- **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+- **Should `SoundEngine` be split into smaller, more focused modules?**
+  _Cohesion score 0.13709677419354838 - nodes in this community are weakly interconnected._
