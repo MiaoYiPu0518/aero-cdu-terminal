@@ -10,13 +10,13 @@
     "semantic_hash": ""
   },
   "server/index.js": {
-    "mtime": 1786130323.307547,
-    "ast_hash": "eb172bd7bc8ffee6e541ac0c23edcc25",
+    "mtime": 1786210664.9094443,
+    "ast_hash": "796b09eedb0bdb0ea3156e51863d8d20",
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1786209583.2425478,
-    "ast_hash": "4caed4c98dae7b691aa3c3d04b41d57e",
+    "mtime": 1786210642.858904,
+    "ast_hash": "8cc723a405d3f19d9ba0a47ce71143c7",
     "semantic_hash": ""
   },
   "src/components/CDUFrame.jsx": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "src/components/AnalogRadarScope.jsx": {
-    "mtime": 1786209554.274653,
-    "ast_hash": "9fb84c5cb7adc3b887fce02d37f02348",
+    "mtime": 1786210633.0830107,
+    "ast_hash": "6ea372255167cf18be2597781dc9596d",
     "semantic_hash": ""
   },
   "src/components/AnalogSixPack.jsx": {
@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "src/components/FlightDashboard.jsx": {
-    "mtime": 1786209564.7405999,
-    "ast_hash": "39f4d6b50ec829ebe9d1920b2a27f372",
+    "mtime": 1786210636.8663359,
+    "ast_hash": "8b62ddc0c8eed53c8b5cfc278a6f6886",
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786209550.9983158,
-    "ast_hash": "e343d08a549114f03d6a3f783b706dfd",
+    "mtime": 1786210627.6124268,
+    "ast_hash": "41986c668b8a1d5676deca8bad43b8fa",
     "semantic_hash": ""
   }
 }

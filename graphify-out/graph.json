@@ -887,7 +887,7 @@
       "label": "AnalogRadarScope()",
       "file_type": "code",
       "source_file": "src/components/AnalogRadarScope.jsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_analogradarscope_analogradarscope",
       "community": 15,
@@ -1701,7 +1701,7 @@
       "label": "useFlightSimulator()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L6",
+      "source_location": "L8",
       "_origin": "ast",
       "id": "src_utils_useflightsimulator_useflightsimulator",
       "community": 0,
@@ -2727,7 +2727,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L54",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_connect"
@@ -2738,7 +2738,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L73",
+      "source_location": "L86",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_disconnect"
@@ -2749,7 +2749,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L50",
+      "source_location": "L63",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_onstatus"
@@ -2760,7 +2760,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L25",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_useflightsimulator_useflightsimulator"
@@ -2780,7 +2780,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/AnalogRadarScope.jsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_components_analogradarscope",
       "target": "src_components_analogradarscope_analogradarscope",
@@ -3918,7 +3918,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L6",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "src_utils_useflightsimulator",
       "target": "src_utils_useflightsimulator_useflightsimulator",
@@ -3946,5 +3946,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9e9469dd25d7a5188d3e97636268f721fa4488d7"
+  "built_at_commit": "6c67320a199c5106f66f899ccce9daf47753ab38"
 }

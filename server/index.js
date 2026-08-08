@@ -230,6 +230,13 @@ wss.on('connection', (ws, req) => {
 });
 
 const PORT = process.env.PORT || 3001;
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    logToFile(`[SERVER] Port ${PORT} already in use. Server process reusing existing backend instance.`);
+  } else {
+    logToFile(`[SERVER ERROR] ${err.message}`);
+  }
+});
 server.listen(PORT, () => {
   logToFile(`[SERVER] AeroCDU Terminal PTY Backend running on http://localhost:${PORT}`);
 });

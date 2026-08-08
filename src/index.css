@@ -1772,22 +1772,275 @@ body {
   border-color: #00aa44;
 }
 
-/* PIXEL Theme Overrides for Dashboard */
-[data-theme="PIXEL"] .flight-dashboard-panel {
-  border-radius: 0;
-  border: 2px solid #00a943;
-  font-family: 'Press Start 2P', monospace !important;
+/* Dashboard Toolbar & Sim Controls */
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #11141b;
+  border: 1px solid #272e3d;
+  padding: 6px 10px;
+  border-radius: 8px;
+  gap: 8px;
 }
 
-[data-theme="PIXEL"] .header-title,
-[data-theme="PIXEL"] .gauge-label,
-[data-theme="PIXEL"] .radar-title,
-[data-theme="PIXEL"] .card-title,
-[data-theme="PIXEL"] .metric-label,
-[data-theme="PIXEL"] .preset-btn,
-[data-theme="PIXEL"] .stick-btn {
-  font-family: 'Press Start 2P', monospace !important;
-  font-size: 7px !important;
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-btn {
+  background: #1a1f29;
+  border: 1px solid #333d50;
+  color: #b5c4d6;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover {
+  background: #283142;
+  color: #ffffff;
+}
+
+.toolbar-btn.active-green {
+  background: #004d25;
+  border-color: #00ff66;
+  color: #00ff66;
+  box-shadow: 0 0 6px rgba(0, 255, 102, 0.25);
+}
+
+.toolbar-btn.active-amber {
+  background: #543700;
+  border-color: #ffb000;
+  color: #ffb000;
+}
+
+.speed-selector-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.speed-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: #7b889a;
+}
+
+.speed-btn {
+  background: #161922;
+  border: 1px solid #2c3546;
+  color: #9aa8ba;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.speed-btn.active {
+  background: #00552b;
+  border-color: #00ff66;
+  color: #00ff66;
+}
+
+/* Route Progress Card */
+.route-progress-card {
+  background: #0f1218;
+  border: 1px solid #232a37;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.route-leg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #00e5ff;
+}
+
+.route-dist {
+  color: #ffb000;
+  font-size: 9px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: #191f2b;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #2a3447;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00aa44 0%, #00ff66 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.route-footer {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: #7d8c9e;
+}
+
+/* Alert Banners */
+.dashboard-alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.event-banner {
+  background: rgba(255, 176, 0, 0.12);
+  border: 1px solid rgba(255, 176, 0, 0.4);
+  color: #ffb000;
+}
+
+.tcas-banner.ta-alert {
+  background: rgba(255, 176, 0, 0.18);
+  border: 1px solid #ffb000;
+  color: #ffb000;
+}
+
+.tcas-banner.ra-alert {
+  background: rgba(255, 71, 87, 0.22);
+  border: 1px solid #ff4757;
+  color: #ff4757;
+  animation: pulse-red 1s infinite alternate;
+}
+
+@keyframes pulse-red {
+  from { box-shadow: 0 0 4px rgba(255, 71, 87, 0.3); }
+  to { box-shadow: 0 0 16px rgba(255, 71, 87, 0.7); }
+}
+
+.alert-icon {
+  flex-shrink: 0;
+}
+
+.alert-title {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.alert-desc {
+  font-size: 8px;
+  opacity: 0.85;
+}
+
+/* Radar Scope Controls & Buttons */
+.radar-mode-selector,
+.radar-range-selector {
+  display: flex;
+  gap: 3px;
+}
+
+.mode-btn,
+.range-btn {
+  background: #0d1e13;
+  border: 1px solid #1a4d2c;
+  color: #00aa44;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.mode-btn.active,
+.range-btn.active {
+  background: #004d25;
+  border-color: #00ff66;
+  color: #00ff66;
+  font-weight: bold;
+}
+
+.dashboard-middle-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inspected Target Card */
+.inspected-target-card {
+  flex: 1;
+  background: #0d131a;
+  border: 1px solid #00e5ff;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+}
+
+.small-close-btn {
+  background: none;
+  border: none;
+  color: #8a99ad;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.small-close-btn:hover {
+  color: #ff4757;
+}
+
+.target-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.target-metric {
+  background: #141b24;
+  border: 1px solid #1e2938;
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.target-metric .label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  color: #7b8ea5;
+}
+
+.target-metric .val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  color: #f0f4f8;
 }
 
 /* Responsive adjustment for Dashboard */
@@ -1803,4 +2056,5 @@ body {
     min-width: 100%;
   }
 }
+
 

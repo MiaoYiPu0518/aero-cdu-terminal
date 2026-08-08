@@ -1,13 +1,13 @@
 {
   "electron/main.js": {
-    "mtime": 1786073305.4602785,
-    "ast_hash": "df6da3ad32fd72557ee7b9411d6ef05c",
-    "semantic_hash": "df6da3ad32fd72557ee7b9411d6ef05c"
+    "mtime": 1786209814.4396396,
+    "ast_hash": "24f14dcf2a74cccfbf6dac1c0a7835fe",
+    "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1786071468.3169703,
-    "ast_hash": "a4abaa1df63130256a0b7a0eccf94e2b",
-    "semantic_hash": "a4abaa1df63130256a0b7a0eccf94e2b"
+    "mtime": 1786209568.6645997,
+    "ast_hash": "04ddc4fe538a2994a46351b2bf3c9b17",
+    "semantic_hash": ""
   },
   "server/index.js": {
     "mtime": 1786130323.307547,
@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1786126777.2637217,
-    "ast_hash": "2e61a2bd19a5f718401d78c22e9a3efc",
+    "mtime": 1786209583.2425478,
+    "ast_hash": "4caed4c98dae7b691aa3c3d04b41d57e",
     "semantic_hash": ""
   },
   "src/components/CDUFrame.jsx": {
@@ -45,8 +45,8 @@
     "semantic_hash": "fb1b65a1f17835c787aab4a806093df4"
   },
   "src/components/TopBar.jsx": {
-    "mtime": 1786134657.4624503,
-    "ast_hash": "9b2e350490e6f6942b55197ca6cf70b6",
+    "mtime": 1786209826.3593714,
+    "ast_hash": "df805e34b4314e4a7095d563dc50c9ed",
     "semantic_hash": ""
   },
   "src/main.jsx": {
@@ -127,6 +127,26 @@
   "server/voices/en_US-l2arctic-medium.onnx.json": {
     "mtime": 1786131103.6755836,
     "ast_hash": "a0f29a10628f08dccd757aca57ccb163",
+    "semantic_hash": ""
+  },
+  "src/components/AnalogRadarScope.jsx": {
+    "mtime": 1786209554.274653,
+    "ast_hash": "9fb84c5cb7adc3b887fce02d37f02348",
+    "semantic_hash": ""
+  },
+  "src/components/AnalogSixPack.jsx": {
+    "mtime": 1786209562.2664726,
+    "ast_hash": "b81c5c69a8212ef6e30b7ef9ac5bfda7",
+    "semantic_hash": ""
+  },
+  "src/components/FlightDashboard.jsx": {
+    "mtime": 1786209564.7405999,
+    "ast_hash": "39f4d6b50ec829ebe9d1920b2a27f372",
+    "semantic_hash": ""
+  },
+  "src/utils/useFlightSimulator.js": {
+    "mtime": 1786209550.9983158,
+    "ast_hash": "e343d08a549114f03d6a3f783b706dfd",
     "semantic_hash": ""
   }
 }

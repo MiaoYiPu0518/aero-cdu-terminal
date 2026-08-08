@@ -22,7 +22,20 @@ export function App() {
   const [ptyConnected, setPtyConnected] = useState(false);
 
   // Initialize Flight Simulator Engine
-  const { telemetry, setPreset, adjustPitch, adjustRoll, toggleGear, setFlaps } = useFlightSimulator(showDashboard);
+  const {
+    telemetry,
+    setPreset,
+    toggleAutoFlight,
+    toggleRandomManeuvers,
+    setSimSpeed,
+    setRadarRange,
+    setRadarMode,
+    setSelectedTarget,
+    adjustPitch,
+    adjustRoll,
+    toggleGear,
+    setFlaps
+  } = useFlightSimulator(showDashboard);
 
   const [activeModal, setActiveModal] = useState(null);
   const [editingKeyId, setEditingKeyId] = useState(null);
@@ -357,6 +370,12 @@ export function App() {
           <FlightDashboard
             telemetry={telemetry}
             setPreset={setPreset}
+            toggleAutoFlight={toggleAutoFlight}
+            toggleRandomManeuvers={toggleRandomManeuvers}
+            setSimSpeed={setSimSpeed}
+            setRadarRange={setRadarRange}
+            setRadarMode={setRadarMode}
+            setSelectedTarget={setSelectedTarget}
             adjustPitch={adjustPitch}
             adjustRoll={adjustRoll}
             toggleGear={toggleGear}
