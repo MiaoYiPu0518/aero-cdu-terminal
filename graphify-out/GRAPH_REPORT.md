@@ -1,16 +1,16 @@
 # Graph Report - quick-einstein  (2026-08-08)
 
 ## Corpus Check
-- 30 files · ~20,882 words
+- 30 files · ~21,950 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 174 nodes · 242 edges · 17 communities (13 shown, 4 thin omitted)
+- 185 nodes · 284 edges · 17 communities (13 shown, 4 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `92b9165d`
+- Built from commit: `6482a73f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,13 +30,13 @@
 - FlightDashboard.jsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `SoundEngine` - 43 edges
+1. `SoundEngine` - 48 edges
 2. `PTYClient` - 9 edges
 3. `scripts` - 8 edges
-4. `App()` - 6 edges
+4. `App()` - 8 edges
 5. `PiperHandler` - 5 edges
-6. `CDUScreen()` - 3 edges
-7. `TopBar()` - 3 edges
+6. `normalizeAudioSettings()` - 3 edges
+7. `CDUScreen()` - 3 edges
 8. `eventToAnsi()` - 3 edges
 9. `useFlightSimulator()` - 3 edges
 10. `@xterm/addon-fit` - 2 edges
@@ -53,8 +53,8 @@
 ## Communities (17 total, 4 thin omitted)
 
 ### Community 0 - "App.jsx"
-Cohesion: 0.13
-Nodes (8): App(), KeyProgrammerModal(), PRESET_PROFILES, ProfileModal(), TopBar(), PTYClient, REAL_WORLD_ROUTES, useFlightSimulator()
+Cohesion: 0.11
+Nodes (13): App(), DEFAULT_AUDIO_SETTINGS, normalizeAudioSettings(), normalizeRange(), normalizeUiScale(), SUPPORTED_SHELLS, KeyProgrammerModal(), PRESET_PROFILES (+5 more)
 
 ### Community 1 - "dependencies"
 Cohesion: 0.10
@@ -89,7 +89,7 @@ Cohesion: 0.47
 Nodes (3): AnalogRadarScope(), AnalogSixPack(), FlightDashboard()
 
 ## Knowledge Gaps
-- **59 isolated node(s):** `__filename`, `__dirname`, `name`, `private`, `version` (+54 more)
+- **60 isolated node(s):** `__filename`, `__dirname`, `name`, `private`, `version` (+55 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -97,16 +97,16 @@ Nodes (3): AnalogRadarScope(), AnalogSixPack(), FlightDashboard()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `SoundEngine` connect `SoundEngine` to `App.jsx`, `soundEngine.js`, `CDUFrame.jsx`?**
-  _High betweenness centrality (0.170) - this node is a cross-community bridge._
+  _High betweenness centrality (0.190) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
-- **Why does `devDependencies` connect `devDependencies` to `package.json`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **What connects `__filename`, `__dirname`, `name` to the rest of the system?**
-  _59 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _60 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `App.jsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.12648221343873517 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
 - **Should `SoundEngine` be split into smaller, more focused modules?**
-  _Cohesion score 0.12375533428165007 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12626262626262627 - nodes in this community are weakly interconnected._
+- **Should `package.json` be split into smaller, more focused modules?**
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._

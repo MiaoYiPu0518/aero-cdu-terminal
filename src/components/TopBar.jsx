@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Sliders, ChevronDown, Palette, Activity } from 'lucide-react';
-import { soundEngine } from '../utils/soundEngine';
+import { Terminal, Volume2, VolumeX, Edit3, Folder, RefreshCw, ZoomIn, ZoomOut, Sliders, ChevronDown, Activity } from 'lucide-react';
 
 export function TopBar({
   ptyConnected,
@@ -18,6 +17,8 @@ export function TopBar({
   onToggleCabinNoise,
   atcChatterActive,
   onToggleATCChatter,
+  audioSettings = {},
+  onAudioSettingsChange,
   onOpenProfiles,
   onReconnect,
   uiScale = 1.0,
@@ -25,12 +26,15 @@ export function TopBar({
   onZoomOutUI,
   onResetUI
 }) {
-  const [activeMenu, setActiveMenu] = useState(null); // 'AUDIO' | 'VIEW' | null
-  const [cabinVolume, setCabinVolume] = useState(25);
-  const [atcVolume, setAtcVolume] = useState(35);
-  const [atcFrequency, setAtcFrequency] = useState(2); // 1: LOW, 2: MED, 3: HIGH, 4: RAPID
+  const [activeMenu, setActiveMenu] = useState(null); // 'SESSION' | 'AUDIO' | 'VIEW' | null
 
   const menuRef = useRef(null);
+  const {
+    cabinVolume = 25,
+    atcVolume = 35,
+    atcFrequency = 2,
+    ttsProvider = 'PIPER'
+  } = audioSettings;
 
   // Close menus on outside click
   useEffect(() => {
@@ -45,36 +49,28 @@ export function TopBar({
 
   const handleCabinVolChange = (e) => {
     const val = parseInt(e.target.value, 10);
-    setCabinVolume(val);
-    soundEngine.setCabinVolume(val / 100);
+    onAudioSettingsChange?.({ cabinVolume: val });
   };
 
   const handleATCVolChange = (e) => {
     const val = parseInt(e.target.value, 10);
-    setAtcVolume(val);
-    soundEngine.setATCVolume(val / 100);
+    onAudioSettingsChange?.({ atcVolume: val });
   };
 
   const handleATCFreqChange = (e) => {
     const val = parseInt(e.target.value, 10);
-    setAtcFrequency(val);
-    soundEngine.setATCChatterFrequency(val);
+    onAudioSettingsChange?.({ atcFrequency: val });
   };
 
   const scalePercent = Math.round(uiScale * 100);
 
+  const handleOpenProfiles = () => {
+    setActiveMenu(null);
+    onOpenProfiles?.();
+  };
+
   return (
     <div className="top-bar" ref={menuRef}>
-      <div className="brand-section">
-        <Terminal className="brand-icon" size={18} />
-        <div className="brand-copy">
-          <div className="brand-title">
-            AERO-CDU <span className="brand-badge">PTY</span>
-          </div>
-          <span className="brand-subtitle">LOCAL COMMAND UNIT</span>
-        </div>
-      </div>
-
       <div className="controls-section">
         <div className="control-cluster" aria-label="Interface controls">
         {/* Theme Selector Dropdown */}
@@ -112,32 +108,55 @@ export function TopBar({
           {programMode ? 'PROG ON' : 'PROG'}
         </button>
 
-        {/* Profiles Manager */}
-        <button
-          className="icon-btn"
-          onClick={onOpenProfiles}
-          title="Macro Preset Profiles"
-        >
-          <Folder size={13} />
-          PROFILES
-        </button>
         </div>
 
         <div className="control-cluster session-cluster" aria-label="Terminal session controls">
-        {/* Shell Selector Dropdown */}
+        {/* Combined terminal and profiles menu */}
         <div className="topbar-dropdown-wrap">
-          <select
-            className="icon-btn"
-            value={activeShell}
-            onChange={(e) => onShellChange(e.target.value)}
-            title="Select Local PTY Shell"
-            aria-label="Terminal shell"
-            style={{ cursor: 'pointer', outline: 'none' }}
+          <button
+            className={`icon-btn ${activeMenu === 'SESSION' ? 'active' : ''}`}
+            onClick={() => setActiveMenu(activeMenu === 'SESSION' ? null : 'SESSION')}
+            title="Terminal selection and macro profiles"
+            aria-haspopup="dialog"
+            aria-expanded={activeMenu === 'SESSION'}
+            aria-controls="topbar-session-menu"
           >
-            <option value="powershell.exe">PowerShell</option>
-            <option value="cmd.exe">CMD</option>
-            <option value="bash">WSL Bash</option>
-          </select>
+            <Terminal size={13} />
+            SESSION
+            <ChevronDown size={11} />
+          </button>
+
+          {activeMenu === 'SESSION' && (
+            <div className="topbar-popover session-popover" id="topbar-session-menu" role="dialog" aria-label="Session tools">
+              <div className="popover-header">
+                <Terminal size={13} /> SESSION TOOLS
+              </div>
+
+              <div className="popover-row">
+                <span className="popover-label">TERMINAL</span>
+                <select
+                  className="icon-btn session-shell-select"
+                  value={activeShell}
+                  onChange={(e) => onShellChange(e.target.value)}
+                  title="Select Local PTY Shell"
+                  aria-label="Terminal shell"
+                >
+                  <option value="powershell.exe">PowerShell</option>
+                  <option value="cmd.exe">CMD</option>
+                  <option value="bash">WSL Bash</option>
+                </select>
+              </div>
+
+              <div className="popover-divider" />
+
+              <div className="popover-row">
+                <span className="popover-label">MACRO PROFILES</span>
+                <button className="icon-btn" onClick={handleOpenProfiles} title="Macro Preset Profiles">
+                  <Folder size={13} /> PROFILES
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Audio Popover Menu */}
@@ -146,6 +165,9 @@ export function TopBar({
             className={`icon-btn ${(cabinNoiseActive || atcChatterActive) ? 'active' : ''}`}
             onClick={() => setActiveMenu(activeMenu === 'AUDIO' ? null : 'AUDIO')}
             title="Audio & Sound Level Settings"
+            aria-haspopup="dialog"
+            aria-expanded={activeMenu === 'AUDIO'}
+            aria-controls="topbar-audio-menu"
           >
             {soundMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
             AUDIO
@@ -153,7 +175,7 @@ export function TopBar({
           </button>
 
           {activeMenu === 'AUDIO' && (
-            <div className="topbar-popover">
+            <div className="topbar-popover" id="topbar-audio-menu" role="dialog" aria-label="Audio settings">
               <div className="popover-header">
                 <Sliders size={13} /> AUDIO SETTINGS
               </div>
@@ -190,6 +212,7 @@ export function TopBar({
                   value={cabinVolume}
                   onChange={handleCabinVolChange}
                   className="popover-range"
+                  aria-label="Cabin hum volume"
                 />
                 <span className="popover-val">{cabinVolume}%</span>
               </div>
@@ -214,6 +237,7 @@ export function TopBar({
                   value={atcVolume}
                   onChange={handleATCVolChange}
                   className="popover-range"
+                  aria-label="ATC volume"
                 />
                 <span className="popover-val">{atcVolume}%</span>
               </div>
@@ -230,6 +254,7 @@ export function TopBar({
                   value={atcFrequency}
                   onChange={handleATCFreqChange}
                   className="popover-range"
+                  aria-label="ATC chatter frequency"
                 />
               </div>
 
@@ -239,10 +264,9 @@ export function TopBar({
                 <span className="popover-label">TTS ENGINE</span>
                 <select
                   className="icon-btn"
-                  value={soundEngine.ttsProvider}
-                  onChange={(e) => {
-                    soundEngine.setTTSProvider(e.target.value);
-                  }}
+                  value={ttsProvider}
+                  onChange={(e) => onAudioSettingsChange?.({ ttsProvider: e.target.value })}
+                  aria-label="Text to speech engine"
                   style={{ padding: '2px 6px', fontSize: '10px' }}
                 >
                   <option value="PIPER">🎙️ PIPER NEURAL</option>
@@ -259,6 +283,9 @@ export function TopBar({
             className="icon-btn"
             onClick={() => setActiveMenu(activeMenu === 'VIEW' ? null : 'VIEW')}
             title="UI Scale & View Options"
+            aria-haspopup="dialog"
+            aria-expanded={activeMenu === 'VIEW'}
+            aria-controls="topbar-view-menu"
           >
             <ZoomIn size={13} />
             VIEW ({scalePercent}%)
@@ -266,14 +293,14 @@ export function TopBar({
           </button>
 
           {activeMenu === 'VIEW' && (
-            <div className="topbar-popover">
+            <div className="topbar-popover" id="topbar-view-menu" role="dialog" aria-label="View settings">
               <div className="popover-header">
                 <ZoomIn size={13} /> UI SCALE
               </div>
               <div className="popover-row" style={{ justifyContent: 'space-between', gap: 6 }}>
-                <button className="icon-btn" onClick={onZoomOutUI}><ZoomOut size={12} /> OUT</button>
-                <span className="zoom-badge" onClick={onResetUI} title="Reset to 100%">{scalePercent}%</span>
-                <button className="icon-btn" onClick={onZoomInUI}><ZoomIn size={12} /> IN</button>
+                <button className="icon-btn" onClick={onZoomOutUI} aria-label="Zoom out"><ZoomOut size={12} /> OUT</button>
+                <button className="zoom-badge" onClick={onResetUI} title="Reset to 100%" aria-label="Reset interface scale">{scalePercent}%</button>
+                <button className="icon-btn" onClick={onZoomInUI} aria-label="Zoom in"><ZoomIn size={12} /> IN</button>
               </div>
             </div>
           )}

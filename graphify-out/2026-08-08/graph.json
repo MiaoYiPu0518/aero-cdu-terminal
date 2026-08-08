@@ -1242,8 +1242,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_utils_soundengine",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "soundengine.js"
     },
     {
@@ -1253,8 +1253,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_utils_soundengine_callsigns",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "callsigns"
     },
     {
@@ -1264,8 +1264,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_utils_soundengine_facilities",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "facilities"
     },
     {
@@ -1275,8 +1275,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_utils_soundengine_runways",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "runways"
     },
     {
@@ -1286,8 +1286,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_utils_soundengine_headings",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "headings"
     },
     {
@@ -1297,8 +1297,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_utils_soundengine_flight_levels",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "flight_levels"
     },
     {
@@ -1308,8 +1308,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_utils_soundengine_altitudes",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "altitudes"
     },
     {
@@ -1319,8 +1319,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_utils_soundengine_frequencies",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "frequencies"
     },
     {
@@ -1330,8 +1330,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_utils_soundengine_waypoints",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "waypoints"
     },
     {
@@ -1341,8 +1341,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_utils_soundengine_squawks",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "squawks"
     },
     {
@@ -1352,8 +1352,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_utils_soundengine_atis_letters",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "atis_letters"
     },
     {
@@ -1363,8 +1363,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_utils_soundengine_aircraft_types",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "aircraft_types"
     },
     {
@@ -1374,8 +1374,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_utils_soundengine_alien_phrases",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "alien_phrases"
     },
     {
@@ -1385,8 +1385,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_utils_soundengine_emergency_phrases",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "emergency_phrases"
     },
     {
@@ -1396,8 +1396,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "src_utils_soundengine_funny_phrases",
-      "community": 0,
-      "community_name": "App.jsx",
+      "community": 6,
+      "community_name": "soundEngine.js",
       "norm_label": "funny_phrases"
     },
     {
@@ -1841,10 +1841,21 @@
       "norm_label": "useflightsimulator.js"
     },
     {
+      "label": "REAL_WORLD_ROUTES",
+      "file_type": "code",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_utils_useflightsimulator_real_world_routes",
+      "community": 0,
+      "community_name": "App.jsx",
+      "norm_label": "real_world_routes"
+    },
+    {
       "label": "useFlightSimulator()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L9",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "src_utils_useflightsimulator_useflightsimulator",
       "community": 0,
@@ -2880,7 +2891,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_connect"
@@ -2891,7 +2902,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L87",
+      "source_location": "L88",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_disconnect"
@@ -2902,7 +2913,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_onstatus"
@@ -2913,7 +2924,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_useflightsimulator_useflightsimulator"
@@ -4401,7 +4412,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L9",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_useflightsimulator_real_world_routes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L24",
       "weight": 1.0,
       "source": "src_utils_useflightsimulator",
       "target": "src_utils_useflightsimulator_useflightsimulator",
@@ -4429,5 +4450,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3333fbd466e36b660245c0a522e8c230f678997b"
+  "built_at_commit": "92b9165d22f73f82c9c3147c794f8fc490f4bbaf"
 }

@@ -80,9 +80,17 @@ export function useFlightSimulator(active = false) {
     ]
   });
 
+  const telemetryRef = useRef(telemetry);
   const maneuverTimerRef = useRef(0);
   const phaseTimerRef = useRef(0);
   const animFrameRef = useRef(null);
+
+  const commitTelemetry = (nextOrUpdater) => {
+    const current = telemetryRef.current;
+    const next = typeof nextOrUpdater === 'function' ? nextOrUpdater(current) : nextOrUpdater;
+    telemetryRef.current = next;
+    setTelemetry(next);
+  };
 
   // Main Simulation Loop
   useEffect(() => {
@@ -94,16 +102,23 @@ export function useFlightSimulator(active = false) {
       const realDt = Math.min((now - lastTime) / 1000, 0.2);
       lastTime = now;
 
-      setTelemetry((prev) => {
-        let {
+      const prev = telemetryRef.current;
+      let {
           pitch, roll, heading, altitude, airspeed, vsi, turnRate, n1, egt, fuelTotal,
           preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, distRemainingNM, totalDistNM,
+          targetAlt,
           activeEvent, tcasAlert, weatherCells, radarTargets, flaps, gearDown, selectedTarget
         } = prev;
 
-        const dt = realDt * simSpeed;
-        maneuverTimerRef.current += dt;
-        phaseTimerRef.current += dt;
+        const dt = Math.min(realDt * simSpeed, 0.2);
+        if (autoFlightMode) {
+          maneuverTimerRef.current += dt;
+          phaseTimerRef.current += dt;
+        } else {
+          maneuverTimerRef.current = 0;
+          phaseTimerRef.current = 0;
+          activeEvent = null;
+        }
 
         // Emergency PANIC Mode Override
         if (panicMode) {
@@ -143,6 +158,7 @@ export function useFlightSimulator(active = false) {
               n1 = 32;
               airspeed = Math.min(25, airspeed + 4 * dt);
               altitude = 0;
+              targetAlt = 35000;
               vsi = 0;
               gearDown = true;
               flaps = 0;
@@ -183,8 +199,8 @@ export function useFlightSimulator(active = false) {
               gearDown = false;
               flaps = 0;
               airspeed = Math.min(290, airspeed + 4 * dt);
-              altitude = Math.min(35000, altitude + (vsi / 60) * dt);
-              if (altitude >= 35000) {
+              altitude = Math.min(targetAlt, altitude + (vsi / 60) * dt);
+              if (altitude >= targetAlt) {
                 preset = 'CRUISE';
                 vsi = 0;
                 pitch = 2.2;
@@ -198,11 +214,17 @@ export function useFlightSimulator(active = false) {
               flaps = 0;
               n1 = 86.5;
               airspeed = Math.min(440, airspeed + 2 * dt);
-              altitude = 35000;
-              vsi = 0;
+              if (altitude < targetAlt) {
+                pitch = 5.0;
+                vsi = 1600;
+                altitude = Math.min(targetAlt, altitude + (vsi / 60) * dt);
+              } else {
+                altitude = targetAlt;
+                vsi = 0;
+              }
 
               // Distance progress towards destination
-              distRemainingNM = Math.max(0, distRemainingNM - (airspeed / 3600) * dt * 4);
+              distRemainingNM = Math.max(0, distRemainingNM - (airspeed / 3600) * dt);
               if (distRemainingNM <= 60) {
                 preset = 'DESCENT';
                 phaseTimerRef.current = 0;
@@ -216,7 +238,7 @@ export function useFlightSimulator(active = false) {
               vsi = -1800;
               airspeed = Math.max(220, airspeed - 6 * dt);
               altitude = Math.max(3500, altitude + (vsi / 60) * dt);
-              distRemainingNM = Math.max(0, distRemainingNM - (airspeed / 3600) * dt * 4);
+              distRemainingNM = Math.max(0, distRemainingNM - (airspeed / 3600) * dt);
               if (altitude <= 4000) {
                 preset = 'APPROACH';
                 phaseTimerRef.current = 0;
@@ -232,7 +254,7 @@ export function useFlightSimulator(active = false) {
               vsi = -750;
               airspeed = Math.max(140, airspeed - 8 * dt);
               altitude = Math.max(0, altitude + (vsi / 60) * dt);
-              distRemainingNM = Math.max(0, distRemainingNM - (airspeed / 3600) * dt * 2);
+              distRemainingNM = Math.max(0, distRemainingNM - (airspeed / 3600) * dt);
               if (altitude <= 20) {
                 preset = 'TOUCHDOWN';
                 phaseTimerRef.current = 0;
@@ -273,14 +295,15 @@ export function useFlightSimulator(active = false) {
                 timer: 0
               };
               soundEngine.playMasterCaution();
-            } else if (randType < 0.65) {
-              activeEvent = {
-                type: 'ATC_STEP_CLIMB',
+            } else if (randType < 0.65 && (preset === 'CRUISE' || preset === 'CLIMB')) {
+                activeEvent = {
+                  type: 'ATC_STEP_CLIMB',
                 title: '📈 ATC STEP CLIMB DIRECTIVE',
                 description: 'CLIMBING FL350 -> FL370 FOR TRAFFIC SEPARATION',
                 duration: 15,
-                timer: 0
-              };
+                  timer: 0
+                };
+                targetAlt = 37000;
               soundEngine.playAltitudeChime();
             } else {
               activeEvent = {
@@ -296,24 +319,23 @@ export function useFlightSimulator(active = false) {
         }
 
         // Process Active Event Effect
-        if (activeEvent) {
-          activeEvent.timer += dt;
+        if (autoFlightMode && activeEvent) {
+          activeEvent = { ...activeEvent, timer: activeEvent.timer + dt };
           if (activeEvent.type === 'WEATHER_DEVIATION') {
-            roll += (-22 - roll) * dt * 2.0;
+            roll += (-22 - roll) * Math.min(dt * 2.0, 1.0);
           } else if (activeEvent.type === 'ATC_STEP_CLIMB') {
-            pitch += (5.0 - pitch) * dt * 2.0;
-            vsi += (1600 - vsi) * dt * 2.0;
-            altitude += (vsi / 60) * dt;
+            pitch += (5.0 - pitch) * Math.min(dt * 2.0, 1.0);
+            vsi += (1600 - vsi) * Math.min(dt * 2.0, 1.0);
           } else if (activeEvent.type === 'TCAS_AVOIDANCE') {
-            pitch += (8.0 - pitch) * dt * 3.0;
-            vsi += (2500 - vsi) * dt * 3.0;
+            pitch += (8.0 - pitch) * Math.min(dt * 3.0, 1.0);
+            vsi += (2500 - vsi) * Math.min(dt * 3.0, 1.0);
             altitude += (vsi / 60) * dt;
           }
 
           if (activeEvent.timer >= activeEvent.duration) {
             activeEvent = null;
           }
-        } else {
+        } else if (autoFlightMode) {
           // Return to normal roll & pitch stability
           const turb = preset === 'TURBULENCE' ? 3.0 : 0.4;
           const pitchNoise = (Math.sin(now * 0.003) * 0.3 + Math.cos(now * 0.007) * 0.2) * turb;
@@ -377,7 +399,7 @@ export function useFlightSimulator(active = false) {
           syncSelectedTarget = updatedTargets.find(t => t.id === selectedTarget.id) || selectedTarget;
         }
 
-        return {
+        const nextTelemetry = {
           ...prev,
           pitch,
           roll,
@@ -390,6 +412,7 @@ export function useFlightSimulator(active = false) {
           egt,
           fuelFlow: Math.round(currentFF),
           fuelTotal: Math.round(fuelTotal),
+          targetAlt,
           flaps,
           gearDown,
           preset,
@@ -401,7 +424,9 @@ export function useFlightSimulator(active = false) {
           radarTargets: updatedTargets,
           selectedTarget: syncSelectedTarget
         };
-      });
+
+        telemetryRef.current = nextTelemetry;
+        setTelemetry(nextTelemetry);
 
       animFrameRef.current = requestAnimationFrame(updateTick);
     };
@@ -414,59 +439,92 @@ export function useFlightSimulator(active = false) {
 
   // Helper Methods
   const setPreset = (presetName) => {
-    setTelemetry((prev) => ({ ...prev, preset: presetName, autoFlightMode: false }));
+    commitTelemetry((prev) => ({
+      ...prev,
+      preset: presetName,
+      autoFlightMode: false,
+      activeEvent: null,
+      targetAlt: 35000
+    }));
+    maneuverTimerRef.current = 0;
     phaseTimerRef.current = 0;
   };
 
   const toggleAutoFlight = () => {
-    setTelemetry((prev) => ({ ...prev, autoFlightMode: !prev.autoFlightMode }));
+    const nextAutoFlightMode = !telemetryRef.current.autoFlightMode;
+    if (!nextAutoFlightMode) {
+      maneuverTimerRef.current = 0;
+      phaseTimerRef.current = 0;
+    }
+    commitTelemetry((prev) => ({
+      ...prev,
+      autoFlightMode: nextAutoFlightMode,
+      activeEvent: nextAutoFlightMode ? prev.activeEvent : null,
+      targetAlt: nextAutoFlightMode ? prev.targetAlt : 35000
+    }));
   };
 
   const toggleRandomManeuvers = () => {
-    setTelemetry((prev) => ({ ...prev, randomManeuversEnabled: !prev.randomManeuversEnabled }));
+    commitTelemetry((prev) => ({ ...prev, randomManeuversEnabled: !prev.randomManeuversEnabled }));
   };
 
   const setSimSpeed = (speed) => {
-    setTelemetry((prev) => ({ ...prev, simSpeed: speed }));
+    commitTelemetry((prev) => ({ ...prev, simSpeed: speed }));
   };
 
   const setRadarRange = (rangeNM) => {
-    setTelemetry((prev) => ({ ...prev, radarRangeNM: rangeNM }));
+    commitTelemetry((prev) => ({ ...prev, radarRangeNM: rangeNM }));
   };
 
   const setRadarMode = (mode) => {
-    setTelemetry((prev) => ({ ...prev, radarMode: mode }));
+    commitTelemetry((prev) => ({ ...prev, radarMode: mode }));
   };
 
   const setSelectedTarget = (tgt) => {
-    setTelemetry((prev) => ({ ...prev, selectedTarget: tgt }));
+    commitTelemetry((prev) => ({ ...prev, selectedTarget: tgt }));
   };
 
   const adjustPitch = (delta) => {
-    setTelemetry((prev) => ({ ...prev, pitch: Math.max(-30, Math.min(30, prev.pitch + delta)), autoFlightMode: false }));
+    commitTelemetry((prev) => ({
+      ...prev,
+      pitch: Math.max(-30, Math.min(30, prev.pitch + delta)),
+      autoFlightMode: false,
+      activeEvent: null,
+      targetAlt: 35000
+    }));
+    maneuverTimerRef.current = 0;
+    phaseTimerRef.current = 0;
   };
 
   const adjustRoll = (delta) => {
-    setTelemetry((prev) => ({ ...prev, roll: Math.max(-45, Math.min(45, prev.roll + delta)), autoFlightMode: false }));
+    commitTelemetry((prev) => ({
+      ...prev,
+      roll: Math.max(-45, Math.min(45, prev.roll + delta)),
+      autoFlightMode: false,
+      activeEvent: null,
+      targetAlt: 35000
+    }));
+    maneuverTimerRef.current = 0;
+    phaseTimerRef.current = 0;
   };
 
   const toggleGear = () => {
     soundEngine.playGearClunk();
-    setTelemetry((prev) => ({ ...prev, gearDown: !prev.gearDown }));
+    commitTelemetry((prev) => ({ ...prev, gearDown: !prev.gearDown }));
   };
 
   const setFlaps = (flapVal) => {
-    setTelemetry((prev) => ({ ...prev, flaps: flapVal }));
+    commitTelemetry((prev) => ({ ...prev, flaps: flapVal }));
   };
 
   const togglePanicMode = () => {
-    const nextPanic = !telemetry.panicMode;
+    const nextPanic = !telemetryRef.current.panicMode;
     if (nextPanic) {
       soundEngine.playPanicEmergencySequence();
-      setTelemetry((prev) => ({ ...prev, panicMode: true }));
+      commitTelemetry((prev) => ({ ...prev, panicMode: true }));
     } else {
       soundEngine.stopPanicEmergencySequence();
-      setTelemetry((prev) => ({
+      commitTelemetry((prev) => ({
         ...prev,
         panicMode: false,
         activeEvent: null,
@@ -482,7 +540,7 @@ export function useFlightSimulator(active = false) {
   const nextRoute = () => {
     const nextIndex = Math.floor(Math.random() * REAL_WORLD_ROUTES.length);
     const r = REAL_WORLD_ROUTES[nextIndex];
-    setTelemetry((prev) => ({
+    commitTelemetry((prev) => ({
       ...prev,
       origin: r.origin,
       destination: r.destination,

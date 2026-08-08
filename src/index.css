@@ -28,7 +28,7 @@
 html, body {
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
 }
 
@@ -67,7 +67,7 @@ body {
   border-radius: 12px;
   padding: 6px 14px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -77,41 +77,16 @@ body {
   overflow: visible !important;
 }
 
-.brand-section {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .brand-icon {
   color: var(--crt-cyan);
 }
 
-.brand-title {
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.brand-badge {
-  font-size: 9px;
-  background: rgba(0, 229, 255, 0.15);
-  color: var(--crt-cyan);
-  border: 1px solid rgba(0, 229, 255, 0.3);
-  padding: 1px 5px;
-  border-radius: 4px;
-  font-family: 'Share Tech Mono', monospace;
-}
-
 .controls-section {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   position: relative;
   z-index: 901;
   overflow: visible !important;
@@ -183,6 +158,13 @@ body {
 }
 
 /* Sleek TopBar Popover Menus */
+.topbar-dropdown-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .topbar-popover {
   position: absolute;
   top: calc(100% + 8px);
@@ -194,6 +176,7 @@ body {
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.98);
   z-index: 9999 !important;
   min-width: 220px;
+  max-width: calc(100vw - 24px);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1155,10 +1138,6 @@ body {
   border-bottom: 3px solid #00ff66 !important;
   background: #0a0d10 !important;
 }
-[data-theme="PIXEL"] .brand-title {
-  font-family: 'Press Start 2P', monospace !important;
-  font-size: 11px !important;
-}
 [data-theme="PIXEL"] .icon-btn {
   border-radius: 0px !important;
   font-family: 'Press Start 2P', monospace !important;
@@ -1209,46 +1188,25 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.62), inset 0 1px rgba(255, 255, 255, 0.05);
 }
 
-.brand-section {
-  gap: 10px;
-  padding-right: 13px;
-  border-right: 1px solid #343b48;
-}
-
 .brand-icon {
   filter: drop-shadow(0 0 7px rgba(0, 229, 255, 0.38));
-}
-
-.brand-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.brand-title {
-  letter-spacing: 0.8px;
-  line-height: 1;
-}
-
-.brand-subtitle {
-  color: #6f7b8d;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 8px;
-  line-height: 1;
-  letter-spacing: 1.25px;
 }
 
 .controls-section {
   flex: 1;
   flex-wrap: nowrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 7px;
+  min-width: 0;
 }
 
 .control-cluster {
   display: flex;
   align-items: center;
   gap: 4px;
+  min-width: 0;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
   padding: 3px;
   border: 1px solid #303744;
   border-radius: 7px;
@@ -1257,6 +1215,15 @@ body {
 
 .session-cluster {
   border-color: #35404d;
+}
+
+.session-popover {
+  min-width: 260px;
+}
+
+.session-shell-select {
+  min-width: 0;
+  max-width: 145px;
 }
 
 .icon-btn {
@@ -1399,16 +1366,10 @@ body {
   border-color: #536074;
 }
 
-[data-theme="PIXEL"] .brand-subtitle,
 [data-theme="PIXEL"] .chassis-id,
 [data-theme="PIXEL"] .keypad-bank-label,
 [data-theme="PIXEL"] .session-status {
   font-family: 'Press Start 2P', monospace !important;
-}
-
-[data-theme="PIXEL"] .brand-subtitle {
-  color: #00a943;
-  font-size: 6px;
 }
 
 [data-theme="PIXEL"] .control-cluster,
@@ -1448,6 +1409,11 @@ body {
   width: 100%;
 }
 
+.cockpit-main-layout.scaled-cdu-layout {
+  flex-direction: column;
+  align-items: center;
+}
+
 .cdu-unit-wrapper {
   flex-shrink: 0;
   display: flex;
@@ -1485,6 +1451,7 @@ body {
   gap: 8px;
   color: #00ff66;
   font-family: 'Share Tech Mono', monospace;
+  min-width: 0;
 }
 
 .header-title {
@@ -1492,6 +1459,10 @@ body {
   font-weight: 700;
   letter-spacing: 1px;
   color: #f0f4f8;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .header-badge {
@@ -1528,6 +1499,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-width: 0;
 }
 
 /* 6-Pack Instruments Grid */
@@ -1573,6 +1545,12 @@ body {
   display: flex;
   flex-direction: row;
   gap: 12px;
+  min-width: 0;
+}
+
+.dashboard-middle-row > *,
+.dashboard-middle-right {
+  min-width: 0;
 }
 
 /* CRT Radar Scope Wrapper */
@@ -1638,6 +1616,14 @@ body {
   letter-spacing: 0.5px;
   border-bottom: 1px solid #202632;
   padding-bottom: 4px;
+  min-width: 0;
+}
+
+.card-title > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .metrics-grid {
@@ -1782,12 +1768,15 @@ body {
   padding: 6px 10px;
   border-radius: 8px;
   gap: 8px;
+  min-width: 0;
 }
 
 .toolbar-group {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .toolbar-btn {
@@ -1909,6 +1898,7 @@ body {
   font-family: 'Share Tech Mono', monospace;
   font-size: 10px;
   font-weight: bold;
+  min-width: 0;
 }
 
 .route-leg {
@@ -1916,6 +1906,14 @@ body {
   align-items: center;
   gap: 6px;
   color: #00e5ff;
+  min-width: 0;
+}
+
+.route-leg > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .route-change-btn {
@@ -1939,6 +1937,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .route-dist {
@@ -1987,6 +1986,16 @@ body {
   padding: 8px 12px;
   border-radius: 8px;
   font-family: 'Share Tech Mono', monospace;
+}
+
+.alert-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.alert-title,
+.alert-desc {
+  overflow-wrap: anywhere;
 }
 
 .event-banner {
@@ -2129,4 +2138,37 @@ body {
   }
 }
 
+@media (max-width: 680px) {
+  .flight-dashboard-panel {
+    min-width: 0;
+  }
 
+  .dashboard-toolbar,
+  .dashboard-middle-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .speed-selector-group {
+    justify-content: flex-end;
+  }
+
+  .route-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .route-leg,
+  .route-timing {
+    max-width: 100%;
+  }
+
+  .manual-stick-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stick-subgroup {
+    flex-wrap: wrap;
+  }
+}

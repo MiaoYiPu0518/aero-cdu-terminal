@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TopBar } from './components/TopBar';
 import { CDUFrame } from './components/CDUFrame';
 import { KeyProgrammerModal } from './components/KeyProgrammerModal';
@@ -8,6 +8,37 @@ import { PTYClient } from './utils/ptyClient';
 import { soundEngine } from './utils/soundEngine';
 import { useFlightSimulator } from './utils/useFlightSimulator';
 
+const DEFAULT_AUDIO_SETTINGS = {
+  cabinVolume: 25,
+  atcVolume: 35,
+  atcFrequency: 2,
+  ttsProvider: 'PIPER'
+};
+
+const SUPPORTED_SHELLS = ['powershell.exe', 'cmd.exe', 'bash'];
+
+const normalizeUiScale = (value) => {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 1.0;
+  return Math.min(1.6, Math.max(0.6, parseFloat(numericValue.toFixed(1))));
+};
+
+const normalizeRange = (value, fallback, min, max) => {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(numericValue)));
+};
+
+const normalizeAudioSettings = (settings = {}) => {
+  const source = settings && typeof settings === 'object' ? settings : {};
+  return {
+    cabinVolume: normalizeRange(source.cabinVolume, DEFAULT_AUDIO_SETTINGS.cabinVolume, 0, 100),
+    atcVolume: normalizeRange(source.atcVolume, DEFAULT_AUDIO_SETTINGS.atcVolume, 0, 100),
+    atcFrequency: normalizeRange(source.atcFrequency, DEFAULT_AUDIO_SETTINGS.atcFrequency, 1, 4),
+    ttsProvider: source.ttsProvider === 'WEBSPEECH' ? 'WEBSPEECH' : 'PIPER'
+  };
+};
+
 export function App() {
   const [bindings, setBindings] = useState({});
   const [scratchpad, setScratchpad] = useState('');
@@ -16,10 +47,12 @@ export function App() {
   const [programMode, setProgramMode] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [activeShell, setActiveShell] = useState('powershell.exe');
-  const [soundMuted, setSoundMuted] = useState(false);
-  const [cabinNoiseActive, setCabinNoiseActive] = useState(false);
-  const [atcChatterActive, setAtcChatterActive] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(() => soundEngine.muted);
+  const [cabinNoiseActive, setCabinNoiseActive] = useState(() => soundEngine.noisePlaying);
+  const [atcChatterActive, setAtcChatterActive] = useState(() => soundEngine.chatterActive);
   const [ptyConnected, setPtyConnected] = useState(false);
+  const [audioSettings, setAudioSettings] = useState(DEFAULT_AUDIO_SETTINGS);
+  const audioSettingsRef = useRef(DEFAULT_AUDIO_SETTINGS);
 
   // Initialize Flight Simulator Engine
   const {
@@ -51,6 +84,7 @@ export function App() {
 
   // Entire CDU UI Scale
   const [uiScale, setUiScale] = useState(1.0);
+  const uiScaleRef = useRef(1.0);
 
   // UI Theme State ('REALISTIC' | 'PIXEL')
   const [uiTheme, setUiTheme] = useState(() => {
@@ -59,75 +93,110 @@ export function App() {
 
   // React state for ptyClient
   const [ptyClient, setPtyClient] = useState(null);
+  const activePtyClientRef = useRef(null);
 
-  useEffect(() => {
-    const client = new PTYClient();
-    client.onStatus((status) => {
+  const replacePtyClient = (shell) => {
+    const previousClient = activePtyClientRef.current;
+    if (previousClient) {
+      previousClient.disconnect();
+    }
+
+    const nextClient = new PTYClient();
+    nextClient.onStatus((status) => {
+      if (activePtyClientRef.current !== nextClient) return;
       setPtyConnected(status === 'CONNECTED');
     });
 
-    client.connect(activeShell, 80, 24);
-    setPtyClient(client);
+    activePtyClientRef.current = nextClient;
+    setPtyClient(nextClient);
+    nextClient.connect(shell, 80, 24);
+  };
 
-    fetch('/api/config')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          if (data.bindings && Object.keys(data.bindings).length > 0) {
-            setBindings(data.bindings);
-          }
-          if (data.uiTheme) {
-            setUiTheme(data.uiTheme);
-            localStorage.setItem('aero_cdu_theme', data.uiTheme);
-          }
-        }
-      })
-      .catch(() => {});
+  useEffect(() => {
+    let cancelled = false;
+
+    const initialize = async () => {
+      let data = {};
+      try {
+        const response = await fetch('/api/config');
+        if (response.ok) data = await response.json();
+      } catch (e) {
+        // Fall back to the local defaults when the backend is unavailable.
+      }
+
+      if (cancelled) return;
+
+      const restoredShell = SUPPORTED_SHELLS.includes(data.activeShell) ? data.activeShell : 'powershell.exe';
+      const restoredAudio = normalizeAudioSettings(data.audio);
+      const restoredUiScale = normalizeUiScale(data.uiScale);
+
+      if (data.bindings && Object.keys(data.bindings).length > 0) {
+        setBindings(data.bindings);
+      }
+      if (data.uiTheme) {
+        setUiTheme(data.uiTheme);
+        localStorage.setItem('aero_cdu_theme', data.uiTheme);
+      }
+
+      setActiveShell(restoredShell);
+      audioSettingsRef.current = restoredAudio;
+      setAudioSettings(restoredAudio);
+      soundEngine.setCabinVolume(restoredAudio.cabinVolume / 100);
+      soundEngine.setATCVolume(restoredAudio.atcVolume / 100);
+      soundEngine.setATCChatterFrequency(restoredAudio.atcFrequency);
+      soundEngine.setTTSProvider(restoredAudio.ttsProvider);
+      uiScaleRef.current = restoredUiScale;
+      setUiScale(restoredUiScale);
+
+      replacePtyClient(restoredShell);
+    };
+
+    initialize();
 
     return () => {
-      client.disconnect();
+      cancelled = true;
+      const client = activePtyClientRef.current;
+      activePtyClientRef.current = null;
+      if (client) client.disconnect();
     };
   }, []);
 
-  const saveConfigToStorage = (newBindings = bindings, newTheme = uiTheme, newShell = activeShell) => {
+  const saveConfigToStorage = ({
+    newBindings = bindings,
+    newTheme = uiTheme,
+    newShell = activeShell,
+    newAudio = audioSettingsRef.current,
+    newUiScale = uiScaleRef.current
+  } = {}) => {
     setBindings(newBindings);
     setUiTheme(newTheme);
     localStorage.setItem('aero_cdu_theme', newTheme);
     fetch('/api/config', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bindings: newBindings, activeShell: newShell, uiTheme: newTheme }),
+      body: JSON.stringify({
+        bindings: newBindings,
+        activeShell: newShell,
+        uiTheme: newTheme,
+        audio: newAudio,
+        uiScale: newUiScale
+      }),
     }).catch(() => {});
   };
 
   const handleThemeChange = (newTheme) => {
     setUiTheme(newTheme);
-    saveConfigToStorage(bindings, newTheme, activeShell);
+    saveConfigToStorage({ newTheme });
   };
 
   const handleShellChange = (newShell) => {
     setActiveShell(newShell);
-    if (ptyClient) {
-      ptyClient.disconnect();
-    }
-    const newClient = new PTYClient();
-    newClient.onStatus((status) => {
-      setPtyConnected(status === 'CONNECTED');
-    });
-    newClient.connect(newShell, 80, 24);
-    setPtyClient(newClient);
+    replacePtyClient(newShell);
+    saveConfigToStorage({ newShell });
   };
 
   const handleReconnect = () => {
-    if (ptyClient) {
-      ptyClient.disconnect();
-    }
-    const newClient = new PTYClient();
-    newClient.onStatus((status) => {
-      setPtyConnected(status === 'CONNECTED');
-    });
-    newClient.connect(activeShell, 80, 24);
-    setPtyClient(newClient);
+    replacePtyClient(activeShell);
   };
 
   // Zoom handlers for CRT font size (LSK 1L and LSK 2L)
@@ -141,15 +210,44 @@ export function App() {
 
   // Entire UI Scale Handlers
   const handleZoomInUI = () => {
-    setUiScale((prev) => Math.min(parseFloat((prev + 0.1).toFixed(1)), 1.6));
+    const nextScale = normalizeUiScale(uiScale + 0.1);
+    uiScaleRef.current = nextScale;
+    setUiScale(nextScale);
+    saveConfigToStorage({ newUiScale: nextScale });
   };
 
   const handleZoomOutUI = () => {
-    setUiScale((prev) => Math.max(parseFloat((prev - 0.1).toFixed(1)), 0.6));
+    const nextScale = normalizeUiScale(uiScale - 0.1);
+    uiScaleRef.current = nextScale;
+    setUiScale(nextScale);
+    saveConfigToStorage({ newUiScale: nextScale });
   };
 
   const handleResetUI = () => {
+    uiScaleRef.current = 1.0;
     setUiScale(1.0);
+    saveConfigToStorage({ newUiScale: 1.0 });
+  };
+
+  const handleAudioSettingsChange = (partialSettings) => {
+    const nextSettings = normalizeAudioSettings({ ...audioSettingsRef.current, ...partialSettings });
+    audioSettingsRef.current = nextSettings;
+    setAudioSettings(nextSettings);
+
+    if (Object.prototype.hasOwnProperty.call(partialSettings, 'cabinVolume')) {
+      soundEngine.setCabinVolume(nextSettings.cabinVolume / 100);
+    }
+    if (Object.prototype.hasOwnProperty.call(partialSettings, 'atcVolume')) {
+      soundEngine.setATCVolume(nextSettings.atcVolume / 100);
+    }
+    if (Object.prototype.hasOwnProperty.call(partialSettings, 'atcFrequency')) {
+      soundEngine.setATCChatterFrequency(nextSettings.atcFrequency);
+    }
+    if (Object.prototype.hasOwnProperty.call(partialSettings, 'ttsProvider')) {
+      soundEngine.setTTSProvider(nextSettings.ttsProvider);
+    }
+
+    saveConfigToStorage({ newAudio: nextSettings });
   };
 
   const handleToggleCabinNoise = () => {
@@ -160,6 +258,13 @@ export function App() {
   const handleToggleATCChatter = () => {
     const newState = soundEngine.toggleATCChatter();
     setAtcChatterActive(newState);
+  };
+
+  const handleToggleSound = () => {
+    const newMutedState = soundEngine.toggleMute();
+    setSoundMuted(newMutedState);
+    setCabinNoiseActive(soundEngine.noisePlaying);
+    setAtcChatterActive(soundEngine.chatterActive);
   };
 
   // Keyboard button press handler
@@ -318,7 +423,7 @@ export function App() {
 
   const handleSaveKeyBinding = (keyId, bindingData) => {
     const updated = { ...bindings, [keyId]: bindingData };
-    saveConfigToStorage(updated);
+    saveConfigToStorage({ newBindings: updated });
     setActiveModal(null);
     setEditingKeyId(null);
   };
@@ -326,17 +431,17 @@ export function App() {
   const handleUnbindKey = (keyId) => {
     const updated = { ...bindings };
     delete updated[keyId];
-    saveConfigToStorage(updated);
+    saveConfigToStorage({ newBindings: updated });
     setActiveModal(null);
     setEditingKeyId(null);
   };
 
   const handleLoadProfile = (profileBindings) => {
-    saveConfigToStorage(profileBindings);
+    saveConfigToStorage({ newBindings: profileBindings });
   };
 
   const handleClearAllBindings = () => {
-    saveConfigToStorage({});
+    saveConfigToStorage({ newBindings: {} });
   };
 
   return (
@@ -348,15 +453,17 @@ export function App() {
         uiTheme={uiTheme}
         onThemeChange={handleThemeChange}
         programMode={programMode}
-        onToggleProgramMode={() => setProgramMode(!programMode)}
+        onToggleProgramMode={() => setProgramMode((prev) => !prev)}
         showDashboard={showDashboard}
-        onToggleDashboard={() => setShowDashboard(!showDashboard)}
+        onToggleDashboard={() => setShowDashboard((prev) => !prev)}
         soundMuted={soundMuted}
-        onToggleSound={() => setSoundMuted(soundEngine.toggleMute())}
+        onToggleSound={handleToggleSound}
         cabinNoiseActive={cabinNoiseActive}
         onToggleCabinNoise={handleToggleCabinNoise}
         atcChatterActive={atcChatterActive}
         onToggleATCChatter={handleToggleATCChatter}
+        audioSettings={audioSettings}
+        onAudioSettingsChange={handleAudioSettingsChange}
         onOpenProfiles={() => setActiveModal('PROFILES')}
         onReconnect={handleReconnect}
         uiScale={uiScale}
@@ -366,7 +473,7 @@ export function App() {
       />
 
       {/* Main Cockpit Layout containing Left Dashboard & Right CDU Unit */}
-      <div className="cockpit-main-layout">
+      <div className={`cockpit-main-layout ${showDashboard && uiScale > 1 ? 'scaled-cdu-layout' : ''}`}>
         {/* Left Side Flight Dashboard Panel */}
         {showDashboard && (
           <FlightDashboard

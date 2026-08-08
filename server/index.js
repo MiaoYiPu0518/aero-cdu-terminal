@@ -136,7 +136,18 @@ app.get('/api/config', (req, res) => {
       logToFile(`[SERVER] Error reading config file: ${e.message}`);
     }
   }
-  res.json({ bindings: {}, activeShell: 'powershell.exe', uiTheme: 'REALISTIC' });
+  res.json({
+    bindings: {},
+    activeShell: 'powershell.exe',
+    uiTheme: 'REALISTIC',
+    audio: {
+      cabinVolume: 25,
+      atcVolume: 35,
+      atcFrequency: 2,
+      ttsProvider: 'PIPER'
+    },
+    uiScale: 1.0
+  });
 });
 
 app.post('/api/config', (req, res) => {

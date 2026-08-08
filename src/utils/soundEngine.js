@@ -113,10 +113,13 @@ const FUNNY_PHRASES = [
 class SoundEngine {
   constructor() {
     this.audioCtx = null;
+    this.masterGainNode = null;
     this.muted = false;
+    this.activeHtmlAudio = new Set();
 
     // Cabin Hum
     this.noisePlaying = false;
+    this.resumeNoiseOnUnmute = false;
     this.noiseNode = null;
     this.gainNode = null;
     this.filterNode = null;
@@ -124,10 +127,13 @@ class SoundEngine {
 
     // ATC Radio Engine
     this.chatterActive = false;
+    this.resumeChatterOnUnmute = false;
     this.chatterFrequency = 2; // 1: LOW, 2: MED, 3: HIGH, 4: RAPID
     this.chatterTimer = null;
+    this.chatterGeneration = 0;
     this.currentStaticSource = null;
     this.currentStaticGain = null;
+    this.currentStaticFilter = null;
     this.atcVolume = 0.35; // 0.0 to 1.0
     this.voices = [];
 
@@ -151,7 +157,12 @@ class SoundEngine {
       'en_US-l2arctic-medium'
     ];
     this.currentVoiceNode = null;
+    this.currentVoiceOwner = null;
     this.isTransmitting = false;
+    this.isPanicActive = false;
+    this.panicGeneration = 0;
+    this.panicAlarmInterval = null;
+    this.resumePanicOnUnmute = false;
   }
 
   init() {
@@ -161,16 +172,77 @@ class SoundEngine {
         this.audioCtx = new AudioContext();
       }
     }
+    if (this.audioCtx && !this.masterGainNode) {
+      this.masterGainNode = this.audioCtx.createGain();
+      this.masterGainNode.gain.setValueAtTime(this.muted ? 0 : 1, this.audioCtx.currentTime);
+      this.masterGainNode.connect(this.audioCtx.destination);
+    }
     if (this.audioCtx && this.audioCtx.state === 'suspended') {
       this.audioCtx.resume();
     }
   }
 
+  getOutputNode() {
+    return this.masterGainNode || this.audioCtx?.destination;
+  }
+
+  setMasterGain() {
+    if (this.masterGainNode && this.audioCtx) {
+      this.masterGainNode.gain.setValueAtTime(this.muted ? 0 : 1, this.audioCtx.currentTime);
+    }
+  }
+
+  stopActiveHtmlAudio() {
+    for (const audio of this.activeHtmlAudio) {
+      try {
+        audio.muted = true;
+        audio.pause();
+        audio.currentTime = 0;
+      } catch (e) {}
+      this.activeHtmlAudio.delete(audio);
+    }
+  }
+
+  stopActiveVoiceTransmission(owner = null) {
+    if (!this.currentVoiceNode || (owner && this.currentVoiceOwner !== owner)) return;
+    try { this.currentVoiceNode.stop(); } catch (e) {}
+    try { this.currentVoiceNode.disconnect(); } catch (e) {}
+    this.currentVoiceNode = null;
+    this.currentVoiceOwner = null;
+  }
+
+  isChatterSessionActive(sessionId) {
+    return sessionId === this.chatterGeneration && this.chatterActive && !this.muted && !this.isPanicActive;
+  }
+
+  isPanicSessionActive(sessionId) {
+    return sessionId === this.panicGeneration && this.isPanicActive;
+  }
+
   toggleMute() {
     this.muted = !this.muted;
+    this.setMasterGain();
     if (this.muted) {
-      if (this.noisePlaying) this.stopCockpitNoise();
-      if (this.chatterActive) this.stopATCChatter();
+      this.resumeNoiseOnUnmute = this.noisePlaying;
+      this.resumeChatterOnUnmute = this.chatterActive;
+      this.resumePanicOnUnmute = this.isPanicActive;
+      if (this.noisePlaying) this.stopCockpitNoise(true);
+      if (this.chatterActive) this.stopATCChatter(true);
+      if (this.isPanicActive) this.stopPanicEmergencySequence(true);
+      this.stopActiveHtmlAudio();
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    } else {
+      const resumeNoise = this.resumeNoiseOnUnmute;
+      const resumeChatter = this.resumeChatterOnUnmute;
+      const resumePanic = this.resumePanicOnUnmute;
+      this.resumeNoiseOnUnmute = false;
+      this.resumeChatterOnUnmute = false;
+      this.resumePanicOnUnmute = false;
+      if (resumeNoise) this.startCockpitNoise();
+      if (resumeChatter) this.startATCChatter();
+      if (resumePanic) this.playPanicEmergencySequence();
     }
     return this.muted;
   }
@@ -186,6 +258,9 @@ class SoundEngine {
     this.atcVolume = Math.max(0, Math.min(1, val));
     if (this.currentStaticGain && this.audioCtx) {
       this.currentStaticGain.gain.setValueAtTime(this.atcVolume * 0.7, this.audioCtx.currentTime);
+    }
+    for (const audio of this.activeHtmlAudio) {
+      audio.volume = this.atcVolume;
     }
   }
 
@@ -213,7 +288,7 @@ class SoundEngine {
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
 
     osc.connect(gain);
-    gain.connect(this.audioCtx.destination);
+    gain.connect(this.getOutputNode());
 
     osc.start(now);
     osc.stop(now + 0.03);
@@ -237,7 +312,7 @@ class SoundEngine {
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
     osc.connect(gain);
-    gain.connect(this.audioCtx.destination);
+    gain.connect(this.getOutputNode());
 
     osc.start(now);
     osc.stop(now + 0.35);
@@ -261,7 +336,7 @@ class SoundEngine {
 
     osc1.connect(gain);
     osc2.connect(gain);
-    gain.connect(this.audioCtx.destination);
+    gain.connect(this.getOutputNode());
 
     osc1.start(now);
     osc2.start(now);
@@ -271,6 +346,7 @@ class SoundEngine {
 
   // Procedural Cockpit Cabin White Noise
   toggleCockpitNoise() {
+    if (this.muted) return false;
     if (this.noisePlaying) {
       this.stopCockpitNoise();
       return false;
@@ -282,7 +358,7 @@ class SoundEngine {
 
   startCockpitNoise() {
     this.init();
-    if (!this.audioCtx || this.noisePlaying) return;
+    if (this.muted || !this.audioCtx || this.noisePlaying) return;
 
     const bufferSize = 2 * this.audioCtx.sampleRate;
     const noiseBuffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
@@ -316,14 +392,14 @@ class SoundEngine {
 
     whiteNoise.connect(this.filterNode);
     this.filterNode.connect(this.gainNode);
-    this.gainNode.connect(this.audioCtx.destination);
+    this.gainNode.connect(this.getOutputNode());
 
     whiteNoise.start();
     this.noiseNode = whiteNoise;
     this.noisePlaying = true;
   }
 
-  stopCockpitNoise() {
+  stopCockpitNoise(preserveForUnmute = false) {
     if (this.noiseNode) {
       try {
         this.noiseNode.stop();
@@ -331,11 +407,17 @@ class SoundEngine {
       } catch (e) {}
       this.noiseNode = null;
     }
+    try { this.filterNode?.disconnect(); } catch (e) {}
+    try { this.gainNode?.disconnect(); } catch (e) {}
+    this.filterNode = null;
+    this.gainNode = null;
     this.noisePlaying = false;
+    if (!preserveForUnmute) this.resumeNoiseOnUnmute = false;
   }
 
   // Dynamic ATC Transmission Engine
   toggleATCChatter() {
+    if (this.muted) return false;
     if (this.chatterActive) {
       this.stopATCChatter();
       return false;
@@ -346,12 +428,15 @@ class SoundEngine {
   }
 
   startATCChatter() {
+    if (this.muted || this.chatterActive) return;
     this.init();
     this.chatterActive = true;
-    this.runTransmissionCycle();
+    const sessionId = ++this.chatterGeneration;
+    this.runTransmissionCycle(sessionId);
   }
 
-  stopATCChatter() {
+  stopATCChatter(preserveForUnmute = false) {
+    this.chatterGeneration += 1;
     this.chatterActive = false;
     this.isTransmitting = false;
     if (this.chatterTimer) {
@@ -359,9 +444,11 @@ class SoundEngine {
       this.chatterTimer = null;
     }
     this.stopActiveTransmissionStatic();
+    this.stopActiveVoiceTransmission('CHATTER');
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
+    if (!preserveForUnmute) this.resumeChatterOnUnmute = false;
   }
 
   setATCChatterFrequency(level) {
@@ -371,23 +458,23 @@ class SoundEngine {
         clearTimeout(this.chatterTimer);
         this.chatterTimer = null;
       }
-      this.runTransmissionCycle();
+      this.runTransmissionCycle(this.chatterGeneration);
     }
   }
 
-  async runTransmissionCycle() {
-    if (!this.chatterActive || this.muted || this.isTransmitting) return;
+  async runTransmissionCycle(sessionId = this.chatterGeneration) {
+    if (!this.isChatterSessionActive(sessionId) || this.isTransmitting) return;
 
     this.isTransmitting = true;
     try {
-      await this.generateAndPlayDynamicTransmission();
+      await this.generateAndPlayDynamicTransmission(sessionId);
     } catch (err) {
       // Ignore transmission error and proceed to next cycle
     } finally {
-      this.isTransmitting = false;
+      if (sessionId === this.chatterGeneration) this.isTransmitting = false;
     }
 
-    if (!this.chatterActive) return;
+    if (!this.isChatterSessionActive(sessionId)) return;
 
     // Calculate silence gap AFTER previous transmission completes
     let minGap = 5000;
@@ -418,29 +505,38 @@ class SoundEngine {
 
     const gap = Math.floor(Math.random() * (maxGap - minGap)) + minGap;
     this.chatterTimer = setTimeout(() => {
-      this.runTransmissionCycle();
+      if (sessionId !== this.chatterGeneration) return;
+      this.chatterTimer = null;
+      this.runTransmissionCycle(sessionId);
     }, gap);
   }
 
   stopActiveTransmissionStatic() {
-    if (this.currentStaticSource) {
-      try {
-        if (this.currentStaticGain && this.audioCtx) {
-          const now = this.audioCtx.currentTime;
-          this.currentStaticGain.gain.setValueAtTime(this.currentStaticGain.gain.value, now);
-          this.currentStaticGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-        }
-        setTimeout(() => {
-          if (this.currentStaticSource) {
-            try { this.currentStaticSource.stop(); this.currentStaticSource.disconnect(); } catch (e) {}
-            this.currentStaticSource = null;
-            this.currentStaticGain = null;
-          }
-        }, 60);
-      } catch (e) {
-        this.currentStaticSource = null;
-        this.currentStaticGain = null;
+    const source = this.currentStaticSource;
+    const gain = this.currentStaticGain;
+    const filter = this.currentStaticFilter;
+    if (!source) return;
+
+    this.currentStaticSource = null;
+    this.currentStaticGain = null;
+    this.currentStaticFilter = null;
+
+    try {
+      if (gain && this.audioCtx) {
+        const now = this.audioCtx.currentTime;
+        gain.gain.setValueAtTime(gain.gain.value, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
       }
+      setTimeout(() => {
+        try { source.stop(); } catch (e) {}
+        try { source.disconnect(); } catch (e) {}
+        try { filter?.disconnect(); } catch (e) {}
+        try { gain?.disconnect(); } catch (e) {}
+      }, 60);
+    } catch (e) {
+      try { source.disconnect(); } catch (ignored) {}
+      try { filter?.disconnect(); } catch (ignored) {}
+      try { gain?.disconnect(); } catch (ignored) {}
     }
   }
 
@@ -642,9 +738,14 @@ class SoundEngine {
     return await this.audioCtx.decodeAudioData(arrayBuffer);
   }
 
-  playAudioBufferWithRadioFX(audioBuffer, transmissionType = 'NORMAL') {
+  playAudioBufferWithRadioFX(audioBuffer, transmissionType = 'NORMAL', owner = null, sessionId = null) {
     return new Promise((resolve) => {
-      if (!this.audioCtx || (!this.chatterActive && !this.isPanicActive) || !audioBuffer) return resolve();
+      const sessionActive = owner === 'CHATTER'
+        ? this.isChatterSessionActive(sessionId)
+        : owner === 'PANIC'
+          ? this.isPanicSessionActive(sessionId) && !this.muted
+          : !this.muted && (this.chatterActive || this.isPanicActive);
+      if (!this.audioCtx || !sessionActive || !audioBuffer) return resolve();
 
       const source = this.audioCtx.createBufferSource();
       source.buffer = audioBuffer;
@@ -665,11 +766,19 @@ class SoundEngine {
 
       source.connect(bandpass);
       bandpass.connect(voiceGain);
-      voiceGain.connect(this.audioCtx.destination);
+      voiceGain.connect(this.getOutputNode());
 
       this.currentVoiceNode = source;
+      this.currentVoiceOwner = owner;
 
       source.onended = () => {
+        if (this.currentVoiceNode === source) {
+          this.currentVoiceNode = null;
+          this.currentVoiceOwner = null;
+        }
+        try { source.disconnect(); } catch (e) {}
+        try { bandpass.disconnect(); } catch (e) {}
+        try { voiceGain.disconnect(); } catch (e) {}
         resolve();
       };
 
@@ -702,6 +811,7 @@ class SoundEngine {
 
     const bandpass = this.audioCtx.createBiquadFilter();
     bandpass.type = 'bandpass';
+    this.currentStaticFilter = bandpass;
 
     if (transmissionType === 'ALIEN') {
       bandpass.frequency.setValueAtTime(2400, now);
@@ -720,54 +830,58 @@ class SoundEngine {
 
     this.currentStaticSource.connect(bandpass);
     bandpass.connect(this.currentStaticGain);
-    this.currentStaticGain.connect(this.audioCtx.destination);
+    this.currentStaticGain.connect(this.getOutputNode());
 
     this.currentStaticSource.start(now);
   }
 
-  async playSingleUtterance(text, voiceName, transmissionType = 'NORMAL') {
+  async playSingleUtterance(text, voiceName, transmissionType = 'NORMAL', sessionId) {
+    const isActive = () => this.isChatterSessionActive(sessionId);
+    if (!isActive()) return;
     this.playPTTClick(true);
     this.startSpeakerStatic(transmissionType);
     try {
       if (this.ttsProvider === 'PIPER') {
         const audioBuffer = await this.fetchPiperAudioBuffer(text, voiceName);
-        await this.playAudioBufferWithRadioFX(audioBuffer, transmissionType);
+        if (isActive()) await this.playAudioBufferWithRadioFX(audioBuffer, transmissionType, 'CHATTER', sessionId);
       } else {
-        await this.playWebSpeech(text, transmissionType);
+        await this.playWebSpeech(text, transmissionType, 'CHATTER', sessionId);
       }
     } catch (err) {
-      await this.playWebSpeech(text, transmissionType);
+      if (isActive()) await this.playWebSpeech(text, transmissionType, 'CHATTER', sessionId);
     } finally {
       this.playPTTClick(false);
       this.stopActiveTransmissionStatic();
     }
   }
 
-  async playDialogueSequence(transmission) {
+  async playDialogueSequence(transmission, sessionId) {
+    const isActive = () => this.isChatterSessionActive(sessionId);
+    if (!isActive()) return;
     // 1. First Transmission (Independent static burst for Speaker 1)
     this.playPTTClick(true);
     this.startSpeakerStatic('NORMAL');
     try {
       if (this.ttsProvider === 'PIPER') {
         const firstBuf = await this.fetchPiperAudioBuffer(transmission.firstSpeaker.text, transmission.firstSpeaker.voice);
-        await this.playAudioBufferWithRadioFX(firstBuf, 'NORMAL');
+        if (isActive()) await this.playAudioBufferWithRadioFX(firstBuf, 'NORMAL', 'CHATTER', sessionId);
       } else {
-        await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL');
+        await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL', 'CHATTER', sessionId);
       }
     } catch (e) {
-      await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL');
+      if (isActive()) await this.playWebSpeech(transmission.firstSpeaker.text, 'NORMAL', 'CHATTER', sessionId);
     }
     this.playPTTClick(false);
     // Stop static immediately when Speaker 1 finishes
     this.stopActiveTransmissionStatic();
 
-    if (!this.chatterActive || this.muted) return;
+    if (!isActive()) return;
 
     // Inter-speaker pause (1.0s to 5.0s) - Complete radio silence / cabin hum
     const pauseMs = 1000 + Math.floor(Math.random() * 4000);
     await new Promise(r => setTimeout(r, pauseMs));
 
-    if (!this.chatterActive || this.muted) return;
+    if (!isActive()) return;
 
     // 2. Second Transmission (Independent static burst for Speaker 2)
     this.playPTTClick(true);
@@ -775,20 +889,30 @@ class SoundEngine {
     try {
       if (this.ttsProvider === 'PIPER') {
         const secondBuf = await this.fetchPiperAudioBuffer(transmission.secondSpeaker.text, transmission.secondSpeaker.voice);
-        await this.playAudioBufferWithRadioFX(secondBuf, 'NORMAL');
+        if (isActive()) await this.playAudioBufferWithRadioFX(secondBuf, 'NORMAL', 'CHATTER', sessionId);
       } else {
-        await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL');
+        await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL', 'CHATTER', sessionId);
       }
     } catch (e) {
-      await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL');
+      if (isActive()) await this.playWebSpeech(transmission.secondSpeaker.text, 'NORMAL', 'CHATTER', sessionId);
     }
     this.playPTTClick(false);
     // Stop static immediately when Speaker 2 finishes
     this.stopActiveTransmissionStatic();
   }
 
-  playWebSpeech(text, transmissionType) {
+  playWebSpeech(text, transmissionType, owner = null, sessionId = null) {
     return new Promise((resolve) => {
+      const sessionActive = owner === 'CHATTER'
+        ? this.isChatterSessionActive(sessionId)
+        : owner === 'PANIC'
+          ? this.isPanicSessionActive(sessionId) && !this.muted
+          : !this.muted;
+      if (!sessionActive) {
+        resolve();
+        return;
+      }
+
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
 
@@ -819,8 +943,8 @@ class SoundEngine {
     });
   }
 
-  async generateAndPlayDynamicTransmission() {
-    if (this.muted || !this.chatterActive || this.isPanicActive) return;
+  async generateAndPlayDynamicTransmission(sessionId) {
+    if (!this.isChatterSessionActive(sessionId)) return;
     this.init();
 
     const transmission = this.generateDynamicPhrase();
@@ -830,9 +954,9 @@ class SoundEngine {
     }
 
     if (transmission.isDialogue) {
-      await this.playDialogueSequence(transmission);
+      await this.playDialogueSequence(transmission, sessionId);
     } else {
-      await this.playSingleUtterance(transmission.text, transmission.voice, transmission.type);
+      await this.playSingleUtterance(transmission.text, transmission.voice, transmission.type, sessionId);
     }
   }
   // Helper method to play audio files from /sounds/ with Web Audio synth fallback
@@ -841,10 +965,16 @@ class SoundEngine {
     this.init();
 
     const audio = new Audio(soundPath);
-    audio.volume = Math.max(0.1, Math.min(1.0, this.atcVolume));
+    audio.volume = Math.max(0, Math.min(1.0, this.atcVolume));
+    audio.muted = this.muted;
+    this.activeHtmlAudio.add(audio);
+    const cleanup = () => this.activeHtmlAudio.delete(audio);
+    audio.addEventListener('ended', cleanup, { once: true });
+    audio.addEventListener('error', cleanup, { once: true });
     audio.play().catch(() => {
+      cleanup();
       // Fallback to Web Audio synthesizer if file play is blocked
-      if (fallbackFn) fallbackFn.call(this);
+      if (fallbackFn && !this.muted) fallbackFn.call(this);
     });
   }
 
@@ -859,7 +989,7 @@ class SoundEngine {
       gain.gain.setValueAtTime(this.atcVolume * 0.5, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
       osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+      gain.connect(this.getOutputNode());
       osc.start(now);
       osc.stop(now + 0.65);
     });
@@ -877,7 +1007,7 @@ class SoundEngine {
         gain.gain.setValueAtTime(this.atcVolume * 0.5, now + delay);
         gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.3);
         osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
+        gain.connect(this.getOutputNode());
         osc.start(now + delay);
         osc.stop(now + delay + 0.35);
       });
@@ -898,7 +1028,7 @@ class SoundEngine {
         gain.gain.setValueAtTime(this.atcVolume * 0.6, now + delay);
         gain.gain.linearRampToValueAtTime(0.001, now + delay + 0.2);
         osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
+        gain.connect(this.getOutputNode());
         osc.start(now + delay);
         osc.stop(now + delay + 0.22);
       }
@@ -917,7 +1047,7 @@ class SoundEngine {
       gain.gain.setValueAtTime(this.atcVolume * 0.7, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
       osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+      gain.connect(this.getOutputNode());
       osc.start(now);
       osc.stop(now + 0.4);
     });
@@ -935,7 +1065,7 @@ class SoundEngine {
       gain.gain.setValueAtTime(this.atcVolume * 0.4, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
       osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+      gain.connect(this.getOutputNode());
       osc.start(now);
       osc.stop(now + 0.3);
     });
@@ -952,7 +1082,7 @@ class SoundEngine {
       gain.gain.setValueAtTime(this.atcVolume * 0.5, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
       osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+      gain.connect(this.getOutputNode());
       osc.start(now);
       osc.stop(now + 0.55);
     });
@@ -982,15 +1112,23 @@ class SoundEngine {
     if (this.isPanicActive) return;
     this.init();
     this.isPanicActive = true;
+    const sessionId = ++this.panicGeneration;
+
+    if (this.chatterActive) {
+      this.chatterGeneration += 1;
+      this.isTransmitting = false;
+      if (this.chatterTimer) {
+        clearTimeout(this.chatterTimer);
+        this.chatterTimer = null;
+      }
+    }
 
     // Immediately stop ongoing background ambient speech or static to prevent overlap
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
     this.stopActiveTransmissionStatic();
-    if (this.currentVoiceNode) {
-      try { this.currentVoiceNode.stop(); } catch (e) {}
-    }
+    this.stopActiveVoiceTransmission();
 
     // Start repeating emergency alert sound alarm loop
     this.startPanicAlarmLoop();
@@ -1009,7 +1147,7 @@ class SoundEngine {
     ];
 
     for (let i = 0; i < panicTurns.length; i++) {
-      if (!this.isPanicActive || this.muted) break;
+      if (!this.isPanicSessionActive(sessionId)) break;
       const turn = panicTurns[i];
 
       this.playPTTClick(true);
@@ -1019,18 +1157,18 @@ class SoundEngine {
         if (this.ttsProvider === 'PIPER') {
           try {
             const audioBuf = await this.fetchPiperAudioBuffer(turn.text, turn.voice);
-            if (audioBuf && this.isPanicActive) {
-              await this.playAudioBufferWithRadioFX(audioBuf, 'EMERGENCY');
-            } else if (this.isPanicActive) {
-              await this.playWebSpeech(turn.text, 'EMERGENCY');
+            if (audioBuf && this.isPanicSessionActive(sessionId) && !this.muted) {
+              await this.playAudioBufferWithRadioFX(audioBuf, 'EMERGENCY', 'PANIC', sessionId);
+            } else if (this.isPanicSessionActive(sessionId) && !this.muted) {
+              await this.playWebSpeech(turn.text, 'EMERGENCY', 'PANIC', sessionId);
             }
           } catch (err) {
-            if (this.isPanicActive) {
-              await this.playWebSpeech(turn.text, 'EMERGENCY');
+            if (this.isPanicSessionActive(sessionId) && !this.muted) {
+              await this.playWebSpeech(turn.text, 'EMERGENCY', 'PANIC', sessionId);
             }
           }
-        } else if (this.isPanicActive) {
-          await this.playWebSpeech(turn.text, 'EMERGENCY');
+        } else if (this.isPanicSessionActive(sessionId) && !this.muted) {
+          await this.playWebSpeech(turn.text, 'EMERGENCY', 'PANIC', sessionId);
         }
       } catch (e) {
         console.error('[SoundEngine] Panic turn dialogue error:', e);
@@ -1039,24 +1177,29 @@ class SoundEngine {
       this.playPTTClick(false);
       this.stopActiveTransmissionStatic();
 
-      if (!this.isPanicActive || this.muted) break;
+      if (!this.isPanicSessionActive(sessionId)) break;
       const pauseMs = 1000 + Math.floor(Math.random() * 800);
       await new Promise((r) => setTimeout(r, pauseMs));
     }
   }
 
-  stopPanicEmergencySequence() {
+  stopPanicEmergencySequence(preserveForUnmute = false) {
+    this.panicGeneration += 1;
     this.isPanicActive = false;
     this.stopPanicAlarmLoop();
     this.stopActiveTransmissionStatic();
+    this.stopActiveVoiceTransmission('PANIC');
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
+    }
+    if (!preserveForUnmute) this.resumePanicOnUnmute = false;
+
+    if (!preserveForUnmute && !this.muted && this.chatterActive) {
+      this.isTransmitting = false;
+      const sessionId = ++this.chatterGeneration;
+      this.runTransmissionCycle(sessionId);
     }
   }
 }
 
 export const soundEngine = new SoundEngine();
-
-
-
-
