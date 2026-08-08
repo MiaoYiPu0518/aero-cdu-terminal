@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1786210642.858904,
-    "ast_hash": "8cc723a405d3f19d9ba0a47ce71143c7",
+    "mtime": 1786211824.3149197,
+    "ast_hash": "3d2ead953a6f54f831027159532adad6",
     "semantic_hash": ""
   },
   "src/components/CDUFrame.jsx": {
@@ -65,8 +65,8 @@
     "semantic_hash": "9dafffef83d2f765ad2ae09352f0c994"
   },
   "src/utils/soundEngine.js": {
-    "mtime": 1786211144.5207098,
-    "ast_hash": "c086d6826ebd2a4fa513dd6581e8f3ca",
+    "mtime": 1786213416.003114,
+    "ast_hash": "553489fc3f2291d93ee724159dba1f4c",
     "semantic_hash": ""
   },
   "vite.config.js": {
@@ -140,18 +140,18 @@
     "semantic_hash": ""
   },
   "src/components/FlightDashboard.jsx": {
-    "mtime": 1786211144.5191388,
-    "ast_hash": "8b62ddc0c8eed53c8b5cfc278a6f6886",
+    "mtime": 1786211814.4604073,
+    "ast_hash": "b5491eaa2f7e89ee8564c373956f54fc",
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786211144.5201824,
-    "ast_hash": "41986c668b8a1d5676deca8bad43b8fa",
+    "mtime": 1786212505.956905,
+    "ast_hash": "043f0e151c4f1124f62fd425f2c16ad5",
     "semantic_hash": ""
   },
   "public/sounds/altitude_chime.wav": {
-    "mtime": 1786210889.5882268,
-    "ast_hash": "5f61046acd688cdb9e33f602e6e10119",
+    "mtime": 1786211347.6487622,
+    "ast_hash": "04d70f43103a901baeed98c6a3fd7a0f",
     "semantic_hash": ""
   },
   "public/sounds/flaps_motor.wav": {
@@ -160,18 +160,33 @@
     "semantic_hash": ""
   },
   "public/sounds/gear_clunk.wav": {
-    "mtime": 1786210889.5934296,
-    "ast_hash": "90cf1257dd7e11874d4a7d0942311296",
+    "mtime": 1786211347.7160282,
+    "ast_hash": "cd654dfce4170e885b416e9f83af68b6",
     "semantic_hash": ""
   },
   "public/sounds/tcas_warning.wav": {
-    "mtime": 1786210889.6135726,
-    "ast_hash": "1e82fbcd25cae1a950102d6d01f75804",
+    "mtime": 1786211347.700446,
+    "ast_hash": "431fba1ae52b443adca88a26d3f09869",
     "semantic_hash": ""
   },
   "public/sounds/touchdown_chirp.wav": {
-    "mtime": 1786210889.6055403,
-    "ast_hash": "c0feeb25de37ba1484f15ef517968004",
+    "mtime": 1786211347.7255392,
+    "ast_hash": "0828fb36f4f1eddfaae806196fdd87c5",
+    "semantic_hash": ""
+  },
+  "scratch/generate_sounds.py": {
+    "mtime": 1786211327.943972,
+    "ast_hash": "76da0738c024a4ce9549f27ddec5f284",
+    "semantic_hash": ""
+  },
+  "public/sounds/master_caution.wav": {
+    "mtime": 1786211347.6718295,
+    "ast_hash": "822d0f79554699bd57da44d5eb1c0fcd",
+    "semantic_hash": ""
+  },
+  "public/sounds/overspeed_warn.wav": {
+    "mtime": 1786211347.7519255,
+    "ast_hash": "5c3b0d585040ec6275fa97fa0050849e",
     "semantic_hash": ""
   }
 }

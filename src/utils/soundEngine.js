@@ -644,7 +644,7 @@ class SoundEngine {
 
   playAudioBufferWithRadioFX(audioBuffer, transmissionType = 'NORMAL') {
     return new Promise((resolve) => {
-      if (!this.audioCtx || !this.chatterActive || !audioBuffer) return resolve();
+      if (!this.audioCtx || (!this.chatterActive && !this.isPanicActive) || !audioBuffer) return resolve();
 
       const source = this.audioCtx.createBufferSource();
       source.buffer = audioBuffer;
@@ -680,7 +680,7 @@ class SoundEngine {
   // Independent, randomized static burst per speaker
   startSpeakerStatic(transmissionType = 'NORMAL') {
     this.stopActiveTransmissionStatic();
-    if (!this.audioCtx || this.muted || !this.chatterActive) return;
+    if (!this.audioCtx || this.muted || (!this.chatterActive && !this.isPanicActive)) return;
 
     const now = this.audioCtx.currentTime;
     const bufferSize = Math.floor(this.audioCtx.sampleRate * 5.0);
@@ -820,7 +820,7 @@ class SoundEngine {
   }
 
   async generateAndPlayDynamicTransmission() {
-    if (this.muted || !this.chatterActive) return;
+    if (this.muted || !this.chatterActive || this.isPanicActive) return;
     this.init();
 
     const transmission = this.generateDynamicPhrase();
@@ -835,8 +835,228 @@ class SoundEngine {
       await this.playSingleUtterance(transmission.text, transmission.voice, transmission.type);
     }
   }
+  // Helper method to play audio files from /sounds/ with Web Audio synth fallback
+  playCockpitSound(soundPath, fallbackFn) {
+    if (this.muted) return;
+    this.init();
+
+    const audio = new Audio(soundPath);
+    audio.volume = Math.max(0.1, Math.min(1.0, this.atcVolume));
+    audio.play().catch(() => {
+      // Fallback to Web Audio synthesizer if file play is blocked
+      if (fallbackFn) fallbackFn.call(this);
+    });
+  }
+
+  playAltitudeChime() {
+    this.playCockpitSound('/sounds/altitude_chime.wav', () => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1050, now);
+      gain.gain.setValueAtTime(this.atcVolume * 0.5, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.65);
+    });
+  }
+
+  playMasterCaution() {
+    this.playCockpitSound('/sounds/master_caution.wav', () => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      [0, 0.22].forEach((delay) => {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(850, now + delay);
+        gain.gain.setValueAtTime(this.atcVolume * 0.5, now + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.3);
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(now + delay);
+        osc.stop(now + delay + 0.35);
+      });
+    });
+  }
+
+  playTCASWarning() {
+    this.playCockpitSound('/sounds/tcas_warning.wav', () => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      for (let i = 0; i < 4; i++) {
+        const delay = i * 0.25;
+        const freq = i % 2 === 0 ? 1000 : 800;
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now + delay);
+        gain.gain.setValueAtTime(this.atcVolume * 0.6, now + delay);
+        gain.gain.linearRampToValueAtTime(0.001, now + delay + 0.2);
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(now + delay);
+        osc.stop(now + delay + 0.22);
+      }
+    });
+  }
+
+  playGearClunk() {
+    this.playCockpitSound('/sounds/gear_clunk.wav', () => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(90, now);
+      osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
+      gain.gain.setValueAtTime(this.atcVolume * 0.7, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    });
+  }
+
+  playTouchdownChirp() {
+    this.playCockpitSound('/sounds/touchdown_chirp.wav', () => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(2200, now);
+      osc.frequency.exponentialRampToValueAtTime(600, now + 0.25);
+      gain.gain.setValueAtTime(this.atcVolume * 0.4, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    });
+  }
+
+  playOverspeedWarning() {
+    this.playCockpitSound('/sounds/overspeed_warn.wav', () => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(950, now);
+      gain.gain.setValueAtTime(this.atcVolume * 0.5, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.55);
+    });
+  }
+
+  startPanicAlarmLoop() {
+    if (this.panicAlarmInterval) clearInterval(this.panicAlarmInterval);
+    this.playOverspeedWarning();
+    this.panicAlarmInterval = setInterval(() => {
+      if (this.isPanicActive && !this.muted) {
+        this.playOverspeedWarning();
+      } else {
+        clearInterval(this.panicAlarmInterval);
+        this.panicAlarmInterval = null;
+      }
+    }, 2200);
+  }
+
+  stopPanicAlarmLoop() {
+    if (this.panicAlarmInterval) {
+      clearInterval(this.panicAlarmInterval);
+      this.panicAlarmInterval = null;
+    }
+  }
+
+  async playPanicEmergencySequence() {
+    if (this.isPanicActive) return;
+    this.init();
+    this.isPanicActive = true;
+
+    // Immediately stop ongoing background ambient speech or static to prevent overlap
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    this.stopActiveTransmissionStatic();
+    if (this.currentVoiceNode) {
+      try { this.currentVoiceNode.stop(); } catch (e) {}
+    }
+
+    // Start repeating emergency alert sound alarm loop
+    this.startPanicAlarmLoop();
+
+    const panicTurns = [
+      { speaker: 'PILOT', text: "MAYDAY, MAYDAY, MAYDAY! Aero Flight 492, engine number 1 failure, experiencing severe vibration!", voice: "en_US-danny-low" },
+      { speaker: 'ATC', text: "Aero 492, New York Center, MAYDAY acknowledged. Squawk 7700. Maintain current altitude if able, state intentions.", voice: "en_GB-vctk-medium" },
+      { speaker: 'PILOT', text: "Squawking 7700, Aero 492. We are unable to maintain altitude, initiating emergency descent to 10,000 feet.", voice: "en_US-danny-low" },
+      { speaker: 'ATC', text: "Aero 492, roger. Cleared emergency descent to 10,000 feet, heading 180, emergency equipment on standby.", voice: "en_GB-vctk-medium" },
+      { speaker: 'PILOT', text: "Leaving FL350 for 10,000 feet, heading 180. Engine 1 secured, running emergency checklist, Aero 492.", voice: "en_US-danny-low" },
+      { speaker: 'ATC', text: "Aero 492, JFK radar contact 25 miles north. Runway 22 Left is cleared for your arrival.", voice: "en_GB-vctk-medium" },
+      { speaker: 'PILOT', text: "Request vector for ILS approach runway 22 Left. We have 142 souls on board and 4 hours fuel remaining, Aero 492.", voice: "en_US-danny-low" },
+      { speaker: 'ATC', text: "Aero 492, turn left heading 140, vector for ILS 22 Left, altimeter 29.92. You are priority number 1.", voice: "en_GB-vctk-medium" },
+      { speaker: 'PILOT', text: "Left heading 140, descending to 3,000 feet, Aero 492.", voice: "en_US-danny-low" },
+      { speaker: 'ATC', text: "Aero 492, wind 210 at 12 knots. Emergency ground equipment in position, cleared to land runway 22 Left.", voice: "en_GB-vctk-medium" }
+    ];
+
+    for (let i = 0; i < panicTurns.length; i++) {
+      if (!this.isPanicActive || this.muted) break;
+      const turn = panicTurns[i];
+
+      this.playPTTClick(true);
+      this.startSpeakerStatic('NORMAL');
+
+      try {
+        if (this.ttsProvider === 'PIPER') {
+          try {
+            const audioBuf = await this.fetchPiperAudioBuffer(turn.text, turn.voice);
+            if (audioBuf && this.isPanicActive) {
+              await this.playAudioBufferWithRadioFX(audioBuf, 'EMERGENCY');
+            } else if (this.isPanicActive) {
+              await this.playWebSpeech(turn.text, 'EMERGENCY');
+            }
+          } catch (err) {
+            if (this.isPanicActive) {
+              await this.playWebSpeech(turn.text, 'EMERGENCY');
+            }
+          }
+        } else if (this.isPanicActive) {
+          await this.playWebSpeech(turn.text, 'EMERGENCY');
+        }
+      } catch (e) {
+        console.error('[SoundEngine] Panic turn dialogue error:', e);
+      }
+
+      this.playPTTClick(false);
+      this.stopActiveTransmissionStatic();
+
+      if (!this.isPanicActive || this.muted) break;
+      const pauseMs = 1000 + Math.floor(Math.random() * 800);
+      await new Promise((r) => setTimeout(r, pauseMs));
+    }
+  }
+
+  stopPanicEmergencySequence() {
+    this.isPanicActive = false;
+    this.stopPanicAlarmLoop();
+    this.stopActiveTransmissionStatic();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }
 }
 
 export const soundEngine = new SoundEngine();
+
+
 
 

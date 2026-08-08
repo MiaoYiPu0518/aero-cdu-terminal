@@ -27,6 +27,7 @@ export function App() {
     setPreset,
     toggleAutoFlight,
     toggleRandomManeuvers,
+    togglePanicMode,
     setSimSpeed,
     setRadarRange,
     setRadarMode,
@@ -372,6 +373,7 @@ export function App() {
             setPreset={setPreset}
             toggleAutoFlight={toggleAutoFlight}
             toggleRandomManeuvers={toggleRandomManeuvers}
+            togglePanicMode={togglePanicMode}
             setSimSpeed={setSimSpeed}
             setRadarRange={setRadarRange}
             setRadarMode={setRadarMode}

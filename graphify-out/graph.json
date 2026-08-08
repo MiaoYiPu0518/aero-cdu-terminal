@@ -598,6 +598,28 @@
       "norm_label": "download.ps1"
     },
     {
+      "label": "generate_sounds.py",
+      "file_type": "code",
+      "source_file": "scratch/generate_sounds.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scratch_generate_sounds",
+      "community": 16,
+      "community_name": "generate_sounds.py",
+      "norm_label": "generate_sounds.py"
+    },
+    {
+      "label": "write_wav()",
+      "file_type": "code",
+      "source_file": "scratch/generate_sounds.py",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "scratch_generate_sounds_write_wav",
+      "community": 16,
+      "community_name": "generate_sounds.py",
+      "norm_label": "write_wav()"
+    },
+    {
       "label": "download_voices.py",
       "file_type": "code",
       "source_file": "server/download_voices.py",
@@ -1220,8 +1242,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_utils_soundengine",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "soundengine.js"
     },
     {
@@ -1231,8 +1253,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_utils_soundengine_callsigns",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "callsigns"
     },
     {
@@ -1242,8 +1264,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_utils_soundengine_facilities",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "facilities"
     },
     {
@@ -1253,8 +1275,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_utils_soundengine_runways",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "runways"
     },
     {
@@ -1264,8 +1286,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_utils_soundengine_headings",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "headings"
     },
     {
@@ -1275,8 +1297,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_utils_soundengine_flight_levels",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "flight_levels"
     },
     {
@@ -1286,8 +1308,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_utils_soundengine_altitudes",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "altitudes"
     },
     {
@@ -1297,8 +1319,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_utils_soundengine_frequencies",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "frequencies"
     },
     {
@@ -1308,8 +1330,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_utils_soundengine_waypoints",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "waypoints"
     },
     {
@@ -1319,8 +1341,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_utils_soundengine_squawks",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "squawks"
     },
     {
@@ -1330,8 +1352,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_utils_soundengine_atis_letters",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "atis_letters"
     },
     {
@@ -1341,8 +1363,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_utils_soundengine_aircraft_types",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "aircraft_types"
     },
     {
@@ -1352,8 +1374,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_utils_soundengine_alien_phrases",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "alien_phrases"
     },
     {
@@ -1363,8 +1385,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_utils_soundengine_emergency_phrases",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "emergency_phrases"
     },
     {
@@ -1374,8 +1396,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "src_utils_soundengine_funny_phrases",
-      "community": 6,
-      "community_name": "soundEngine.js",
+      "community": 0,
+      "community_name": "App.jsx",
       "norm_label": "funny_phrases"
     },
     {
@@ -1687,6 +1709,127 @@
       "norm_label": ".generateandplaydynamictransmission()"
     },
     {
+      "label": ".playCockpitSound()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L839",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playcockpitsound",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playcockpitsound()"
+    },
+    {
+      "label": ".playAltitudeChime()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L851",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playaltitudechime",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playaltitudechime()"
+    },
+    {
+      "label": ".playMasterCaution()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L868",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playmastercaution",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playmastercaution()"
+    },
+    {
+      "label": ".playTCASWarning()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L887",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playtcaswarning",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playtcaswarning()"
+    },
+    {
+      "label": ".playGearClunk()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L908",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playgearclunk",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playgearclunk()"
+    },
+    {
+      "label": ".playTouchdownChirp()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L926",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playtouchdownchirp",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playtouchdownchirp()"
+    },
+    {
+      "label": ".playOverspeedWarning()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L944",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playoverspeedwarning",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playoverspeedwarning()"
+    },
+    {
+      "label": ".startPanicAlarmLoop()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L961",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_startpanicalarmloop",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".startpanicalarmloop()"
+    },
+    {
+      "label": ".stopPanicAlarmLoop()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L974",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_stoppanicalarmloop",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".stoppanicalarmloop()"
+    },
+    {
+      "label": ".playPanicEmergencySequence()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L981",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_playpanicemergencysequence",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".playpanicemergencysequence()"
+    },
+    {
+      "label": ".stopPanicEmergencySequence()",
+      "file_type": "code",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1048",
+      "_origin": "ast",
+      "id": "src_utils_soundengine_soundengine_stoppanicemergencysequence",
+      "community": 2,
+      "community_name": "SoundEngine",
+      "norm_label": ".stoppanicemergencysequence()"
+    },
+    {
       "label": "useFlightSimulator.js",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
@@ -1701,7 +1844,7 @@
       "label": "useFlightSimulator()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L8",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "src_utils_useflightsimulator_useflightsimulator",
       "community": 0,
@@ -2294,6 +2437,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "scratch/generate_sounds.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "scratch_generate_sounds",
+      "target": "scratch_generate_sounds_write_wav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "server/index.js",
       "source_location": "L19",
       "weight": 1.0,
@@ -2727,7 +2880,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_connect"
@@ -2738,7 +2891,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L86",
+      "source_location": "L87",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_disconnect"
@@ -2749,7 +2902,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_ptyclient_ptyclient_onstatus"
@@ -2760,7 +2913,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.jsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "src_app_app",
       "target": "src_utils_useflightsimulator_useflightsimulator"
@@ -3266,7 +3419,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
-      "source_location": "L840",
+      "source_location": "L1058",
       "weight": 1.0,
       "source": "src_utils_soundengine",
       "target": "src_utils_soundengine_soundengine",
@@ -3290,6 +3443,17 @@
       "weight": 1.0,
       "source": "src_utils_soundengine",
       "target": "src_utils_soundengine_waypoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_soundengine",
       "confidence_score": 1.0
     },
     {
@@ -3346,10 +3510,30 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L851",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playaltitudechime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L645",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
       "target": "src_utils_soundengine_soundengine_playaudiobufferwithradiofx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L839",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
       "confidence_score": 1.0
     },
     {
@@ -3386,10 +3570,50 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L908",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playgearclunk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L198",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
       "target": "src_utils_soundengine_soundengine_playkeyclick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L868",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playmastercaution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L944",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playoverspeedwarning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L981",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playpanicemergencysequence",
       "confidence_score": 1.0
     },
     {
@@ -3410,6 +3634,26 @@
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
       "target": "src_utils_soundengine_soundengine_playsingleutterance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L887",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playtcaswarning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L926",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_playtouchdownchirp",
       "confidence_score": 1.0
     },
     {
@@ -3496,6 +3740,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L961",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_startpanicalarmloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L681",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
@@ -3536,6 +3790,26 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L974",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_stoppanicalarmloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1048",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine",
+      "target": "src_utils_soundengine_soundengine_stoppanicemergencysequence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L338",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine",
@@ -3563,6 +3837,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_utils_useflightsimulator",
+      "target": "src_utils_soundengine_soundengine",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -3570,6 +3855,17 @@
       "source_location": "L824",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_generateandplaydynamictransmission",
+      "target": "src_utils_soundengine_soundengine_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L841",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playcockpitsound",
       "target": "src_utils_soundengine_soundengine_init",
       "confidence_score": 1.0
     },
@@ -3592,6 +3888,17 @@
       "source_location": "L200",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_playkeyclick",
+      "target": "src_utils_soundengine_soundengine_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L983",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
       "target": "src_utils_soundengine_soundengine_init",
       "confidence_score": 1.0
     },
@@ -3647,6 +3954,17 @@
       "source_location": "L748",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_playdialoguesequence",
+      "target": "src_utils_soundengine_soundengine_playpttclick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1015",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
       "target": "src_utils_soundengine_soundengine_playpttclick",
       "confidence_score": 1.0
     },
@@ -3776,6 +4094,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L990",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
+      "target": "src_utils_soundengine_soundengine_stopactivetransmissionstatic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L742",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_playsingleutterance",
@@ -3790,6 +4119,17 @@
       "source_location": "L682",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_startspeakerstatic",
+      "target": "src_utils_soundengine_soundengine_stopactivetransmissionstatic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1051",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_stoppanicemergencysequence",
       "target": "src_utils_soundengine_soundengine_stopactivetransmissionstatic",
       "confidence_score": 1.0
     },
@@ -3820,6 +4160,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1021",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
+      "target": "src_utils_soundengine_soundengine_fetchpiperaudiobuffer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L733",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_playsingleutterance",
@@ -3842,6 +4193,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1023",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
+      "target": "src_utils_soundengine_soundengine_playaudiobufferwithradiofx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
       "source_location": "L734",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_playsingleutterance",
@@ -3856,6 +4218,17 @@
       "source_location": "L749",
       "weight": 1.0,
       "source": "src_utils_soundengine_soundengine_playdialoguesequence",
+      "target": "src_utils_soundengine_soundengine_startspeakerstatic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1016",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
       "target": "src_utils_soundengine_soundengine_startspeakerstatic",
       "confidence_score": 1.0
     },
@@ -3915,10 +4288,120 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1025",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
+      "target": "src_utils_soundengine_soundengine_playwebspeech",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L852",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playaltitudechime",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L909",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playgearclunk",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L869",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playmastercaution",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L945",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playoverspeedwarning",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L888",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playtcaswarning",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L927",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playtouchdownchirp",
+      "target": "src_utils_soundengine_soundengine_playcockpitsound",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L963",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_startpanicalarmloop",
+      "target": "src_utils_soundengine_soundengine_playoverspeedwarning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L996",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_playpanicemergencysequence",
+      "target": "src_utils_soundengine_soundengine_startpanicalarmloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/soundEngine.js",
+      "source_location": "L1050",
+      "weight": 1.0,
+      "source": "src_utils_soundengine_soundengine_stoppanicemergencysequence",
+      "target": "src_utils_soundengine_soundengine_stoppanicalarmloop",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_utils_useflightsimulator",
       "target": "src_utils_useflightsimulator_useflightsimulator",
@@ -3946,5 +4429,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1ef1e6324fbb9ed082ab81b38e5c15b0acf77ed4"
+  "built_at_commit": "3333fbd466e36b660245c0a522e8c230f678997b"
 }

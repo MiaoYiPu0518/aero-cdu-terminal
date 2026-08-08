@@ -11,6 +11,7 @@ export function FlightDashboard({
   setPreset,
   toggleAutoFlight,
   toggleRandomManeuvers,
+  togglePanicMode,
   setSimSpeed,
   setRadarRange,
   setRadarMode,
@@ -24,7 +25,7 @@ export function FlightDashboard({
 }) {
   const {
     pitch, roll, heading, altitude, airspeed, vsi, n1, egt, fuelFlow, fuelTotal, flaps, gearDown,
-    preset, autoFlightMode, randomManeuversEnabled, simSpeed, origin, destination, distRemainingNM,
+    preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, origin, destination, distRemainingNM,
     totalDistNM, legProgressPct, activeEvent, tcasAlert, radarRangeNM, radarMode, selectedTarget,
     weatherCells, radarTargets
   } = telemetry;
@@ -32,13 +33,15 @@ export function FlightDashboard({
   const isPixel = uiTheme === 'PIXEL';
 
   return (
-    <div className={`flight-dashboard-panel ${isPixel ? 'pixel-theme' : ''}`}>
+    <div className={`flight-dashboard-panel ${isPixel ? 'pixel-theme' : ''} ${panicMode ? 'panic-active' : ''}`}>
       {/* Panel Header & Controls */}
       <div className="dashboard-header">
         <div className="header-title-group">
-          <Activity size={16} className="header-icon" />
+          <Activity size={16} className={`header-icon ${panicMode ? 'text-red' : ''}`} />
           <span className="header-title">ANALOG FLIGHT DASHBOARD</span>
-          <span className="header-badge">{autoFlightMode ? 'AUTO MODE' : 'MANUAL'}</span>
+          <span className={`header-badge ${panicMode ? 'badge-red' : ''}`}>
+            {panicMode ? '🚨 MAYDAY 7700' : autoFlightMode ? 'AUTO MODE' : 'MANUAL'}
+          </span>
         </div>
         <button className="dashboard-close-btn" onClick={onClose} title="Hide Flight Dashboard">
           <X size={15} />
@@ -62,6 +65,15 @@ export function FlightDashboard({
             title="Toggle Random Tactical Maneuvers & Events"
           >
             {randomManeuversEnabled ? '🎲 MANEUVERS: ON' : '🎲 MANEUVERS: OFF'}
+          </button>
+
+          {/* Panic Emergency Button (Default OFF) */}
+          <button
+            className={`toolbar-btn panic-btn ${panicMode ? 'active-panic' : ''}`}
+            onClick={togglePanicMode}
+            title="Trigger Emergency Situation & Mayday 10-Turn ATC Dialogue"
+          >
+            {panicMode ? '🚨 PANIC: ON' : '🚨 PANIC'}
           </button>
         </div>
 

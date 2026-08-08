@@ -1821,6 +1821,46 @@ body {
   color: #ffb000;
 }
 
+.toolbar-btn.panic-btn {
+  background: #2a1215;
+  border-color: #6b2229;
+  color: #ff6b77;
+}
+
+.toolbar-btn.panic-btn:hover {
+  background: #40181d;
+  color: #ffffff;
+}
+
+.toolbar-btn.active-panic {
+  background: #801019 !important;
+  border-color: #ff4757 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+  animation: panic-pulse 0.8s infinite alternate;
+}
+
+@keyframes panic-pulse {
+  from { opacity: 0.85; transform: scale(1.0); }
+  to { opacity: 1.0; transform: scale(1.03); box-shadow: 0 0 18px rgba(255, 71, 87, 0.9); }
+}
+
+.flight-dashboard-panel.panic-active {
+  border-color: #ff4757;
+  box-shadow: 0 0 25px rgba(255, 71, 87, 0.3), inset 0 0 15px rgba(255, 71, 87, 0.08);
+}
+
+.text-red {
+  color: #ff4757 !important;
+}
+
+.badge-red {
+  background: rgba(255, 71, 87, 0.2) !important;
+  border-color: #ff4757 !important;
+  color: #ff4757 !important;
+  animation: panic-pulse 0.8s infinite alternate;
+}
+
 .speed-selector-group {
   display: flex;
   align-items: center;

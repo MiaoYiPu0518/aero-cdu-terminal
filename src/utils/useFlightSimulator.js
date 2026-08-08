@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { soundEngine } from './soundEngine';
 
 /**
  * Advanced Telemetry Flight Simulator Engine Hook
@@ -28,6 +29,7 @@ export function useFlightSimulator(active = false) {
     preset: 'TAXI',      // 'TAXI' | 'TAKEOFF' | 'CLIMB' | 'CRUISE' | 'DESCENT' | 'APPROACH' | 'TOUCHDOWN'
     autoFlightMode: true,
     randomManeuversEnabled: true,
+    panicMode: false,
     simSpeed: 4,         // 1x, 4x, 8x speed multiplier
 
     // Route & Progress Tracking
@@ -78,7 +80,7 @@ export function useFlightSimulator(active = false) {
       setTelemetry((prev) => {
         let {
           pitch, roll, heading, altitude, airspeed, vsi, turnRate, n1, egt, fuelTotal,
-          preset, autoFlightMode, randomManeuversEnabled, simSpeed, distRemainingNM, totalDistNM,
+          preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, distRemainingNM, totalDistNM,
           activeEvent, tcasAlert, weatherCells, radarTargets, flaps, gearDown, selectedTarget
         } = prev;
 
@@ -86,8 +88,38 @@ export function useFlightSimulator(active = false) {
         maneuverTimerRef.current += dt;
         phaseTimerRef.current += dt;
 
-        // 1. AUTOMATIC FLIGHT PHASE STATE MACHINE
-        if (autoFlightMode) {
+        // Emergency PANIC Mode Override
+        if (panicMode) {
+          n1 = 18.0;
+          egt = 780;
+          airspeed = Math.max(210, airspeed - 5 * dt);
+
+          // Fast descent until reaching 10,000 ft floor, then bounce up & down with severe turbulence
+          if (altitude > 10800) {
+            vsi = -4500;
+            pitch = -7.5 + (Math.sin(now * 0.008) * 3.0);
+            roll = Math.sin(now * 0.005) * 8.0;
+            altitude = Math.max(10000, altitude + (vsi / 60) * dt);
+          } else {
+            // Oscillate / bounce altitude up & down continuously around 10,000 ft
+            const bounceOffset = Math.sin(now * 0.003) * 650 + Math.cos(now * 0.007) * 350;
+            altitude = Math.max(1000, 10000 + bounceOffset);
+            vsi = Math.cos(now * 0.003) * 1800 + Math.sin(now * 0.007) * 1200;
+            pitch = -2.5 + (Math.sin(now * 0.006) * 5.0);
+            roll = Math.sin(now * 0.004) * 12.0;
+          }
+
+          activeEvent = {
+            type: 'PANIC_MAYDAY',
+            title: '🚨 EMERGENCY MAYDAY (SQUAWK 7700)',
+            description: 'ENGINE 1 SEVERE VIBRATION & FAILURE - EMERGENCY DESCENT & BOUNCING 10,000 FT'
+          };
+        } else {
+          // If panic was just turned off, clear panic event notification cleanly
+          if (activeEvent && activeEvent.type === 'PANIC_MAYDAY') {
+            activeEvent = null;
+          }
+          if (autoFlightMode) {
           switch (preset) {
             case 'TAXI':
               pitch = 0;
@@ -122,6 +154,7 @@ export function useFlightSimulator(active = false) {
                   flaps = 5;
                   preset = 'CLIMB';
                   phaseTimerRef.current = 0;
+                  soundEngine.playGearClunk();
                 }
               }
               break;
@@ -139,6 +172,7 @@ export function useFlightSimulator(active = false) {
                 vsi = 0;
                 pitch = 2.2;
                 phaseTimerRef.current = 0;
+                soundEngine.playAltitudeChime();
               }
               break;
 
@@ -155,6 +189,7 @@ export function useFlightSimulator(active = false) {
               if (distRemainingNM <= 60) {
                 preset = 'DESCENT';
                 phaseTimerRef.current = 0;
+                soundEngine.playMasterCaution();
               }
               break;
 
@@ -168,6 +203,7 @@ export function useFlightSimulator(active = false) {
               if (altitude <= 4000) {
                 preset = 'APPROACH';
                 phaseTimerRef.current = 0;
+                soundEngine.playGearClunk();
               }
               break;
 
@@ -183,6 +219,7 @@ export function useFlightSimulator(active = false) {
               if (altitude <= 20) {
                 preset = 'TOUCHDOWN';
                 phaseTimerRef.current = 0;
+                soundEngine.playTouchdownChirp();
               }
               break;
 
@@ -203,6 +240,7 @@ export function useFlightSimulator(active = false) {
               break;
           }
         }
+      }
 
         // 2. RANDOM TACTICAL MANEUVERS ENGINE (Runs in Cruise / Climb / Descent)
         if (randomManeuversEnabled && autoFlightMode && (preset === 'CRUISE' || preset === 'CLIMB' || preset === 'DESCENT')) {
@@ -217,6 +255,7 @@ export function useFlightSimulator(active = false) {
                 duration: 12,
                 timer: 0
               };
+              soundEngine.playMasterCaution();
             } else if (randType < 0.65) {
               activeEvent = {
                 type: 'ATC_STEP_CLIMB',
@@ -225,6 +264,7 @@ export function useFlightSimulator(active = false) {
                 duration: 15,
                 timer: 0
               };
+              soundEngine.playAltitudeChime();
             } else {
               activeEvent = {
                 type: 'TCAS_AVOIDANCE',
@@ -233,6 +273,7 @@ export function useFlightSimulator(active = false) {
                 duration: 8,
                 timer: 0
               };
+              soundEngine.playTCASWarning();
             }
           }
         }
@@ -387,6 +428,7 @@ export function useFlightSimulator(active = false) {
   };
 
   const toggleGear = () => {
+    soundEngine.playGearClunk();
     setTelemetry((prev) => ({ ...prev, gearDown: !prev.gearDown }));
   };
 
@@ -394,11 +436,32 @@ export function useFlightSimulator(active = false) {
     setTelemetry((prev) => ({ ...prev, flaps: flapVal }));
   };
 
+  const togglePanicMode = () => {
+    const nextPanic = !telemetry.panicMode;
+    if (nextPanic) {
+      soundEngine.playPanicEmergencySequence();
+      setTelemetry((prev) => ({ ...prev, panicMode: true }));
+    } else {
+      soundEngine.stopPanicEmergencySequence();
+      setTelemetry((prev) => ({
+        ...prev,
+        panicMode: false,
+        activeEvent: null,
+        n1: prev.preset === 'CRUISE' ? 86.5 : prev.preset === 'CLIMB' ? 92 : 65,
+        egt: 450,
+        vsi: 0,
+        pitch: prev.preset === 'CRUISE' ? 2.2 : 0,
+        roll: 0
+      }));
+    }
+  };
+
   return {
     telemetry,
     setPreset,
     toggleAutoFlight,
     toggleRandomManeuvers,
+    togglePanicMode,
     setSimSpeed,
     setRadarRange,
     setRadarMode,
