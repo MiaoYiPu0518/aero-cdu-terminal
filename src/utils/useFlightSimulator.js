@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { soundEngine } from './soundEngine';
+import { AIRPORT_COORDINATES, getGreatCirclePoint, getInitialBearing } from './geo';
 
 export const REAL_WORLD_ROUTES = [
   { origin: 'KJFK', destination: 'EGLL', distNM: 3000, name: 'New York (JFK) ➔ London Heathrow' },
@@ -20,6 +21,11 @@ export const REAL_WORLD_ROUTES = [
 ];
 
 const initialRoute = REAL_WORLD_ROUTES[0];
+const getRouteCoordinates = (route) => ({
+  originCoords: AIRPORT_COORDINATES[route.origin] || [0, 0],
+  destinationCoords: AIRPORT_COORDINATES[route.destination] || [0, 0]
+});
+const initialRouteCoordinates = getRouteCoordinates(initialRoute);
 const ROUTE_MOVEMENT_PHASES = new Set([
   'TAKEOFF',
   'CLIMB',
@@ -60,12 +66,15 @@ export function useFlightSimulator(active = false) {
     autoFlightMode: true,
     randomManeuversEnabled: true,
     panicMode: false,
-    simSpeed: 4,         // 1x, 4x, 8x speed multiplier
+    simSpeed: 1,         // 1x, 4x, 8x speed multiplier
 
     // Route & Progress Tracking
     origin: initialRoute.origin,
     destination: initialRoute.destination,
     routeName: initialRoute.name,
+    ...initialRouteCoordinates,
+    flightPosition: initialRouteCoordinates.originCoords,
+    groundTrack: getInitialBearing(initialRouteCoordinates.originCoords, initialRouteCoordinates.destinationCoords),
     distRemainingNM: initialRoute.distNM,
     totalDistNM: initialRoute.distNM,
     legProgressPct: 0,
@@ -442,6 +451,9 @@ export function useFlightSimulator(active = false) {
         const legPct = totalDistNM > 0
           ? Math.min(100, Math.max(0, ((totalDistNM - distRemainingNM) / totalDistNM) * 100))
           : 0;
+        const routeProgress = legPct / 100;
+        const flightPosition = getGreatCirclePoint(prev.originCoords, prev.destinationCoords, routeProgress);
+        const groundTrack = getInitialBearing(prev.originCoords, prev.destinationCoords);
         const effectiveSpd = Math.max(140, airspeed);
         const eteSecondsTotal = Math.max(0, Math.round((distRemainingNM / effectiveSpd) * 3600));
         const eteHours = Math.floor(eteSecondsTotal / 3600);
@@ -469,6 +481,8 @@ export function useFlightSimulator(active = false) {
           fuelFlow: Math.round(currentFF),
           fuelTotal: Math.round(fuelTotal),
           targetAlt,
+          flightPosition,
+          groundTrack,
           flaps,
           gearDown,
           preset,
@@ -610,11 +624,15 @@ export function useFlightSimulator(active = false) {
   const nextRoute = () => {
     const nextIndex = Math.floor(Math.random() * REAL_WORLD_ROUTES.length);
     const r = REAL_WORLD_ROUTES[nextIndex];
+    const routeCoordinates = getRouteCoordinates(r);
     commitTelemetry((prev) => ({
       ...prev,
       origin: r.origin,
       destination: r.destination,
       routeName: r.name,
+      ...routeCoordinates,
+      flightPosition: routeCoordinates.originCoords,
+      groundTrack: getInitialBearing(routeCoordinates.originCoords, routeCoordinates.destinationCoords),
       totalDistNM: r.distNM,
       distRemainingNM: r.distNM,
       legProgressPct: 0

@@ -9,7 +9,7 @@ Keep it updated when adding a phase, an automated event, or a new manual overrid
 - The animation loop runs only while the dashboard is active. Hiding the dashboard
   pauses simulation time and preserves the current telemetry.
 - Each frame clamps wall-clock time to 0.2 seconds, applies the selected simulator
-  speed (`1x`, `4x`, or `8x`), then clamps the effective simulation step to 0.2
+  speed (`1x`, `4x`, or `8x`; `1x` is the default), then clamps the effective simulation step to 0.2
   seconds. This prevents a large frame gap from jumping across a maneuver.
 - React state is mirrored in `telemetryRef`; the loop reads and writes that ref so
   frame updates do not depend on asynchronous React updater timing.
@@ -83,6 +83,19 @@ the dashboard's **MANEUVERS** switch is enabled.
   accumulated every frame; the dashboard formats NM to one decimal and exposes a
   fractional leg percentage. ETE is calculated to the nearest second using the
   remaining distance and a minimum effective speed of 140 kt.
+- Route telemetry also exposes `originCoords`, `destinationCoords`, `flightPosition`,
+  and `groundTrack` for the satellite flight map. Position is interpolated along
+  the active route's great-circle path from the same fractional leg progress used
+  by the dashboard, so the map and route metrics cannot drift apart.
+- Map route geometry is split at the antimeridian and route framing uses an unwrapped
+  shortest longitude span, keeping dateline-crossing routes such as Los Angeles to
+  Tokyo visible without zooming out to the whole world.
+- The map ownship marker uses the downloaded CC0 top-view plane asset at
+  `public/assets/plane-top-view.svg`; its CSS rotation follows the live ground track.
+- The map header provides `TRACK`, `ROUTE`, and `WINDOW` views. `WINDOW` keeps the
+  online satellite raster but pitches the camera toward the starboard passenger view,
+  hides route overlays and the ownship marker, and adds a CSS window frame; it does
+  not enable terrain or any other 3D renderer.
 
 ## Change checklist for future agents
 
@@ -92,3 +105,5 @@ When modifying this simulator, update both the hook and this document if you:
 2. Add an event type, eligibility rule, duration, or event effect.
 3. Change manual-control behavior or dashboard visibility behavior.
 4. Change the time-step clamp, simulator speed, or route-progress calculation.
+5. Change route coordinate data or the geospatial telemetry consumed by
+   `TerrainFlightMap.jsx`.

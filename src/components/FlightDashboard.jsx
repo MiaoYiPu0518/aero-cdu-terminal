@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { AnalogSixPack } from './AnalogSixPack';
 import { AnalogRadarScope } from './AnalogRadarScope';
 import { X, Activity, Zap, Sliders, ShieldAlert, Navigation, Compass, AlertTriangle, Crosshair, Play, FastForward, RotateCcw } from 'lucide-react';
+
+const TerrainFlightMap = lazy(() => import('./TerrainFlightMap').then((module) => ({ default: module.TerrainFlightMap })));
 
 /**
  * Left-Side Docked Virtual Flight Dashboard Container Component
@@ -24,6 +26,7 @@ export function FlightDashboard({
   onClose,
   uiTheme = 'REALISTIC'
 }) {
+  const [showFlightControls, setShowFlightControls] = useState(false);
   const {
     pitch, roll, heading, altitude, airspeed, vsi, n1, egt, fuelFlow, fuelTotal, flaps, gearDown,
     preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, origin, destination, routeName,
@@ -247,8 +250,22 @@ export function FlightDashboard({
           </div>
         </div>
 
-        {/* 3. Interactive Flight Simulation Controls & Presets */}
-        <div className="dashboard-controls-section">
+        {/* 3. Satellite terrain map; manual controls stay available in a compact drawer. */}
+        <Suspense fallback={<div className="terrain-flight-section terrain-flight-loading">LOADING TERRAIN FLIGHT MAP…</div>}>
+          <TerrainFlightMap telemetry={telemetry} uiTheme={uiTheme} />
+        </Suspense>
+        <div className="terrain-controls-dock">
+          <button
+            className={`terrain-controls-toggle ${showFlightControls ? 'active' : ''}`}
+            onClick={() => setShowFlightControls((visible) => !visible)}
+          >
+            <Sliders size={13} />
+            <span>{showFlightControls ? 'HIDE SIMULATION CONTROLS' : 'SHOW SIMULATION CONTROLS'}</span>
+            <span className="terrain-controls-phase">{preset}</span>
+          </button>
+
+          {showFlightControls && (
+        <div className="dashboard-controls-section flight-controls-drawer">
           <div className="control-bar-label">
             <Sliders size={13} />
             <span>FLIGHT PHASE PRESETS & MANUAL STICK</span>
@@ -292,6 +309,8 @@ export function FlightDashboard({
               </button>
             </div>
           </div>
+        </div>
+          )}
         </div>
       </div>
     </div>

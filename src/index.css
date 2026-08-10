@@ -1758,6 +1758,300 @@ body {
   border-color: #00aa44;
 }
 
+/* Satellite terrain flight map */
+.terrain-flight-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 282px;
+  background: #08111a;
+  border: 1px solid #314355;
+  border-radius: 10px;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.55), 0 0 14px rgba(0, 0, 0, 0.2);
+}
+
+.terrain-flight-loading {
+  display: grid;
+  place-items: center;
+  color: #91a9bd;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.8px;
+}
+
+.terrain-flight-header,
+.terrain-flight-footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 29px;
+  padding: 6px 9px;
+  background: rgba(8, 14, 22, 0.91);
+  color: #b9cadc;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.45px;
+}
+
+.terrain-flight-header {
+  border-bottom: 1px solid rgba(120, 160, 190, 0.2);
+}
+
+.terrain-flight-footer {
+  border-top: 1px solid rgba(120, 160, 190, 0.2);
+  color: #8da4b9;
+}
+
+.terrain-flight-title,
+.terrain-flight-actions,
+.terrain-flight-footer span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.terrain-flight-title {
+  color: #d8e7f3;
+  font-weight: bold;
+}
+
+.terrain-map-status {
+  padding: 2px 4px;
+  border: 1px solid #69788a;
+  border-radius: 3px;
+  color: #9aa8b7;
+  font-size: 7px;
+}
+
+.terrain-map-status.online {
+  border-color: #4ad69e;
+  color: #6dffbb;
+}
+
+.terrain-map-status.error {
+  border-color: #e5a44b;
+  color: #ffd38a;
+}
+
+.terrain-map-btn,
+.terrain-controls-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #3a5268;
+  border-radius: 3px;
+  background: rgba(15, 29, 42, 0.9);
+  color: #a9bfd2;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  font-weight: bold;
+  letter-spacing: 0.35px;
+  padding: 4px 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.terrain-map-btn:hover,
+.terrain-map-btn.active,
+.terrain-controls-toggle:hover,
+.terrain-controls-toggle.active {
+  border-color: #6dffbb;
+  background: rgba(18, 75, 67, 0.85);
+  color: #b5ffdf;
+}
+
+.terrain-map-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.terrain-flight-map {
+  position: absolute;
+  inset: 29px 0 26px;
+  min-height: 220px;
+}
+
+.terrain-flight-map .maplibregl-canvas {
+  outline: none;
+}
+
+.terrain-flight-map .maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid rgba(169, 191, 210, 0.5);
+  border-radius: 4px;
+  background: rgba(9, 18, 28, 0.78);
+}
+
+.terrain-flight-map .maplibregl-ctrl-group button {
+  width: 23px;
+  height: 23px;
+  filter: invert(0.85);
+}
+
+.terrain-flight-map .maplibregl-ctrl-attrib {
+  padding: 1px 4px;
+  background: rgba(8, 14, 22, 0.76);
+  color: #d6e2eb;
+  font-size: 8px;
+}
+
+.terrain-flight-section.window-mode .terrain-flight-map .maplibregl-ctrl-top-right {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.terrain-flight-section.window-mode .terrain-flight-plane {
+  display: none;
+}
+
+.terrain-window-view-overlay {
+  position: absolute;
+  z-index: 2;
+  inset: 29px 0 26px;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(4, 9, 15, 0.08) 0%, transparent 43%, rgba(4, 9, 15, 0.22) 100%);
+}
+
+.terrain-window-view-overlay::before,
+.terrain-window-view-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 9px 18px;
+  border: 8px solid rgba(5, 10, 16, 0.72);
+  border-radius: 48% / 17%;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(204, 226, 238, 0.24);
+}
+
+.terrain-window-view-overlay::after {
+  inset: 16px 26px;
+  border-width: 1px;
+  border-color: rgba(209, 238, 247, 0.35);
+  box-shadow: inset 0 0 36px rgba(7, 15, 22, 0.24);
+}
+
+.terrain-window-view-label {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 16px;
+  padding: 3px 5px;
+  border: 1px solid rgba(182, 216, 226, 0.55);
+  border-radius: 3px;
+  background: rgba(7, 15, 23, 0.72);
+  color: #e4f4f6;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.55px;
+}
+
+.terrain-window-view-glass {
+  position: absolute;
+  inset: 26px 37% 25px 12%;
+  border-left: 1px solid rgba(221, 243, 247, 0.12);
+  border-right: 1px solid rgba(221, 243, 247, 0.08);
+  background: linear-gradient(105deg, rgba(231, 251, 255, 0.08), transparent 28%, transparent 72%, rgba(231, 251, 255, 0.04));
+  transform: skewX(-7deg);
+}
+
+.terrain-map-error {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 38px;
+  transform: translateX(-50%);
+  padding: 4px 7px;
+  border: 1px solid rgba(229, 164, 75, 0.7);
+  border-radius: 3px;
+  background: rgba(29, 22, 10, 0.9);
+  color: #ffd38a;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.terrain-map-pending {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 38px;
+  transform: translateX(-50%);
+  padding: 4px 7px;
+  border: 1px solid rgba(116, 156, 190, 0.55);
+  border-radius: 3px;
+  background: rgba(8, 14, 22, 0.82);
+  color: #a9bfd2;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.terrain-flight-plane {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #e4fff4;
+  border-radius: 50%;
+  background: rgba(11, 36, 48, 0.86);
+  box-shadow: 0 0 0 2px rgba(109, 255, 187, 0.38), 0 0 12px rgba(109, 255, 187, 0.8);
+  color: #e4fff4;
+  pointer-events: none;
+}
+
+.terrain-flight-plane img {
+  display: block;
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+  transform: rotate(var(--plane-rotation, 0deg));
+  filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(109, 255, 187, 0.95));
+}
+
+.terrain-controls-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.terrain-controls-toggle {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 27px;
+  padding: 6px 8px;
+  background: #0d131b;
+  border-color: #2b394a;
+  color: #8fa2b7;
+}
+
+.terrain-controls-phase {
+  margin-left: auto;
+  color: #6dffbb;
+}
+
+.flight-controls-drawer {
+  margin-top: 0;
+}
+
+[data-theme="PIXEL"] .terrain-flight-section,
+.terrain-flight-section.pixel-theme {
+  border-radius: 2px;
+  border-color: #4e6074;
+  box-shadow: none;
+}
+
+[data-theme="PIXEL"] .terrain-flight-section .terrain-flight-header,
+[data-theme="PIXEL"] .terrain-flight-section .terrain-flight-footer,
+.terrain-flight-section.pixel-theme .terrain-flight-header,
+.terrain-flight-section.pixel-theme .terrain-flight-footer {
+  font-family: 'Press Start 2P', 'Share Tech Mono', monospace;
+  letter-spacing: 0;
+}
+
 /* Dashboard Toolbar & Sim Controls */
 .dashboard-toolbar {
   display: flex;
@@ -2147,6 +2441,20 @@ body {
   .dashboard-middle-row {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .terrain-flight-section {
+    min-height: 300px;
+  }
+
+  .terrain-flight-header,
+  .terrain-flight-footer {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .terrain-flight-map {
+    inset: 58px 0 45px;
   }
 
   .speed-selector-group {
