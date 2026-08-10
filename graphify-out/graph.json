@@ -1612,11 +1612,19 @@
       "_origin": "ast"
     },
     {
+      "id": "src_utils_useflightsimulator_getrandomrouteindex",
+      "label": "getRandomRouteIndex()",
+      "file_type": "code",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
       "id": "src_utils_useflightsimulator_getroutecoordinates",
       "label": "getRouteCoordinates()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L24",
+      "source_location": "L31",
       "_origin": "ast"
     },
     {
@@ -1624,7 +1632,7 @@
       "label": "initialRouteCoordinates",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L28",
+      "source_location": "L35",
       "_origin": "ast"
     },
     {
@@ -1632,7 +1640,7 @@
       "label": "ROUTE_MOVEMENT_PHASES",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L29",
+      "source_location": "L36",
       "_origin": "ast"
     },
     {
@@ -1640,7 +1648,7 @@
       "label": "getRandomManeuverDelay()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L40",
+      "source_location": "L47",
       "_origin": "ast"
     },
     {
@@ -1648,7 +1656,7 @@
       "label": "useFlightSimulator()",
       "file_type": "code",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L45",
+      "source_location": "L52",
       "_origin": "ast"
     },
     {
@@ -1752,7 +1760,7 @@
       "label": "Change checklist for future agents",
       "file_type": "document",
       "source_file": "docs/flight-simulation.md",
-      "source_location": "L103",
+      "source_location": "L106",
       "_origin": "ast"
     },
     {
@@ -5285,11 +5293,20 @@
     },
     {
       "source": "src_utils_useflightsimulator",
+      "target": "src_utils_useflightsimulator_getrandomrouteindex",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_utils_useflightsimulator",
       "target": "src_utils_useflightsimulator_getroutecoordinates",
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L24",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -5298,7 +5315,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L28",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -5307,7 +5324,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L29",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -5316,7 +5333,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L40",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -5325,7 +5342,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L45",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -5335,7 +5352,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L122",
+      "source_location": "L129",
+      "weight": 1.0
+    },
+    {
+      "source": "src_utils_useflightsimulator_useflightsimulator",
+      "target": "src_utils_useflightsimulator_getrandomrouteindex",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L636",
       "weight": 1.0
     },
     {
@@ -5345,7 +5372,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L627",
+      "source_location": "L638",
       "weight": 1.0
     },
     {
@@ -5446,7 +5473,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/flight-simulation.md",
-      "source_location": "L103",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -5542,7 +5569,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L77",
+      "source_location": "L84",
       "weight": 1.0
     },
     {
@@ -5553,7 +5580,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L455",
+      "source_location": "L462",
       "weight": 1.0
     },
     {
@@ -5608,7 +5635,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/utils/useFlightSimulator.js",
-      "source_location": "L317",
+      "source_location": "L324",
+      "weight": 1.0
+    },
+    {
+      "source": "src_utils_useflightsimulator_useflightsimulator",
+      "target": "src_utils_useflightsimulator_real_world_routes",
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/utils/useFlightSimulator.js",
+      "source_location": "L632",
       "weight": 1.0
     }
   ]

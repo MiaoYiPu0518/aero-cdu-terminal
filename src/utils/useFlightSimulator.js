@@ -20,7 +20,14 @@ export const REAL_WORLD_ROUTES = [
   { origin: 'RKSI', destination: 'VHHH', distNM: 1120, name: 'Seoul Incheon ➔ Hong Kong' }
 ];
 
-const initialRoute = REAL_WORLD_ROUTES[0];
+const getRandomRouteIndex = (excludeIndex = -1) => {
+  if (REAL_WORLD_ROUTES.length <= 1) return 0;
+  let index = Math.floor(Math.random() * REAL_WORLD_ROUTES.length);
+  if (index === excludeIndex) index = (index + 1) % REAL_WORLD_ROUTES.length;
+  return index;
+};
+
+const initialRoute = REAL_WORLD_ROUTES[getRandomRouteIndex()];
 const getRouteCoordinates = (route) => ({
   originCoords: AIRPORT_COORDINATES[route.origin] || [0, 0],
   destinationCoords: AIRPORT_COORDINATES[route.destination] || [0, 0]
@@ -622,17 +629,46 @@ export function useFlightSimulator(active = false) {
   };
 
   const nextRoute = () => {
-    const nextIndex = Math.floor(Math.random() * REAL_WORLD_ROUTES.length);
+    const currentIndex = REAL_WORLD_ROUTES.findIndex((route) => (
+      route.origin === telemetryRef.current.origin
+      && route.destination === telemetryRef.current.destination
+    ));
+    const nextIndex = getRandomRouteIndex(currentIndex);
     const r = REAL_WORLD_ROUTES[nextIndex];
     const routeCoordinates = getRouteCoordinates(r);
+    const groundTrack = getInitialBearing(routeCoordinates.originCoords, routeCoordinates.destinationCoords);
+    soundEngine.stopPanicEmergencySequence();
+    maneuverTimerRef.current = 0;
+    nextManeuverDelayRef.current = null;
+    phaseTimerRef.current = 0;
     commitTelemetry((prev) => ({
       ...prev,
+      pitch: 0,
+      roll: 0,
+      heading: 245,
+      altitude: 0,
+      airspeed: 0,
+      vsi: 0,
+      turnRate: 0,
+      n1: 30,
+      egt: 450,
+      fuelFlow: 1200,
+      fuelTotal: 16500,
+      flaps: 0,
+      gearDown: true,
+      preset: 'TAXI',
+      autoFlightMode: true,
+      panicMode: false,
+      activeEvent: null,
+      tcasAlert: null,
+      targetAlt: 35000,
+      eteFormatted: '--H --M --S',
       origin: r.origin,
       destination: r.destination,
       routeName: r.name,
       ...routeCoordinates,
       flightPosition: routeCoordinates.originCoords,
-      groundTrack: getInitialBearing(routeCoordinates.originCoords, routeCoordinates.destinationCoords),
+      groundTrack,
       totalDistNM: r.distNM,
       distRemainingNM: r.distNM,
       legProgressPct: 0

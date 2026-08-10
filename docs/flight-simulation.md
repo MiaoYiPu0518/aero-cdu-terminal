@@ -75,7 +75,10 @@ the dashboard's **MANEUVERS** switch is enabled.
 - Turning panic mode off restores normal engine/flight values and resumes the
   existing phase.
 - Changing routes resets route distance and progress, but does not restart the
-  current aircraft phase.
+- Changing routes selects a different real-world route and restarts the aircraft at
+  that origin in automatic `TAXI`: altitude, speed, vertical speed, attitude,
+  engine state, gear, flaps, alerts, route progress, and ETE are reset.
+- The initial route is selected randomly when the simulator module launches.
 - Route progress is reduced during takeoff, climb, cruise, descent, approach, and
   turbulence whenever airspeed is positive. This movement is independent of
   `autoFlightMode`, so manual flight also advances the route; taxi and touchdown do

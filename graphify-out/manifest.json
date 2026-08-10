@@ -145,8 +145,8 @@
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786378705.6435962,
-    "ast_hash": "296302b19c6b97743a0380a4d1d73b5b",
+    "mtime": 1786383293.4933515,
+    "ast_hash": "35f75aa1accad11f0abae24ad2b49680",
     "semantic_hash": ""
   },
   "public/sounds/altitude_chime.wav": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "docs/flight-simulation.md": {
-    "mtime": 1786382940.0865066,
-    "ast_hash": "66a82e13a1b04c8edf0499d864b28c0a",
+    "mtime": 1786383295.0969048,
+    "ast_hash": "74192e7982dae43bb87d68ecb4ab1a10",
     "semantic_hash": ""
   },
   "src/components/TerrainFlightMap.jsx": {
