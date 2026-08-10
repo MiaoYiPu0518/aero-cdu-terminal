@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1786219284.5488925,
-    "ast_hash": "a86652f9ecf8b9572b843de81996892b",
+    "mtime": 1786387267.7474463,
+    "ast_hash": "c5f020fa45cb82e4c432974194520db0",
     "semantic_hash": ""
   },
   "src/components/CDUFrame.jsx": {
@@ -129,24 +129,19 @@
     "ast_hash": "a0f29a10628f08dccd757aca57ccb163",
     "semantic_hash": ""
   },
-  "src/components/AnalogRadarScope.jsx": {
-    "mtime": 1786210633.0830107,
-    "ast_hash": "6ea372255167cf18be2597781dc9596d",
-    "semantic_hash": ""
-  },
   "src/components/AnalogSixPack.jsx": {
     "mtime": 1786209562.2664726,
     "ast_hash": "b81c5c69a8212ef6e30b7ef9ac5bfda7",
     "semantic_hash": ""
   },
   "src/components/FlightDashboard.jsx": {
-    "mtime": 1786376069.4161916,
-    "ast_hash": "e3282f556ec73269d942b43523bf9f81",
+    "mtime": 1786387983.42007,
+    "ast_hash": "3d5e05ef12f2e5c5f166d76b918416f9",
     "semantic_hash": ""
   },
   "src/utils/useFlightSimulator.js": {
-    "mtime": 1786383293.4933515,
-    "ast_hash": "35f75aa1accad11f0abae24ad2b49680",
+    "mtime": 1786387892.512275,
+    "ast_hash": "20fe3af5564c9d674f5c601236b9f44c",
     "semantic_hash": ""
   },
   "public/sounds/altitude_chime.wav": {
@@ -190,13 +185,13 @@
     "semantic_hash": ""
   },
   "docs/flight-simulation.md": {
-    "mtime": 1786383295.0969048,
-    "ast_hash": "74192e7982dae43bb87d68ecb4ab1a10",
+    "mtime": 1786387873.2766805,
+    "ast_hash": "27e7225cb4929d68abb9d119c156d5da",
     "semantic_hash": ""
   },
   "src/components/TerrainFlightMap.jsx": {
-    "mtime": 1786382938.7430716,
-    "ast_hash": "a30fc8127e1ebffe35b72b5737c9b1ff",
+    "mtime": 1786387780.4442346,
+    "ast_hash": "512452b13fdccb70f9c3871420859cb3",
     "semantic_hash": ""
   },
   "src/utils/geo.js": {

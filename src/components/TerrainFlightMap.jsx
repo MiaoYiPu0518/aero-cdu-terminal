@@ -369,12 +369,6 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
         </div>
       </div>
       <div ref={mapContainerRef} className="terrain-flight-map" />
-      {viewMode === 'WINDOW' && (
-        <div className="terrain-window-view-overlay" aria-label="Passenger window view">
-          <span className="terrain-window-view-label">PASSENGER WINDOW · STARBOARD VIEW</span>
-          <span className="terrain-window-view-glass" aria-hidden="true" />
-        </div>
-      )}
       {mapError && (
         <div className="terrain-map-error" role="status">
           SATELLITE LINK OFFLINE · CHECK NETWORK ACCESS

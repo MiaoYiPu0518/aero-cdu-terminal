@@ -1,7 +1,7 @@
 # Flight Simulation Logic
 
 This document describes the behavior owned by `src/utils/useFlightSimulator.js`.
-Keep it updated when adding a phase, an automated event, or a new manual override.
+Keep it updated when adding a phase or an automated event.
 
 ## Runtime and time
 
@@ -29,9 +29,9 @@ Automation starts enabled by default. When `autoFlightMode` is true, the current
 | `APPROACH` | Gear down, flaps 30, 750 fpm descent | At 20 ft -> `TOUCHDOWN` |
 | `TOUCHDOWN` | Holds 0 ft and slows to 5 kt | Returns to `TAXI` and resets route distance |
 
-`TURBULENCE` is also available as a manual preset, but it is not an automatic
-phase. Selecting any phase preset or using the manual pitch/roll controls disables
-automation.
+The dashboard exposes the automatic/manual flight-mode switch, but no phase-preset
+or manual-stick controls. Phases continue to advance through the automatic state
+machine when automation is enabled.
 
 ## Random automated events
 
@@ -74,7 +74,6 @@ the dashboard's **MANEUVERS** switch is enabled.
   toward 10,000 ft with turbulence-like oscillation and a MAYDAY event.
 - Turning panic mode off restores normal engine/flight values and resumes the
   existing phase.
-- Changing routes resets route distance and progress, but does not restart the
 - Changing routes selects a different real-world route and restarts the aircraft at
   that origin in automatic `TAXI`: altitude, speed, vertical speed, attitude,
   engine state, gear, flaps, alerts, route progress, and ETE are reset.
@@ -95,13 +94,14 @@ the dashboard's **MANEUVERS** switch is enabled.
   Tokyo visible without zooming out to the whole world.
 - The map ownship marker uses the downloaded CC0 top-view plane asset at
   `public/assets/plane-top-view.svg`; its CSS rotation follows the live ground track.
+- The terrain flight map sits beside the EICAS panel in the dashboard's middle row.
 - The map header provides `TRACK`, `ROUTE`, and `WINDOW` views. `WINDOW` keeps the
   online satellite raster but pitches the camera toward the starboard passenger view,
   derives zoom from the live altitude (close airport detail at low altitude and a
   wider view toward cruise, reaching the widest window framing around the simulator's
   35,000 ft cruise target), disables manual zoom gestures and controls, hides route
-  overlays and the ownship marker, and adds a CSS window frame; it does not enable
-  terrain or any other 3D renderer.
+  overlays and the ownship marker. It does not add a fake window frame, terrain, or
+  any other 3D renderer.
 
 ## Change checklist for future agents
 
@@ -109,7 +109,7 @@ When modifying this simulator, update both the hook and this document if you:
 
 1. Add or rename a flight phase.
 2. Add an event type, eligibility rule, duration, or event effect.
-3. Change manual-control behavior or dashboard visibility behavior.
+3. Change dashboard visibility behavior.
 4. Change the time-step clamp, simulator speed, or route-progress calculation.
 5. Change route coordinate data or the geospatial telemetry consumed by
    `TerrainFlightMap.jsx`.

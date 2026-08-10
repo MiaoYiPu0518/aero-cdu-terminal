@@ -57,19 +57,11 @@ export function App() {
   // Initialize Flight Simulator Engine
   const {
     telemetry,
-    setPreset,
     toggleAutoFlight,
     toggleRandomManeuvers,
     togglePanicMode,
     nextRoute,
-    setSimSpeed,
-    setRadarRange,
-    setRadarMode,
-    setSelectedTarget,
-    adjustPitch,
-    adjustRoll,
-    toggleGear,
-    setFlaps
+    setSimSpeed
   } = useFlightSimulator(showDashboard);
 
   const [activeModal, setActiveModal] = useState(null);
@@ -478,19 +470,11 @@ export function App() {
         {showDashboard && (
           <FlightDashboard
             telemetry={telemetry}
-            setPreset={setPreset}
             toggleAutoFlight={toggleAutoFlight}
             toggleRandomManeuvers={toggleRandomManeuvers}
             togglePanicMode={togglePanicMode}
             nextRoute={nextRoute}
             setSimSpeed={setSimSpeed}
-            setRadarRange={setRadarRange}
-            setRadarMode={setRadarMode}
-            setSelectedTarget={setSelectedTarget}
-            adjustPitch={adjustPitch}
-            adjustRoll={adjustRoll}
-            toggleGear={toggleGear}
-            setFlaps={setFlaps}
             onClose={() => setShowDashboard(false)}
             uiTheme={uiTheme}
           />

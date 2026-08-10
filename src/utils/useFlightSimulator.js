@@ -90,25 +90,7 @@ export function useFlightSimulator(active = false) {
     targetSpeed: 440,
 
     // Active Maneuver / Event Status
-    activeEvent: null,   // null | { type, title, description, duration }
-    tcasAlert: null,     // null | { level: 'TA' | 'RA', callsign }
-
-    // Radar Data Engine
-    radarRangeNM: 40,
-    radarMode: 'TCAS',   // 'TCAS' | 'WX'
-    selectedTarget: null,
-    weatherCells: [
-      { id: 'WX-1', relX: 12, relY: 18, radius: 14, intensity: 'HEAVY' },   // Red/Yellow storm cell
-      { id: 'WX-2', relX: -22, relY: -10, radius: 18, intensity: 'MODERATE' },// Yellow storm cell
-      { id: 'WX-3', relX: 5, relY: -28, radius: 10, intensity: 'LIGHT' }     // Green rain cell
-    ],
-    radarTargets: [
-      { id: 'TGT-1', callsign: 'DAL102', type: 'B738', distance: 14.2, bearing: 42,  alt: 35400, speed: 450, hdg: 190, vsi: 0 },
-      { id: 'TGT-2', callsign: 'UAL492', type: 'A320', distance: 28.5, bearing: 145, alt: 33800, speed: 430, hdg: 270, vsi: -500 },
-      { id: 'TGT-3', callsign: 'AAL881', type: 'B777', distance: 8.4,  bearing: 280, alt: 35000, speed: 470, hdg: 45,  vsi: 1200 },
-      { id: 'TGT-4', callsign: 'BAW287', type: 'A350', distance: 34.0, bearing: 215, alt: 29000, speed: 410, hdg: 90,  vsi: 0 },
-      { id: 'TGT-5', callsign: 'AFR012', type: 'A330', distance: 18.0, bearing: 330, alt: 36200, speed: 460, hdg: 130, vsi: 0 }
-    ]
+    activeEvent: null   // null | { type, title, description, duration }
   });
 
   const telemetryRef = useRef(telemetry);
@@ -144,7 +126,7 @@ export function useFlightSimulator(active = false) {
           pitch, roll, heading, altitude, airspeed, vsi, turnRate, n1, egt, fuelTotal,
           preset, autoFlightMode, randomManeuversEnabled, panicMode, simSpeed, distRemainingNM, totalDistNM,
           targetAlt,
-          activeEvent, tcasAlert, weatherCells, radarTargets, flaps, gearDown, selectedTarget
+          activeEvent, flaps, gearDown
         } = prev;
 
         const dt = Math.min(realDt * simSpeed, 0.2);
@@ -423,37 +405,6 @@ export function useFlightSimulator(active = false) {
         const currentFF = 1000 + (n1 / 100) * 2000;
         fuelTotal = Math.max(0, fuelTotal - (currentFF / 3600) * dt);
 
-        // 3. RADAR TARGETS & TCAS PROXIMITY CALCULATIONS
-        let activeTcas = null;
-        const updatedTargets = radarTargets.map((tgt) => {
-          let { distance, bearing, alt, speed, hdg, vsi: tVsi } = tgt;
-
-          const radB = (bearing * Math.PI) / 180;
-          let x = distance * Math.sin(radB);
-          let y = distance * Math.cos(radB);
-
-          // Relative motion vector
-          const relSpeedKts = (speed - airspeed) * 0.0001 * dt;
-          y += relSpeedKts;
-          x += Math.sin(hdg * Math.PI / 180) * 0.006 * dt;
-
-          distance = Math.sqrt(x * x + y * y);
-          bearing = (Math.atan2(x, y) * 180 / Math.PI + 360) % 360;
-
-          if (distance > 42) distance = 6 + Math.random() * 5;
-          if (distance < 2) distance = 14;
-
-          // TCAS Proximity Detection
-          const altDiff = Math.abs(alt - altitude);
-          if (distance <= 4.0 && altDiff <= 800) {
-            activeTcas = { level: 'RA', callsign: tgt.callsign };
-          } else if (distance <= 8.0 && altDiff <= 1500 && !activeTcas) {
-            activeTcas = { level: 'TA', callsign: tgt.callsign };
-          }
-
-          return { ...tgt, distance, bearing, alt, hdg };
-        });
-
         // Calculate Route Leg Progress % & ETE (Estimated Time Enroute)
         const legPct = totalDistNM > 0
           ? Math.min(100, Math.max(0, ((totalDistNM - distRemainingNM) / totalDistNM) * 100))
@@ -467,12 +418,6 @@ export function useFlightSimulator(active = false) {
         const eteMins = Math.floor((eteSecondsTotal % 3600) / 60);
         const eteSecs = eteSecondsTotal % 60;
         const eteFormatted = `${String(eteHours).padStart(2, '0')}H ${String(eteMins).padStart(2, '0')}M ${String(eteSecs).padStart(2, '0')}S`;
-
-        // Update selected target reference if active
-        let syncSelectedTarget = selectedTarget;
-        if (selectedTarget) {
-          syncSelectedTarget = updatedTargets.find(t => t.id === selectedTarget.id) || selectedTarget;
-        }
 
         const nextTelemetry = {
           ...prev,
@@ -497,10 +442,7 @@ export function useFlightSimulator(active = false) {
           distRemainingNM,
           legProgressPct: legPct,
           eteFormatted,
-          activeEvent,
-          tcasAlert: activeTcas,
-          radarTargets: updatedTargets,
-          selectedTarget: syncSelectedTarget
+          activeEvent
         };
 
         telemetryRef.current = nextTelemetry;
@@ -516,19 +458,6 @@ export function useFlightSimulator(active = false) {
   }, [active]);
 
   // Helper Methods
-  const setPreset = (presetName) => {
-    commitTelemetry((prev) => ({
-      ...prev,
-      preset: presetName,
-      autoFlightMode: false,
-      activeEvent: null,
-      targetAlt: 35000
-    }));
-    maneuverTimerRef.current = 0;
-    nextManeuverDelayRef.current = null;
-    phaseTimerRef.current = 0;
-  };
-
   const toggleAutoFlight = () => {
     const nextAutoFlightMode = !telemetryRef.current.autoFlightMode;
     if (!nextAutoFlightMode) {
@@ -559,53 +488,6 @@ export function useFlightSimulator(active = false) {
 
   const setSimSpeed = (speed) => {
     commitTelemetry((prev) => ({ ...prev, simSpeed: speed }));
-  };
-
-  const setRadarRange = (rangeNM) => {
-    commitTelemetry((prev) => ({ ...prev, radarRangeNM: rangeNM }));
-  };
-
-  const setRadarMode = (mode) => {
-    commitTelemetry((prev) => ({ ...prev, radarMode: mode }));
-  };
-
-  const setSelectedTarget = (tgt) => {
-    commitTelemetry((prev) => ({ ...prev, selectedTarget: tgt }));
-  };
-
-  const adjustPitch = (delta) => {
-    commitTelemetry((prev) => ({
-      ...prev,
-      pitch: Math.max(-30, Math.min(30, prev.pitch + delta)),
-      autoFlightMode: false,
-      activeEvent: null,
-      targetAlt: 35000
-    }));
-    maneuverTimerRef.current = 0;
-    nextManeuverDelayRef.current = null;
-    phaseTimerRef.current = 0;
-  };
-
-  const adjustRoll = (delta) => {
-    commitTelemetry((prev) => ({
-      ...prev,
-      roll: Math.max(-45, Math.min(45, prev.roll + delta)),
-      autoFlightMode: false,
-      activeEvent: null,
-      targetAlt: 35000
-    }));
-    maneuverTimerRef.current = 0;
-    nextManeuverDelayRef.current = null;
-    phaseTimerRef.current = 0;
-  };
-
-  const toggleGear = () => {
-    soundEngine.playGearClunk();
-    commitTelemetry((prev) => ({ ...prev, gearDown: !prev.gearDown }));
-  };
-
-  const setFlaps = (flapVal) => {
-    commitTelemetry((prev) => ({ ...prev, flaps: flapVal }));
   };
 
   const togglePanicMode = () => {
@@ -660,7 +542,6 @@ export function useFlightSimulator(active = false) {
       autoFlightMode: true,
       panicMode: false,
       activeEvent: null,
-      tcasAlert: null,
       targetAlt: 35000,
       eteFormatted: '--H --M --S',
       origin: r.origin,
@@ -677,18 +558,10 @@ export function useFlightSimulator(active = false) {
 
   return {
     telemetry,
-    setPreset,
     toggleAutoFlight,
     toggleRandomManeuvers,
     togglePanicMode,
     nextRoute,
-    setSimSpeed,
-    setRadarRange,
-    setRadarMode,
-    setSelectedTarget,
-    adjustPitch,
-    adjustRoll,
-    toggleGear,
-    setFlaps
+    setSimSpeed
   };
 }

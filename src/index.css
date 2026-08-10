@@ -1540,7 +1540,7 @@ body {
   aspect-ratio: 1;
 }
 
-/* Middle Row: Radar + EICAS */
+/* Middle Row: Terrain flight map + EICAS */
 .dashboard-middle-row {
   display: flex;
   flex-direction: row;
@@ -1548,54 +1548,16 @@ body {
   min-width: 0;
 }
 
-.dashboard-middle-row > *,
-.dashboard-middle-right {
+.dashboard-middle-row > * {
   min-width: 0;
 }
 
-/* CRT Radar Scope Wrapper */
-.radar-scope-wrapper {
-  flex: 1;
-  background: #040d07;
-  border: 1px solid #00aa44;
-  border-radius: 10px;
-  padding: 8px;
-  box-shadow: 0 0 15px rgba(0, 255, 102, 0.15), inset 0 0 12px rgba(0, 0, 0, 0.9);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.radar-scope-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  color: #00ff66;
-  padding: 0 4px;
-}
-
-.canvas-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.radar-canvas {
-  width: 100%;
-  max-width: 230px;
-  height: auto;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #020b05;
-}
-
 /* EICAS Metrics Card */
+.dashboard-middle-row > .terrain-flight-section {
+  flex: 1 1 auto;
+}
+
 .engine-metrics-card {
-  flex: 1;
   background: #0f1217;
   border: 1px solid #252b36;
   border-radius: 10px;
@@ -1628,7 +1590,7 @@ body {
 
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 8px;
 }
 
@@ -1659,104 +1621,6 @@ body {
 .text-amber { color: #ffb000; }
 .text-cyan { color: #00e5ff; }
 .text-muted { color: #627083; }
-
-/* Dashboard Controls Section */
-.dashboard-controls-section {
-  background: #0d0f14;
-  border: 1px solid #232833;
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.control-bar-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  color: #8a99ad;
-  font-weight: bold;
-}
-
-.preset-buttons-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.preset-btn {
-  flex: 1;
-  min-width: 70px;
-  background: #171b23;
-  border: 1px solid #2c3442;
-  color: #b0c0d4;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  font-weight: bold;
-  padding: 6px 8px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.preset-btn:hover {
-  background: #252c39;
-  color: #ffffff;
-  border-color: #4a566b;
-}
-
-.preset-btn.active {
-  background: #00552b;
-  border-color: #00ff66;
-  color: #00ff66;
-  box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
-}
-
-.manual-stick-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-top: 6px;
-  border-top: 1px solid #1c212b;
-}
-
-.stick-subgroup {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.subgroup-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 8px;
-  color: #6d7b8e;
-}
-
-.stick-btn {
-  background: #1a1e27;
-  border: 1px solid #303746;
-  color: #d0dceb;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 8px;
-  padding: 4px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.1s;
-}
-
-.stick-btn:hover {
-  background: #2b3342;
-  color: #ffffff;
-}
-
-.stick-btn.active-green {
-  background: #004d25;
-  color: #00ff66;
-  border-color: #00aa44;
-}
 
 /* Satellite terrain flight map */
 .terrain-flight-section {
@@ -1836,8 +1700,7 @@ body {
   color: #ffd38a;
 }
 
-.terrain-map-btn,
-.terrain-controls-toggle {
+.terrain-map-btn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -1855,9 +1718,7 @@ body {
 }
 
 .terrain-map-btn:hover,
-.terrain-map-btn.active,
-.terrain-controls-toggle:hover,
-.terrain-controls-toggle.active {
+.terrain-map-btn.active {
   border-color: #6dffbb;
   background: rgba(18, 75, 67, 0.85);
   color: #b5ffdf;
@@ -1905,56 +1766,6 @@ body {
 
 .terrain-flight-section.window-mode .terrain-flight-plane {
   display: none;
-}
-
-.terrain-window-view-overlay {
-  position: absolute;
-  z-index: 2;
-  inset: 29px 0 26px;
-  overflow: hidden;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(4, 9, 15, 0.08) 0%, transparent 43%, rgba(4, 9, 15, 0.22) 100%);
-}
-
-.terrain-window-view-overlay::before,
-.terrain-window-view-overlay::after {
-  content: '';
-  position: absolute;
-  inset: 9px 18px;
-  border: 8px solid rgba(5, 10, 16, 0.72);
-  border-radius: 48% / 17%;
-  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(204, 226, 238, 0.24);
-}
-
-.terrain-window-view-overlay::after {
-  inset: 16px 26px;
-  border-width: 1px;
-  border-color: rgba(209, 238, 247, 0.35);
-  box-shadow: inset 0 0 36px rgba(7, 15, 22, 0.24);
-}
-
-.terrain-window-view-label {
-  position: absolute;
-  z-index: 1;
-  top: 12px;
-  left: 16px;
-  padding: 3px 5px;
-  border: 1px solid rgba(182, 216, 226, 0.55);
-  border-radius: 3px;
-  background: rgba(7, 15, 23, 0.72);
-  color: #e4f4f6;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 7px;
-  letter-spacing: 0.55px;
-}
-
-.terrain-window-view-glass {
-  position: absolute;
-  inset: 26px 37% 25px 12%;
-  border-left: 1px solid rgba(221, 243, 247, 0.12);
-  border-right: 1px solid rgba(221, 243, 247, 0.08);
-  background: linear-gradient(105deg, rgba(231, 251, 255, 0.08), transparent 28%, transparent 72%, rgba(231, 251, 255, 0.04));
-  transform: skewX(-7deg);
 }
 
 .terrain-map-error {
@@ -2010,31 +1821,6 @@ body {
   object-fit: contain;
   transform: rotate(var(--plane-rotation, 0deg));
   filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(109, 255, 187, 0.95));
-}
-
-.terrain-controls-dock {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.terrain-controls-toggle {
-  justify-content: flex-start;
-  width: 100%;
-  min-height: 27px;
-  padding: 6px 8px;
-  background: #0d131b;
-  border-color: #2b394a;
-  color: #8fa2b7;
-}
-
-.terrain-controls-phase {
-  margin-left: auto;
-  color: #6dffbb;
-}
-
-.flight-controls-drawer {
-  margin-top: 0;
 }
 
 [data-theme="PIXEL"] .terrain-flight-section,
@@ -2298,24 +2084,6 @@ body {
   color: #ffb000;
 }
 
-.tcas-banner.ta-alert {
-  background: rgba(255, 176, 0, 0.18);
-  border: 1px solid #ffb000;
-  color: #ffb000;
-}
-
-.tcas-banner.ra-alert {
-  background: rgba(255, 71, 87, 0.22);
-  border: 1px solid #ff4757;
-  color: #ff4757;
-  animation: pulse-red 1s infinite alternate;
-}
-
-@keyframes pulse-red {
-  from { box-shadow: 0 0 4px rgba(255, 71, 87, 0.3); }
-  to { box-shadow: 0 0 16px rgba(255, 71, 87, 0.7); }
-}
-
 .alert-icon {
   flex-shrink: 0;
 }
@@ -2330,92 +2098,10 @@ body {
   opacity: 0.85;
 }
 
-/* Radar Scope Controls & Buttons */
-.radar-mode-selector,
-.radar-range-selector {
-  display: flex;
-  gap: 3px;
-}
-
-.mode-btn,
-.range-btn {
-  background: #0d1e13;
-  border: 1px solid #1a4d2c;
-  color: #00aa44;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 8px;
-  padding: 2px 5px;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.mode-btn.active,
-.range-btn.active {
-  background: #004d25;
-  border-color: #00ff66;
-  color: #00ff66;
-  font-weight: bold;
-}
-
 .dashboard-middle-right {
-  flex: 1;
+  flex: 0 0 27%;
   display: flex;
   flex-direction: column;
-}
-
-/* Inspected Target Card */
-.inspected-target-card {
-  flex: 1;
-  background: #0d131a;
-  border: 1px solid #00e5ff;
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
-}
-
-.small-close-btn {
-  background: none;
-  border: none;
-  color: #8a99ad;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: auto;
-}
-
-.small-close-btn:hover {
-  color: #ff4757;
-}
-
-.target-details-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 6px;
-}
-
-.target-metric {
-  background: #141b24;
-  border: 1px solid #1e2938;
-  padding: 5px;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.target-metric .label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 7px;
-  color: #7b8ea5;
-}
-
-.target-metric .val {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  font-weight: bold;
-  color: #f0f4f8;
 }
 
 /* Responsive adjustment for Dashboard */
@@ -2471,12 +2157,4 @@ body {
     max-width: 100%;
   }
 
-  .manual-stick-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .stick-subgroup {
-    flex-wrap: wrap;
-  }
 }
