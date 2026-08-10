@@ -20,13 +20,20 @@ const PRIMARY_SATELLITE_TILE = SATELLITE_TILES[0];
 const PASSENGER_WINDOW_PITCH = 42;
 const PASSENGER_WINDOW_MAX_ZOOM = 13.5;
 const PASSENGER_WINDOW_MIN_ZOOM = 8.8;
+const PASSENGER_WINDOW_CRUISE_ALTITUDE_FT = 35000;
+const PASSENGER_WINDOW_ALTITUDE_SCALE_FT = 1800;
 
 const getPassengerWindowZoom = (altitudeFt) => {
   const safeAltitude = Number.isFinite(Number(altitudeFt)) ? Math.max(0, Number(altitudeFt)) : 0;
-  // Ground footprint grows with altitude, so use a logarithmic zoom response:
-  // close airport detail at low altitude, then widen smoothly toward cruise.
+  // Ground footprint grows with altitude, so use a logarithmic response normalized
+  // to the simulator's 35,000 ft cruise target instead of reaching the floor early.
+  const altitudeProgress = Math.min(
+    1,
+    Math.log1p(safeAltitude / PASSENGER_WINDOW_ALTITUDE_SCALE_FT)
+      / Math.log1p(PASSENGER_WINDOW_CRUISE_ALTITUDE_FT / PASSENGER_WINDOW_ALTITUDE_SCALE_FT)
+  );
   const altitudeZoom = PASSENGER_WINDOW_MAX_ZOOM
-    - (Math.log2(1 + safeAltitude / 1800) * 1.5);
+    - (altitudeProgress * (PASSENGER_WINDOW_MAX_ZOOM - PASSENGER_WINDOW_MIN_ZOOM));
   return Math.min(PASSENGER_WINDOW_MAX_ZOOM, Math.max(PASSENGER_WINDOW_MIN_ZOOM, altitudeZoom));
 };
 

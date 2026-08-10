@@ -872,7 +872,7 @@
       "label": "getPassengerWindowZoom()",
       "file_type": "code",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "_origin": "ast"
     },
     {
@@ -880,7 +880,7 @@
       "label": "emptyFeatureCollection()",
       "file_type": "code",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L33",
+      "source_location": "L40",
       "_origin": "ast"
     },
     {
@@ -888,7 +888,7 @@
       "label": "lineFeature()",
       "file_type": "code",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L35",
+      "source_location": "L42",
       "_origin": "ast"
     },
     {
@@ -896,7 +896,7 @@
       "label": "pointFeature()",
       "file_type": "code",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L46",
+      "source_location": "L53",
       "_origin": "ast"
     },
     {
@@ -904,7 +904,7 @@
       "label": "TerrainFlightMap()",
       "file_type": "code",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L52",
+      "source_location": "L59",
       "_origin": "ast"
     },
     {
@@ -1752,7 +1752,7 @@
       "label": "Change checklist for future agents",
       "file_type": "document",
       "source_file": "docs/flight-simulation.md",
-      "source_location": "L102",
+      "source_location": "L103",
       "_origin": "ast"
     },
     {
@@ -3475,7 +3475,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -3484,7 +3484,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L33",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -3493,7 +3493,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L35",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -3502,7 +3502,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L46",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -3511,7 +3511,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L52",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -3521,7 +3521,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L88",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -3531,7 +3531,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L118",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -3541,7 +3541,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L245",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -3551,7 +3551,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L250",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -5446,7 +5446,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/flight-simulation.md",
-      "source_location": "L102",
+      "source_location": "L103",
       "weight": 1.0
     },
     {
@@ -5465,7 +5465,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L36",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -5498,7 +5498,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L69",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -5509,7 +5509,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L73",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -5520,7 +5520,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L82",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -5531,7 +5531,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L295",
+      "source_location": "L302",
       "weight": 1.0
     },
     {
@@ -5597,7 +5597,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L191",
+      "source_location": "L198",
       "weight": 1.0
     },
     {
