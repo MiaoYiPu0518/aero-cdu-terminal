@@ -190,13 +190,13 @@
     "semantic_hash": ""
   },
   "docs/flight-simulation.md": {
-    "mtime": 1786381712.2495294,
-    "ast_hash": "149a126d42e963cbdb6d02c48d2e0698",
+    "mtime": 1786382277.3347733,
+    "ast_hash": "db63a89b9d5a1eb1e7677366244bcbc0",
     "semantic_hash": ""
   },
   "src/components/TerrainFlightMap.jsx": {
-    "mtime": 1786381979.3666856,
-    "ast_hash": "cb32a5b670c93fd675b1d6ce36838e5f",
+    "mtime": 1786382276.048546,
+    "ast_hash": "4a2bf5a465dfd2f4d783b2e5d7584b05",
     "semantic_hash": ""
   },
   "src/utils/geo.js": {

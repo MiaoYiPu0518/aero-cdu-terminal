@@ -18,9 +18,17 @@ const SATELLITE_TILES = (import.meta.env.VITE_SATELLITE_TILES
   ]).map((url) => url.trim()).filter(Boolean);
 const PRIMARY_SATELLITE_TILE = SATELLITE_TILES[0];
 const PASSENGER_WINDOW_PITCH = 42;
-// A window view should feel like looking down from cruising altitude, not like
-// the route overview. Preserve any closer user-selected zoom when re-entering it.
-const PASSENGER_WINDOW_ZOOM = 8;
+const PASSENGER_WINDOW_MAX_ZOOM = 13.5;
+const PASSENGER_WINDOW_MIN_ZOOM = 8.8;
+
+const getPassengerWindowZoom = (altitudeFt) => {
+  const safeAltitude = Number.isFinite(Number(altitudeFt)) ? Math.max(0, Number(altitudeFt)) : 0;
+  // Ground footprint grows with altitude, so use a logarithmic zoom response:
+  // close airport detail at low altitude, then widen smoothly toward cruise.
+  const altitudeZoom = PASSENGER_WINDOW_MAX_ZOOM
+    - (Math.log2(1 + safeAltitude / 1800) * 1.5);
+  return Math.min(PASSENGER_WINDOW_MAX_ZOOM, Math.max(PASSENGER_WINDOW_MIN_ZOOM, altitudeZoom));
+};
 
 const emptyFeatureCollection = () => ({ type: 'FeatureCollection', features: [] });
 
@@ -76,6 +84,8 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
       getGreatCirclePoint(originCoords, destinationCoords, lookAhead)
     );
   }, [currentPosition, originCoords, destinationCoords, legProgressPct]);
+
+  const passengerWindowZoom = useMemo(() => getPassengerWindowZoom(altitude), [altitude]);
 
   const completedCoordinates = useMemo(() => {
     const progress = Math.min(1, Math.max(0, legProgressPct / 100));
@@ -254,12 +264,13 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
           center: currentPosition,
           bearing: viewMode === 'WINDOW' ? (flightBearing + 90) % 360 : flightBearing,
           pitch: viewMode === 'WINDOW' ? PASSENGER_WINDOW_PITCH : 0,
+          ...(viewMode === 'WINDOW' ? { zoom: passengerWindowZoom } : {}),
           duration: 260,
           essential: true
         });
       }
     }
-  }, [mapReady, routeCoordinates, completedCoordinates, currentPosition, originCoords, destinationCoords, origin, destination, flightBearing, followMode, viewMode]);
+  }, [mapReady, routeCoordinates, completedCoordinates, currentPosition, originCoords, destinationCoords, origin, destination, flightBearing, followMode, passengerWindowZoom, viewMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -309,7 +320,7 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
       center: currentPosition,
       bearing: (flightBearing + 90) % 360,
       pitch: PASSENGER_WINDOW_PITCH,
-      zoom: Math.max(map.getZoom(), PASSENGER_WINDOW_ZOOM),
+      zoom: passengerWindowZoom,
       duration: 650,
       essential: true
     });
