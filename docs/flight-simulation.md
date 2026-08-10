@@ -95,8 +95,9 @@ the dashboard's **MANEUVERS** switch is enabled.
 - The map header provides `TRACK`, `ROUTE`, and `WINDOW` views. `WINDOW` keeps the
   online satellite raster but pitches the camera toward the starboard passenger view,
   derives zoom from the live altitude (close airport detail at low altitude and a
-  wider view toward cruise), hides route overlays and the ownship marker, and adds a
-  CSS window frame; it does not enable terrain or any other 3D renderer.
+  wider view toward cruise), disables manual zoom gestures and controls, hides route
+  overlays and the ownship marker, and adds a CSS window frame; it does not enable
+  terrain or any other 3D renderer.
 
 ## Change checklist for future agents
 

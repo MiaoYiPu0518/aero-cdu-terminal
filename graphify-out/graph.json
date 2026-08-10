@@ -1752,7 +1752,7 @@
       "label": "Change checklist for future agents",
       "file_type": "document",
       "source_file": "docs/flight-simulation.md",
-      "source_location": "L101",
+      "source_location": "L102",
       "_origin": "ast"
     },
     {
@@ -5446,7 +5446,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/flight-simulation.md",
-      "source_location": "L101",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -5531,7 +5531,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TerrainFlightMap.jsx",
-      "source_location": "L285",
+      "source_location": "L295",
       "weight": 1.0
     },
     {

@@ -281,6 +281,16 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
     });
   }, [mapReady, viewMode]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    const zoomHandlers = [map.scrollZoom, map.doubleClickZoom, map.touchZoomRotate, map.boxZoom];
+    zoomHandlers.forEach((handler) => {
+      if (viewMode === 'WINDOW') handler.disable();
+      else handler.enable();
+    });
+  }, [mapReady, viewMode]);
+
   const routeBounds = useMemo(() => {
     const unwrappedRoute = unwrapLongitudes(routeCoordinates);
     if (unwrappedRoute.length < 2) return null;
