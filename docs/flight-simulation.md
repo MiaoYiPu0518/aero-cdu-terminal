@@ -94,8 +94,9 @@ the dashboard's **MANEUVERS** switch is enabled.
   `public/assets/plane-top-view.svg`; its CSS rotation follows the live ground track.
 - The map header provides `TRACK`, `ROUTE`, and `WINDOW` views. `WINDOW` keeps the
   online satellite raster but pitches the camera toward the starboard passenger view,
-  hides route overlays and the ownship marker, and adds a CSS window frame; it does
-  not enable terrain or any other 3D renderer.
+  starts at a close `8` zoom (while preserving a closer user-selected zoom), hides
+  route overlays and the ownship marker, and adds a CSS window frame; it does not
+  enable terrain or any other 3D renderer.
 
 ## Change checklist for future agents
 

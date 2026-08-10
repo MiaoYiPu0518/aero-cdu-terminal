@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "src/components/TerrainFlightMap.jsx": {
-    "mtime": 1786381709.694505,
-    "ast_hash": "7347f82b5904863995ee31f045543f68",
+    "mtime": 1786381979.3666856,
+    "ast_hash": "cb32a5b670c93fd675b1d6ce36838e5f",
     "semantic_hash": ""
   },
   "src/utils/geo.js": {

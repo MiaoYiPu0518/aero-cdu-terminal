@@ -18,6 +18,9 @@ const SATELLITE_TILES = (import.meta.env.VITE_SATELLITE_TILES
   ]).map((url) => url.trim()).filter(Boolean);
 const PRIMARY_SATELLITE_TILE = SATELLITE_TILES[0];
 const PASSENGER_WINDOW_PITCH = 42;
+// A window view should feel like looking down from cruising altitude, not like
+// the route overview. Preserve any closer user-selected zoom when re-entering it.
+const PASSENGER_WINDOW_ZOOM = 8;
 
 const emptyFeatureCollection = () => ({ type: 'FeatureCollection', features: [] });
 
@@ -306,7 +309,7 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
       center: currentPosition,
       bearing: (flightBearing + 90) % 360,
       pitch: PASSENGER_WINDOW_PITCH,
-      zoom: Math.max(map.getZoom(), 4.2),
+      zoom: Math.max(map.getZoom(), PASSENGER_WINDOW_ZOOM),
       duration: 650,
       essential: true
     });
