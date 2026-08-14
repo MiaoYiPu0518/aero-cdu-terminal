@@ -12,6 +12,12 @@ logs/
 server/bindings-config.json
 server/profiles/
 server/voices/*.onnx
+.env
+.env.*
+.env.local
+
+# Knowledge graph & local analysis caches
+graphify-out/
 
 # OS / IDE metadata
 .DS_Store

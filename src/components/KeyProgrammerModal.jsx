@@ -33,6 +33,13 @@ export function KeyProgrammerModal({
     });
   };
 
+  const handleCommandKeyDown = (e) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+      e.preventDefault();
+      e.currentTarget.form?.requestSubmit();
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
@@ -49,16 +56,29 @@ export function KeyProgrammerModal({
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div className="form-group">
-            <label className="form-label">COMMAND TO EXECUTE IN TERMINAL</label>
-            <input
-              type="text"
-              className="form-input"
+            <div className="form-label-row">
+              <label className="form-label" htmlFor={`program-command-${keyId}`}>
+                COMMAND / SCRIPT TO EXECUTE
+              </label>
+              <span className="form-label-meta">MULTI-LINE</span>
+            </div>
+            <textarea
+              id={`program-command-${keyId}`}
+              className="form-input command-input"
               value={command}
               onChange={(e) => setCommand(e.target.value)}
-              placeholder="e.g. kubectl get svc -n default"
+              onKeyDown={handleCommandKeyDown}
+              placeholder={'kubectl get svc -n default\n# Add more lines for a shell script'}
+              rows={6}
+              spellCheck={false}
+              wrap="off"
+              aria-describedby="program-command-hint"
               autoFocus
               required
             />
+            <div className="form-hint" id="program-command-hint">
+              Enter adds a new line · Ctrl+Enter saves · Runs in the selected terminal shell
+            </div>
           </div>
 
           <div className="form-group">

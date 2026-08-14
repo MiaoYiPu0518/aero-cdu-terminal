@@ -828,10 +828,25 @@ body {
   gap: 6px;
 }
 
+.form-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .form-label {
   font-size: 12px;
   font-weight: 700;
   color: #a0aab8;
+}
+
+.form-label-meta {
+  color: var(--crt-cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
 .form-input {
@@ -844,6 +859,22 @@ body {
   font-size: 13px;
   outline: none;
   transition: border-color 0.15s ease;
+}
+
+.command-input {
+  min-height: 132px;
+  resize: vertical;
+  overflow-x: auto;
+  line-height: 1.45;
+  tab-size: 2;
+  white-space: pre;
+}
+
+.form-hint {
+  color: #718096;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  line-height: 1.35;
 }
 
 .form-input:focus {

@@ -4,7 +4,7 @@ import math
 import struct
 import random
 
-out_dir = r"c:\Users\CaoYe\Documents\antigravity\quick-einstein\public\sounds"
+out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'public', 'sounds'))
 os.makedirs(out_dir, exist_ok=True)
 sample_rate = 44100
 math_pi = math.pi
