@@ -14,7 +14,8 @@ export function FlightDashboard({
   togglePanicMode,
   nextRoute,
   setSimSpeed,
-  onClose
+  onClose,
+  children
 }) {
   const {
     n1, egt, fuelFlow, fuelTotal, flaps, gearDown,
@@ -118,51 +119,60 @@ export function FlightDashboard({
         </div>
       )}
 
-      <div className="dashboard-content">
-        <AnalogSixPack telemetry={telemetry} />
+      <div className="dashboard-body">
+        <div className="dashboard-content">
+          <AnalogSixPack telemetry={telemetry} />
 
-        <div className="dashboard-middle-row">
-          <Suspense fallback={<div className="terrain-flight-section terrain-flight-loading">LOADING TERRAIN FLIGHT MAP…</div>}>
-            <TerrainFlightMap telemetry={telemetry} />
-          </Suspense>
+          <div className="dashboard-middle-row">
+            <Suspense fallback={<div className="terrain-flight-section terrain-flight-loading">LOADING TERRAIN FLIGHT MAP…</div>}>
+              <TerrainFlightMap telemetry={telemetry} />
+            </Suspense>
 
-          <div className="dashboard-middle-right">
-            <div className="engine-metrics-card">
-              <div className="card-title">
-                <Zap size={13} />
-                <span>EICAS ENGINE &amp; SYSTEMS</span>
-              </div>
-              <div className="metrics-grid">
-                <div className="metric-item">
-                  <span className="metric-label">ENG N1</span>
-                  <span className="metric-val text-green">{n1.toFixed(1)}%</span>
+            <div className="dashboard-middle-right">
+              <div className="engine-metrics-card">
+                <div className="card-title">
+                  <Zap size={13} />
+                  <span>EICAS ENGINE &amp; SYSTEMS</span>
                 </div>
-                <div className="metric-item">
-                  <span className="metric-label">EGT TEMP</span>
-                  <span className="metric-val text-amber">{Math.round(egt)}°C</span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-label">FUEL FLOW</span>
-                  <span className="metric-val text-cyan">{fuelFlow} KG/H</span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-label">FUEL REMAIN</span>
-                  <span className="metric-val">{fuelTotal} KG</span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-label">FLAPS</span>
-                  <span className="metric-val">{flaps}°</span>
-                </div>
-                <div className="metric-item">
-                  <span className="metric-label">GEAR</span>
-                  <span className={`metric-val ${gearDown ? 'text-green' : 'text-muted'}`}>
-                    {gearDown ? 'DOWN' : 'UP'}
-                  </span>
+                <div className="metrics-grid">
+                  <div className="metric-item">
+                    <span className="metric-label">ENG N1</span>
+                    <span className="metric-val text-green">{n1.toFixed(1)}%</span>
+                  </div>
+                  <div className="metric-item">
+                    <span className="metric-label">EGT TEMP</span>
+                    <span className="metric-val text-amber">{Math.round(egt)}°C</span>
+                  </div>
+                  <div className="metric-item">
+                    <span className="metric-label">FUEL FLOW</span>
+                    <span className="metric-val text-cyan">{fuelFlow} KG/H</span>
+                  </div>
+                  <div className="metric-item">
+                    <span className="metric-label">FUEL REMAIN</span>
+                    <span className="metric-val">{fuelTotal} KG</span>
+                  </div>
+                  <div className="metric-item">
+                    <span className="metric-label">FLAPS</span>
+                    <span className="metric-val">{flaps}°</span>
+                  </div>
+                  <div className="metric-item">
+                    <span className="metric-label">GEAR</span>
+                    <span className={`metric-val ${gearDown ? 'text-green' : 'text-muted'}`}>
+                      {gearDown ? 'DOWN' : 'UP'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {children && (
+          <div className="dashboard-cdu-module">
+            <div className="dashboard-module-label">INTEGRATED CDU</div>
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );

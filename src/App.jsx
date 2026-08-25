@@ -77,6 +77,9 @@ export function App() {
   // Entire CDU UI Scale
   const [uiScale, setUiScale] = useState(1.0);
   const uiScaleRef = useRef(1.0);
+  const [dashboardFitScale, setDashboardFitScale] = useState(0.6);
+  const dashboardViewportRef = useRef(null);
+  const dashboardStageRef = useRef(null);
 
   // React state for ptyClient
   const [ptyClient, setPtyClient] = useState(null);
@@ -417,6 +420,75 @@ export function App() {
     saveConfigToStorage({ newBindings: {} });
   };
 
+  useEffect(() => {
+    if (!showDashboard) {
+      setDashboardFitScale(0.6);
+      return undefined;
+    }
+
+    const viewport = dashboardViewportRef.current;
+    const stage = dashboardStageRef.current;
+    if (!viewport || !stage) return undefined;
+
+    let frameId = null;
+    const measureDashboard = () => {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(() => {
+        const availableWidth = Math.max(1, viewport.clientWidth - 16);
+        const availableHeight = Math.max(1, viewport.clientHeight - 16);
+        const naturalWidth = Math.max(1, stage.scrollWidth);
+        const naturalHeight = Math.max(1, stage.scrollHeight);
+        const nextScale = Math.min(1, availableWidth / naturalWidth, availableHeight / naturalHeight);
+        // Do not impose a desktop-sized minimum: very small or unusually tall
+        // viewports must still fit the complete cockpit stage without scrolling.
+        setDashboardFitScale(Math.max(0.01, Number(nextScale.toFixed(4))));
+      });
+    };
+
+    measureDashboard();
+    const resizeObserver = new ResizeObserver(measureDashboard);
+    resizeObserver.observe(viewport);
+    resizeObserver.observe(stage);
+    window.addEventListener('resize', measureDashboard);
+    window.visualViewport?.addEventListener('resize', measureDashboard);
+
+    return () => {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', measureDashboard);
+      window.visualViewport?.removeEventListener('resize', measureDashboard);
+    };
+  }, [showDashboard]);
+
+  useEffect(() => {
+    document.body.classList.toggle('dashboard-fullscreen-mode', showDashboard);
+    document.documentElement.classList.toggle('dashboard-fullscreen-mode', showDashboard);
+    return () => {
+      document.body.classList.remove('dashboard-fullscreen-mode');
+      document.documentElement.classList.remove('dashboard-fullscreen-mode');
+    };
+  }, [showDashboard]);
+
+  const cduUnit = (
+    <div className="cdu-unit-wrapper" style={{ transform: `scale(${uiScale})`, transformOrigin: 'top center', transition: 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
+      <CDUFrame
+        ptyClient={ptyClient}
+        scratchpad={scratchpad}
+        bindings={bindings}
+        onKeyPress={handleKeyPress}
+        onKeyContextMenu={handleKeyContextMenu}
+        onLSKClick={handleLSKClick}
+        execStaged={execStaged}
+        pressedKeyId={pressedKeyId}
+        programMode={programMode}
+        activePage={activePage}
+        totalPages={totalPages}
+        fontSize={fontSize}
+        lastExecutedCmd={lastExecutedCmd}
+      />
+    </div>
+  );
+
   return (
     <div className={`app-container ${showDashboard ? 'has-dashboard' : ''}`}>
       <TopBar
@@ -443,40 +515,31 @@ export function App() {
         onResetUI={handleResetUI}
       />
 
-      {/* Main Cockpit Layout containing Left Dashboard & Right CDU Unit */}
-      <div className={`cockpit-main-layout ${showDashboard && uiScale > 1 ? 'scaled-cdu-layout' : ''}`}>
-        {/* Left Side Flight Dashboard Panel */}
-        {showDashboard && (
-          <FlightDashboard
-            telemetry={telemetry}
-            toggleAutoFlight={toggleAutoFlight}
-            toggleRandomManeuvers={toggleRandomManeuvers}
-            togglePanicMode={togglePanicMode}
-            nextRoute={nextRoute}
-            setSimSpeed={setSimSpeed}
-            onClose={() => setShowDashboard(false)}
-          />
-        )}
-
-        {/* Right Side Main 3D CDU Unit Wrapper */}
-        <div className="cdu-unit-wrapper" style={{ transform: `scale(${uiScale})`, transformOrigin: 'top center', transition: 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
-          <CDUFrame
-            ptyClient={ptyClient}
-            scratchpad={scratchpad}
-            bindings={bindings}
-            onKeyPress={handleKeyPress}
-            onKeyContextMenu={handleKeyContextMenu}
-            onLSKClick={handleLSKClick}
-            execStaged={execStaged}
-            pressedKeyId={pressedKeyId}
-            programMode={programMode}
-            activePage={activePage}
-            totalPages={totalPages}
-            fontSize={fontSize}
-            lastExecutedCmd={lastExecutedCmd}
-          />
+      {showDashboard ? (
+        <div className="dashboard-experience" ref={dashboardViewportRef}>
+          <div
+            className="dashboard-stage"
+            ref={dashboardStageRef}
+            style={{ '--dashboard-fit-scale': dashboardFitScale }}
+          >
+            <FlightDashboard
+              telemetry={telemetry}
+              toggleAutoFlight={toggleAutoFlight}
+              toggleRandomManeuvers={toggleRandomManeuvers}
+              togglePanicMode={togglePanicMode}
+              nextRoute={nextRoute}
+              setSimSpeed={setSimSpeed}
+              onClose={() => setShowDashboard(false)}
+            >
+              {cduUnit}
+            </FlightDashboard>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="cockpit-main-layout">
+          {cduUnit}
+        </div>
+      )}
 
       {/* Key Programmer Dialog */}
       {activeModal === 'PROGRAM' && editingKeyId && (
