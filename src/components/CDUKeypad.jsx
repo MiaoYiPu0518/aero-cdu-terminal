@@ -70,6 +70,9 @@ export function CDUKeypad({
         {renderKey('CLB', 'CLB')}
         {renderKey('CRZ', 'CRZ')}
         {renderKey('DES', 'DES')}
+        {renderKey('VNAV', 'VNAV')}
+        {renderKey('PERF', 'PERF')}
+        {renderKey('DATA', 'DATA')}
       </div>
 
       <div className="key-row exec-row">
@@ -78,6 +81,8 @@ export function CDUKeypad({
         {renderKey('DEP_ARR', 'DEP ARR')}
         {renderKey('HOLD', 'HOLD')}
         {renderKey('PROG', 'PROG')}
+        {renderKey('SEC_FPLN', 'SEC FPLN')}
+        {renderKey('RAD_NAV', 'RAD NAV')}
         {renderKey('EXEC', 'EXEC', '', true)}
       </div>
 
@@ -87,6 +92,9 @@ export function CDUKeypad({
         {renderKey('PREV_PAGE', 'PREV PAGE')}
         {renderKey('NEXT_PAGE', 'NEXT PAGE')}
         {renderKey('HELP', 'HELP')}
+        {renderKey('MSG', 'MSG')}
+        {renderKey('STATUS', 'STATUS')}
+        {renderKey('IDENT', 'IDENT')}
       </div>
 
       {/* Split Keyboard Area */}

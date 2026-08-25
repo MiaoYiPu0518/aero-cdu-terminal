@@ -56,7 +56,7 @@ const pointFeature = (coordinates, properties = {}) => ({
   geometry: { type: 'Point', coordinates }
 });
 
-export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
+export function TerrainFlightMap({ telemetry }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const planeMarkerRef = useRef(null);
@@ -154,7 +154,7 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
     map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
     const plane = document.createElement('div');
-    plane.className = `terrain-flight-plane ${uiTheme === 'PIXEL' ? 'pixel-theme' : ''}`;
+    plane.className = 'terrain-flight-plane';
     // Existing CC0 top-view asset downloaded from SVG Repo; its nose points north,
     // so the same flight bearing used by the camera also rotates the silhouette.
     plane.innerHTML = '<img src="/assets/plane-top-view.svg" alt="" aria-hidden="true" />';
@@ -344,7 +344,7 @@ export function TerrainFlightMap({ telemetry, uiTheme = 'REALISTIC' }) {
   };
 
   return (
-    <section className={`terrain-flight-section ${uiTheme === 'PIXEL' ? 'pixel-theme' : ''} ${viewMode === 'WINDOW' ? 'window-mode' : ''}`}>
+    <section className={`terrain-flight-section ${viewMode === 'WINDOW' ? 'window-mode' : ''}`}>
       <div className="terrain-flight-header">
         <div className="terrain-flight-title">
           <Satellite size={13} />

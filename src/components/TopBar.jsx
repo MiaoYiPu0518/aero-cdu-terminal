@@ -5,8 +5,6 @@ export function TopBar({
   ptyConnected,
   activeShell,
   onShellChange,
-  uiTheme = 'REALISTIC',
-  onThemeChange,
   programMode,
   onToggleProgramMode,
   showDashboard = false,
@@ -73,21 +71,6 @@ export function TopBar({
     <div className="top-bar" ref={menuRef}>
       <div className="controls-section">
         <div className="control-cluster" aria-label="Interface controls">
-        {/* Theme Selector Dropdown */}
-        <div className="topbar-dropdown-wrap">
-          <select
-            className={`icon-btn ${uiTheme === 'PIXEL' ? 'active' : ''}`}
-            value={uiTheme}
-            onChange={(e) => onThemeChange && onThemeChange(e.target.value)}
-            title="Select KDU UI Theme (Realistic Cockpit / Pixel 8-Bit)"
-            aria-label="Interface theme"
-            style={{ cursor: 'pointer', outline: 'none' }}
-          >
-            <option value="REALISTIC">🎨 REALISTIC</option>
-            <option value="PIXEL">👾 PIXEL 8-BIT</option>
-          </select>
-        </div>
-
         {/* Flight Dashboard Toggle Button */}
         <button
           className={`icon-btn ${showDashboard ? 'active' : ''}`}

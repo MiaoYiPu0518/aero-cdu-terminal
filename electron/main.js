@@ -30,7 +30,7 @@ function startBackendServer() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 940,
+    width: 1440,
     height: 1000,
     minWidth: 800,
     minHeight: 850,

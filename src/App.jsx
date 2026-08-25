@@ -78,11 +78,6 @@ export function App() {
   const [uiScale, setUiScale] = useState(1.0);
   const uiScaleRef = useRef(1.0);
 
-  // UI Theme State ('REALISTIC' | 'PIXEL')
-  const [uiTheme, setUiTheme] = useState(() => {
-    return localStorage.getItem('aero_cdu_theme') || 'REALISTIC';
-  });
-
   // React state for ptyClient
   const [ptyClient, setPtyClient] = useState(null);
   const activePtyClientRef = useRef(null);
@@ -101,7 +96,7 @@ export function App() {
 
     activePtyClientRef.current = nextClient;
     setPtyClient(nextClient);
-    nextClient.connect(shell, 80, 24);
+    nextClient.connect(shell);
   };
 
   useEffect(() => {
@@ -125,11 +120,6 @@ export function App() {
       if (data.bindings && Object.keys(data.bindings).length > 0) {
         setBindings(data.bindings);
       }
-      if (data.uiTheme) {
-        setUiTheme(data.uiTheme);
-        localStorage.setItem('aero_cdu_theme', data.uiTheme);
-      }
-
       setActiveShell(restoredShell);
       audioSettingsRef.current = restoredAudio;
       setAudioSettings(restoredAudio);
@@ -155,30 +145,21 @@ export function App() {
 
   const saveConfigToStorage = ({
     newBindings = bindings,
-    newTheme = uiTheme,
     newShell = activeShell,
     newAudio = audioSettingsRef.current,
     newUiScale = uiScaleRef.current
   } = {}) => {
     setBindings(newBindings);
-    setUiTheme(newTheme);
-    localStorage.setItem('aero_cdu_theme', newTheme);
     fetch('/api/config', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         bindings: newBindings,
         activeShell: newShell,
-        uiTheme: newTheme,
         audio: newAudio,
         uiScale: newUiScale
       }),
     }).catch(() => {});
-  };
-
-  const handleThemeChange = (newTheme) => {
-    setUiTheme(newTheme);
-    saveConfigToStorage({ newTheme });
   };
 
   const handleShellChange = (newShell) => {
@@ -437,13 +418,11 @@ export function App() {
   };
 
   return (
-    <div className={`app-container ${showDashboard ? 'has-dashboard' : ''}`} data-theme={uiTheme}>
+    <div className={`app-container ${showDashboard ? 'has-dashboard' : ''}`}>
       <TopBar
         ptyConnected={ptyConnected}
         activeShell={activeShell}
         onShellChange={handleShellChange}
-        uiTheme={uiTheme}
-        onThemeChange={handleThemeChange}
         programMode={programMode}
         onToggleProgramMode={() => setProgramMode((prev) => !prev)}
         showDashboard={showDashboard}
@@ -476,7 +455,6 @@ export function App() {
             nextRoute={nextRoute}
             setSimSpeed={setSimSpeed}
             onClose={() => setShowDashboard(false)}
-            uiTheme={uiTheme}
           />
         )}
 
@@ -496,7 +474,6 @@ export function App() {
             totalPages={totalPages}
             fontSize={fontSize}
             lastExecutedCmd={lastExecutedCmd}
-            uiTheme={uiTheme}
           />
         </div>
       </div>

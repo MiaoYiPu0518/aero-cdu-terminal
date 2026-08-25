@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Terminal as XTerm } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { eventToAnsi } from '../utils/keyboardHelper';
+import { TERMINAL_COLS, TERMINAL_ROWS } from '../utils/ptyClient';
 import '@xterm/xterm/css/xterm.css';
 
 export function CDUScreen({
@@ -24,10 +25,15 @@ export function CDUScreen({
     if (!terminalContainerRef.current) return;
 
     const term = new XTerm({
-      fontFamily: "'Share Tech Mono', 'Courier New', monospace",
+      // Keep the cockpit typography, but prefer Windows terminal fonts for
+      // Fastfetch's Unicode block and box-drawing glyphs.
+      fontFamily: "'Cascadia Mono', 'Consolas', 'Share Tech Mono', 'Courier New', monospace",
       fontSize: fontSize,
       lineHeight: 1.0,
       letterSpacing: 0,
+      termName: 'xterm-256color',
+      windowsMode: true,
+      customGlyphs: true,
       cursorStyle: 'block',
       cursorInactiveStyle: 'block',
       cursorBlink: true,
@@ -50,8 +56,8 @@ export function CDUScreen({
         brightGreen: '#55ff55',
         brightCyan: '#55ffff'
       },
-      cols: 80,
-      rows: 24
+      cols: TERMINAL_COLS,
+      rows: TERMINAL_ROWS
     });
 
     const fitAddon = new FitAddon();
@@ -96,9 +102,13 @@ export function CDUScreen({
       if (fitAddonInstance.current && xtermInstance.current) {
         try {
           fitAddonInstance.current.fit();
-          const { cols, rows } = xtermInstance.current;
-          if (cols > 0 && rows > 0 && ptyClient) {
-            ptyClient.resize(cols, rows);
+          // Keep the PTY and visible XTerm grid at the requested fixed size.
+          // FitAddon still recalculates cell metrics after layout/font changes.
+          if (xtermInstance.current.cols !== TERMINAL_COLS || xtermInstance.current.rows !== TERMINAL_ROWS) {
+            xtermInstance.current.resize(TERMINAL_COLS, TERMINAL_ROWS);
+          }
+          if (ptyClient) {
+            ptyClient.resize(TERMINAL_COLS, TERMINAL_ROWS);
           }
         } catch (e) {}
       }
@@ -137,9 +147,11 @@ export function CDUScreen({
       if (fitAddonInstance.current) {
         try {
           fitAddonInstance.current.fit();
-          const { cols, rows } = xtermInstance.current;
-          if (cols > 0 && rows > 0 && ptyClient) {
-            ptyClient.resize(cols, rows);
+          if (xtermInstance.current.cols !== TERMINAL_COLS || xtermInstance.current.rows !== TERMINAL_ROWS) {
+            xtermInstance.current.resize(TERMINAL_COLS, TERMINAL_ROWS);
+          }
+          if (ptyClient) {
+            ptyClient.resize(TERMINAL_COLS, TERMINAL_ROWS);
           }
         } catch (e) {}
       }
@@ -164,10 +176,7 @@ export function CDUScreen({
 
     // Send initial newline or resize to trigger prompt rendering if shell is idle
     if (ptyClient && xtermInstance.current) {
-      const { cols, rows } = xtermInstance.current;
-      if (cols > 0 && rows > 0) {
-        ptyClient.resize(cols, rows);
-      }
+      ptyClient.resize(TERMINAL_COLS, TERMINAL_ROWS);
     }
 
     // Native XTerm onData input handler
@@ -274,9 +283,9 @@ export function CDUScreen({
 
   return (
     <div className="cdu-screen-housing">
-      {/* Left Line Select Keys (1L - 6L) */}
+      {/* Left Line Select Keys (1L - 8L) */}
       <div className="lsk-column">
-        {['1L', '2L', '3L', '4L', '5L', '6L'].map((lskId) => {
+        {['1L', '2L', '3L', '4L', '5L', '6L', '7L', '8L'].map((lskId) => {
           const b = getLSKBinding(lskId);
           let buttonIcon = '<';
           let titleText = `LSK ${lskId}`;
@@ -334,9 +343,9 @@ export function CDUScreen({
         </div>
       </div>
 
-      {/* Right Line Select Keys (1R - 6R) */}
+      {/* Right Line Select Keys (1R - 8R) */}
       <div className="lsk-column">
-        {['1R', '2R', '3R', '4R', '5R', '6R'].map((lskId) => {
+        {['1R', '2R', '3R', '4R', '5R', '6R', '7R', '8R'].map((lskId) => {
           const b = getLSKBinding(lskId);
           return (
             <button

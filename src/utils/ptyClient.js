@@ -1,5 +1,8 @@
 // WebSocket client wrapper for node-pty terminal backend
 
+export const TERMINAL_COLS = 140;
+export const TERMINAL_ROWS = 40;
+
 export class PTYClient {
   constructor(options = {}) {
     this.options = options;
@@ -9,9 +12,10 @@ export class PTYClient {
     this.onStatusHandler = null;
   }
 
-  connect(shell = 'powershell.exe', cols = 80, rows = 24) {
+  connect(shell = 'powershell.exe', cols = TERMINAL_COLS, rows = TERMINAL_ROWS) {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.hostname === 'localhost' ? 'localhost:3001' : window.location.host;
+    const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const host = isLocalHost ? `${window.location.hostname}:3001` : window.location.host;
     const url = `${protocol}//${host}/terminal?shell=${encodeURIComponent(shell)}&cols=${cols}&rows=${rows}`;
 
     console.log('[PTY Client] Connecting to', url);

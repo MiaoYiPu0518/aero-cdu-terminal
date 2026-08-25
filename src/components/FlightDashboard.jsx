@@ -14,8 +14,7 @@ export function FlightDashboard({
   togglePanicMode,
   nextRoute,
   setSimSpeed,
-  onClose,
-  uiTheme = 'REALISTIC'
+  onClose
 }) {
   const {
     n1, egt, fuelFlow, fuelTotal, flaps, gearDown,
@@ -24,7 +23,6 @@ export function FlightDashboard({
     eteFormatted, activeEvent
   } = telemetry;
 
-  const isPixel = uiTheme === 'PIXEL';
   const progressPct = Number.isFinite(legProgressPct)
     ? Math.min(100, Math.max(0, legProgressPct))
     : 0;
@@ -32,7 +30,7 @@ export function FlightDashboard({
   const totalNm = Number.isFinite(totalDistNM) ? totalDistNM : 0;
 
   return (
-    <div className={`flight-dashboard-panel ${isPixel ? 'pixel-theme' : ''} ${panicMode ? 'panic-active' : ''}`}>
+    <div className={`flight-dashboard-panel ${panicMode ? 'panic-active' : ''}`}>
       <div className="dashboard-header">
         <div className="header-title-group">
           <Activity size={16} className={`header-icon ${panicMode ? 'text-red' : ''}`} />
@@ -121,11 +119,11 @@ export function FlightDashboard({
       )}
 
       <div className="dashboard-content">
-        <AnalogSixPack telemetry={telemetry} uiTheme={uiTheme} />
+        <AnalogSixPack telemetry={telemetry} />
 
         <div className="dashboard-middle-row">
           <Suspense fallback={<div className="terrain-flight-section terrain-flight-loading">LOADING TERRAIN FLIGHT MAP…</div>}>
-            <TerrainFlightMap telemetry={telemetry} uiTheme={uiTheme} />
+            <TerrainFlightMap telemetry={telemetry} />
           </Suspense>
 
           <div className="dashboard-middle-right">

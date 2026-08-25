@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * Classic 6-Pack Analog Flight Instruments Cluster (Pure SVG Implementation)
  */
-export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
+export function AnalogSixPack({ telemetry }) {
   const {
     pitch = 0,
     roll = 0,
@@ -13,8 +13,6 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
     vsi = 0,
     turnRate = 0
   } = telemetry;
-
-  const isPixel = uiTheme === 'PIXEL';
 
   // Calculations for instrument rotations & positions
   // 1. Airspeed Needle Angle (0 to 400 kts -> 0 to 320 degrees)
@@ -44,7 +42,7 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
         <span className="gauge-label">AIRSPEED (KTS)</span>
         <svg viewBox="0 0 160 160" className="gauge-svg">
           {/* Bezel Ring */}
-          <circle cx="80" cy="80" r="76" fill="#12151a" stroke={isPixel ? '#00ff66' : '#2d3542'} strokeWidth="4" />
+          <circle cx="80" cy="80" r="76" fill="#12151a" stroke="#2d3542" strokeWidth="4" />
           <circle cx="80" cy="80" r="71" fill="#080a0d" />
 
           {/* Speed Ticks & Numbers */}
@@ -93,7 +91,7 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
           </defs>
 
           {/* Bezel */}
-          <circle cx="80" cy="80" r="76" fill="#12151a" stroke={isPixel ? '#00ff66' : '#2d3542'} strokeWidth="4" />
+          <circle cx="80" cy="80" r="76" fill="#12151a" stroke="#2d3542" strokeWidth="4" />
 
           {/* Rotating & Translating Horizon Sphere */}
           <g clipPath="url(#horizon-clip)">
@@ -136,7 +134,7 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
       <div className="analog-gauge-box">
         <span className="gauge-label">ALTIMETER (FEET)</span>
         <svg viewBox="0 0 160 160" className="gauge-svg">
-          <circle cx="80" cy="80" r="76" fill="#12151a" stroke={isPixel ? '#00ff66' : '#2d3542'} strokeWidth="4" />
+          <circle cx="80" cy="80" r="76" fill="#12151a" stroke="#2d3542" strokeWidth="4" />
           <circle cx="80" cy="80" r="71" fill="#080a0d" />
 
           {/* Dial Numbers 0-9 */}
@@ -181,7 +179,7 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
       <div className="analog-gauge-box">
         <span className="gauge-label">TURN COORDINATOR</span>
         <svg viewBox="0 0 160 160" className="gauge-svg">
-          <circle cx="80" cy="80" r="76" fill="#12151a" stroke={isPixel ? '#00ff66' : '#2d3542'} strokeWidth="4" />
+          <circle cx="80" cy="80" r="76" fill="#12151a" stroke="#2d3542" strokeWidth="4" />
           <circle cx="80" cy="80" r="71" fill="#080a0d" />
 
           {/* 2 MIN Turn Marks */}
@@ -209,7 +207,7 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
       <div className="analog-gauge-box">
         <span className="gauge-label">HEADING (COMPASS)</span>
         <svg viewBox="0 0 160 160" className="gauge-svg">
-          <circle cx="80" cy="80" r="76" fill="#12151a" stroke={isPixel ? '#00ff66' : '#2d3542'} strokeWidth="4" />
+          <circle cx="80" cy="80" r="76" fill="#12151a" stroke="#2d3542" strokeWidth="4" />
           <circle cx="80" cy="80" r="71" fill="#080a0d" />
 
           {/* Rotating Compass Ring */}
@@ -253,7 +251,7 @@ export function AnalogSixPack({ telemetry, uiTheme = 'REALISTIC' }) {
       <div className="analog-gauge-box">
         <span className="gauge-label">VERTICAL SPEED (VSI)</span>
         <svg viewBox="0 0 160 160" className="gauge-svg">
-          <circle cx="80" cy="80" r="76" fill="#12151a" stroke={isPixel ? '#00ff66' : '#2d3542'} strokeWidth="4" />
+          <circle cx="80" cy="80" r="76" fill="#12151a" stroke="#2d3542" strokeWidth="4" />
           <circle cx="80" cy="80" r="71" fill="#080a0d" />
 
           {/* VSI Scale Marks (-6 to +6 x1000 FPM) */}

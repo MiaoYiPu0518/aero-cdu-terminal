@@ -139,7 +139,6 @@ app.get('/api/config', (req, res) => {
   res.json({
     bindings: {},
     activeShell: 'powershell.exe',
-    uiTheme: 'REALISTIC',
     audio: {
       cabinVolume: 25,
       atcVolume: 35,
@@ -178,8 +177,8 @@ wss.on('connection', (ws, req) => {
 
   const urlParams = new URL(req.url, `http://${req.headers.host}`).searchParams;
   const shell = urlParams.get('shell') || (process.platform === 'win32' ? 'powershell.exe' : 'bash');
-  const cols = parseInt(urlParams.get('cols'), 10) || 80;
-  const rows = parseInt(urlParams.get('rows'), 10) || 24;
+  const cols = parseInt(urlParams.get('cols'), 10) || 140;
+  const rows = parseInt(urlParams.get('rows'), 10) || 40;
 
   // Always set terminal working directory to project root directory
   const targetCwd = projectRootDir;
@@ -192,7 +191,14 @@ wss.on('connection', (ws, req) => {
         cols: cols,
         rows: rows,
         cwd: targetCwd,
-        env: process.env,
+        // Advertise the capabilities used by modern terminal applications.
+        // Fastfetch otherwise falls back to a low-fidelity ANSI logo on Windows.
+        env: {
+          ...process.env,
+          TERM: 'xterm-256color',
+          COLORTERM: 'truecolor'
+        },
+        // Keep WinPTY for the existing PowerShell profile/startup behavior.
         useConpty: false
       });
 
@@ -216,7 +222,7 @@ wss.on('connection', (ws, req) => {
           if (parsed.type === 'input') {
             ptyProcess.write(parsed.data);
           } else if (parsed.type === 'resize') {
-            ptyProcess.resize(parsed.cols || 80, parsed.rows || 24);
+            ptyProcess.resize(parsed.cols || 140, parsed.rows || 40);
           }
         } catch (e) {
           logToFile(`[PTY] Invalid WS message: ${e.message}`);
